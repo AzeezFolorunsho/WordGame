@@ -7,7 +7,7 @@ pygame.init()
 
 # Constants
 
-WIDTH, HEIGHT = 633, 900
+WIDTH, HEIGHT = 1080, 720
 
 SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
 BACKGROUND = pygame.image.load("assets/Starting Tiles.png")
