@@ -3,6 +3,8 @@ import sys
 import random
 from words import *
 
+# initiates pygame session allowing pygame functions to be used 
+
 pygame.init()
 
 # Constants
@@ -14,7 +16,7 @@ BACKGROUND = pygame.image.load("assets/Starting Tiles.png")
 BACKGROUND_RECT = BACKGROUND.get_rect(center=(317, 300))
 ICON = pygame.image.load("assets/Icon.png")
 
-pygame.display.set_caption("Wordle!")
+pygame.display.set_caption("Wordle+!")
 pygame.display.set_icon(ICON)
 
 GREEN = "#6aaa64"
@@ -40,11 +42,22 @@ LETTER_SIZE = 75
 
 # Global variables
 
+# guesses_count is used to keep track of how many guesses have been made
+
 guesses_count = 0
+
+# max_guesses is the maximum number of guesses that can be made.
+
+max_guesses = 6
+
+# word_length is the number of letters in the correct word.
+
+word_length = 5
 
 # guesses is a 2D list that will store guesses. A guess will be a list of letters.
 # The list will be iterated through and each letter in each guess will be drawn on the screen.
-guesses = [[]] * 6
+
+guesses = [[]] * max_guesses
 
 current_guess = []
 current_guess_string = ""
@@ -55,6 +68,7 @@ indicators = []
 
 game_result = ""
 
+# create individual letters that can be added to a word guess in the game.
 class Letter:
     def __init__(self, text, bg_position):
         # Initializes all the variables, including text, color, position, size, etc.
@@ -103,7 +117,7 @@ class Indicator:
 
 # Drawing the indicators on the screen.
 
-indicator_x, indicator_y = 20, 600
+indicator_x, indicator_y = WIDTH /4, HEIGHT / 1.7
 
 for i in range(3):
     for letter in ALPHABET[i]:
@@ -113,15 +127,15 @@ for i in range(3):
         indicator_x += 60
     indicator_y += 100
     if i == 0:
-        indicator_x = 50
+        indicator_x = WIDTH /4 + 40
     elif i == 1:
-        indicator_x = 105
+        indicator_x = WIDTH /4 + 95
 
 def check_guess(guess_to_check):
     # Goes through each letter and checks if it should be green, yellow, or grey.
     global current_guess, current_guess_string, guesses_count, current_letter_bg_x, game_result
     game_decided = False
-    for i in range(5):
+    for i in range(word_length):
         lowercase_letter = guess_to_check[i].text.lower()
         if lowercase_letter in CORRECT_WORD:
             if lowercase_letter == CORRECT_WORD[i]:
