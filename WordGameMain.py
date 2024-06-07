@@ -37,7 +37,8 @@ ALPHABET = ["QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM"]
 GUESSED_LETTER_FONT = pygame.font.Font("assets/FreeSansBold.otf", 50)
 AVAILABLE_LETTER_FONT = pygame.font.Font("assets/FreeSansBold.otf", 25)
 
-SCREEN.fill("white")
+SCREEN_color = "white"
+SCREEN.fill(SCREEN_color)
 SCREEN.blit(BACKGROUND, BACKGROUND_RECT)
 pygame.display.update()
 
@@ -47,7 +48,7 @@ LETTER_Y_SPACING = 10
 LETTER_SIZE = 60
 
 # defines where the first letter will be drawn.
-LETTER_BG_X = 375
+LETTER_BG_X = (WIDTH - LETTER_X_SPACING*5) / 2
 
 # Global Variables
 
@@ -132,7 +133,7 @@ class Indicator:
 
 # Drawing the indicators on the screen.
 
-indicator_x, indicator_y = WIDTH /4, HEIGHT / 1.5
+indicator_x, indicator_y = LETTER_BG_X/1.3, HEIGHT / 1.5
 
 for i in range(3):
     for letter in ALPHABET[i]:
@@ -142,9 +143,9 @@ for i in range(3):
         indicator_x += 60
     indicator_y += 80
     if i == 0:
-        indicator_x = WIDTH /4 + 40
+        indicator_x = LETTER_BG_X/1.3 + 40
     elif i == 1:
-        indicator_x = WIDTH /4 + 95
+        indicator_x = LETTER_BG_X/1.3 + 95
 
 def check_guess(guess_to_check):
     # Goes through each letter and checks if it should be green, yellow, or grey.
@@ -189,13 +190,13 @@ def check_guess(guess_to_check):
         game_result = "L"
 
 def play_again():
-    # Puts the play again text on the screen.
-    pygame.draw.rect(SCREEN, "white", (10, 600, 1000, 600))
+    # Puts the play again text on the screen, genarates a box covering indicators.
+    pygame.draw.rect(SCREEN, SCREEN_color, (indicators[0].x, indicators[0].y, (indicators[9].x - indicators[0].x + LETTER_SIZE - 10), (indicators[-1].y - indicators[0].y + LETTER_SIZE)))
     play_again_font = pygame.font.Font("assets/FreeSansBold.otf", 40)
     play_again_text = play_again_font.render("Press ENTER to Play Again!", True, "black")
-    play_again_rect = play_again_text.get_rect(center=(WIDTH/2, 700))
+    play_again_rect = play_again_text.get_rect(center=(WIDTH/2, HEIGHT / 1.4))
     word_was_text = play_again_font.render(f"The word was {CORRECT_WORD.upper()}!", True, "black")
-    word_was_rect = word_was_text.get_rect(center=(WIDTH/2, 650))
+    word_was_rect = word_was_text.get_rect(center=(WIDTH/2, HEIGHT / 1.2))
     SCREEN.blit(word_was_text, word_was_rect)
     SCREEN.blit(play_again_text, play_again_rect)
     pygame.display.update()
