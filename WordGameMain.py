@@ -8,18 +8,17 @@ pygame.init()
 
 # CONSTANTS
 
-WIDTH, HEIGHT = 1080, 720
+WIDTH, HEIGHT = 1380, 720
 
 SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
 
-ICON = pygame.image.load("assets/Wordle+ Logo.png")
+ICON = pygame.image.load("assets/wordle+logo.png")
 
 # geneates image object from starting tiles image, and rescales it, then adds a rectangle to it to make it fit the screen.
 scale = 0.8
 BACKGROUND = pygame.image.load("assets/Starting Tiles.png")
 BACKGROUND = pygame.transform.scale(BACKGROUND, (BACKGROUND.get_width() * scale, BACKGROUND.get_height() * scale))
 BACKGROUND_RECT = BACKGROUND.get_rect(center=(WIDTH/2, HEIGHT/3))
-
 
 pygame.display.set_caption("Wordle+ !")
 pygame.display.set_icon(ICON)
