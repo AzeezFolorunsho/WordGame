@@ -93,11 +93,11 @@ def draw_grid():
         square_size = ((WIDTH - LETTER_X_SPACING * (word_length - 1)) / word_length) / 3
         # Calculate the starting position of the grid.
         start_x = (WIDTH - square_size * word_length) / 2
-        start_y = (HEIGHT - square_size * max_guesses) / 4
+        start_y = (HEIGHT - square_size * max_guesses) / 30
         # Draw the squares.
         for i in range(squares_to_draw):
-            x = start_x + (i % word_length) * square_size
-            y = start_y + (i // word_length) * square_size
+            x = start_x + (i % word_length) * (square_size + LETTER_X_SPACING - 65)
+            y = start_y + (i // word_length) * (square_size + LETTER_Y_SPACING - 5)
             pygame.draw.rect(SCREEN, "white", (x, y, square_size, square_size))
             pygame.draw.rect(SCREEN, OUTLINE, (x, y, square_size, square_size), 3)
         pygame.display.update()
@@ -158,7 +158,7 @@ class Indicator:
 
 # Drawing the indicators on the screen.
 
-indicator_x, indicator_y = LETTER_BG_X/1.3, HEIGHT / 1.5
+indicator_x, indicator_y = LETTER_BG_X/1.3, HEIGHT / 1.49
 
 for i in range(3):
     for letter in ALPHABET[i]:
