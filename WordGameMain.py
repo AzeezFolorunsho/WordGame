@@ -42,9 +42,13 @@ SCREEN.fill("white")
 SCREEN.blit(BACKGROUND, BACKGROUND_RECT)
 pygame.display.update()
 
-LETTER_X_SPACING = 85
-LETTER_Y_SPACING = 12
-LETTER_SIZE = 75
+# defines the spacing between letters.
+LETTER_X_SPACING = 68
+LETTER_Y_SPACING = 10
+LETTER_SIZE = 60
+
+# defines where the first letter will be drawn.
+LETTER_BG_X = 375
 
 # Global Variables
 
@@ -66,7 +70,7 @@ current_guess = []
 current_guess_string = ""
 
 # current_letter_bg_x is used to keep track of where the next letter will be drawn.
-current_letter_bg_x = 110
+current_letter_bg_x = LETTER_BG_X
 
 # Indicators is a list storing all the Indicator object. An indicator is that button thing with all the letters you see.
 indicators = []
@@ -83,9 +87,9 @@ class Letter:
         self.bg_position = bg_position
         self.bg_x = bg_position[0]
         self.bg_y = bg_position[1]
-        self.bg_rect = (bg_position[0], self.bg_y, LETTER_SIZE, LETTER_SIZE)
+        self.bg_rect = (self.bg_x, self.bg_y, LETTER_SIZE, LETTER_SIZE)
         self.text = text
-        self.text_position = (self.bg_x+36, self.bg_position[1]+34)
+        self.text_position = (self.bg_x+30, self.bg_y+30)
         self.text_surface = GUESSED_LETTER_FONT.render(self.text, True, self.text_color)
         self.text_rect = self.text_surface.get_rect(center=self.text_position)
 
@@ -110,7 +114,7 @@ class Indicator:
         self.x = x
         self.y = y
         self.text = letter
-        self.rect = (self.x, self.y, 57, 75)
+        self.rect = (self.x, self.y, LETTER_SIZE-10, LETTER_SIZE)
         self.bg_color = OUTLINE
 
     def draw(self):
@@ -129,7 +133,7 @@ class Indicator:
 
 # Drawing the indicators on the screen.
 
-indicator_x, indicator_y = WIDTH /4, HEIGHT / 1.7
+indicator_x, indicator_y = WIDTH /4, HEIGHT / 1.5
 
 for i in range(3):
     for letter in ALPHABET[i]:
@@ -137,7 +141,7 @@ for i in range(3):
         indicators.append(new_indicator)
         new_indicator.draw()
         indicator_x += 60
-    indicator_y += 100
+    indicator_y += 80
     if i == 0:
         indicator_x = WIDTH /4 + 40
     elif i == 1:
@@ -179,7 +183,7 @@ def check_guess(guess_to_check):
     guesses_count += 1
     current_guess = []
     current_guess_string = ""
-    current_letter_bg_x = 110
+    current_letter_bg_x = LETTER_BG_X
 
     # Checks if your out of guesses and havent guessed the correct word and end game.
     if guesses_count == max_guesses and game_result == "":
@@ -217,7 +221,7 @@ def create_new_letter():
     # Creates a new letter and adds it to the guess.
     global current_guess_string, current_letter_bg_x
     current_guess_string += key_pressed
-    new_letter = Letter(key_pressed, (current_letter_bg_x, guesses_count*100 + LETTER_Y_SPACING))
+    new_letter = Letter(key_pressed, (current_letter_bg_x, guesses_count*80 + LETTER_Y_SPACING))
     current_letter_bg_x += LETTER_X_SPACING
     guesses[guesses_count].append(new_letter)
     current_guess.append(new_letter)
