@@ -16,9 +16,9 @@ ICON = pygame.image.load("assets/wordle+logo.png")
 
 # geneates image object from starting tiles image, and rescales it, then adds a rectangle to it to make it fit the screen.
 scale = 0.8
-BACKGROUND = pygame.image.load("assets/Starting Tiles.png")
-BACKGROUND = pygame.transform.scale(BACKGROUND, (BACKGROUND.get_width() * scale, BACKGROUND.get_height() * scale))
-BACKGROUND_RECT = BACKGROUND.get_rect(center=(WIDTH/2, HEIGHT/3))
+# BACKGROUND = pygame.image.load("assets/Starting Tiles.png")
+# BACKGROUND = pygame.transform.scale(BACKGROUND, (BACKGROUND.get_width() * scale, BACKGROUND.get_height() * scale))
+# BACKGROUND_RECT = BACKGROUND.get_rect(center=(WIDTH/2, HEIGHT/3))
 
 pygame.display.set_caption("Wordle+ !")
 pygame.display.set_icon(ICON)
@@ -39,7 +39,7 @@ AVAILABLE_LETTER_FONT = pygame.font.Font("assets/FreeSansBold.otf", 25)
 
 SCREEN_color = "white"
 SCREEN.fill(SCREEN_color)
-SCREEN.blit(BACKGROUND, BACKGROUND_RECT)
+# SCREEN.blit(BACKGROUND, BACKGROUND_RECT)
 pygame.display.update()
 
 # defines the spacing between letters.
@@ -78,6 +78,31 @@ indicators = []
 # game_result is used to keep track of if the game has been won or not.
 game_result = ""
 
+# GAME FUNCTIONS
+
+# temporary guides for checking alingment.
+def draw_guide():
+    center_line_x = pygame.draw.rect(SCREEN, "black", ((0, HEIGHT/2), (WIDTH, 2)))
+    center_line_y = pygame.draw.rect(SCREEN, "black", ((WIDTH/2, 0), (2, HEIGHT)))
+draw_guide()
+
+def draw_grid():
+        # Calculate the number of squares to draw based on the word length and number of guesses.
+        squares_to_draw = word_length * max_guesses
+        # Calculate the size of each square.
+        square_size = ((WIDTH - LETTER_X_SPACING * (word_length - 1)) / word_length) / 3
+        # Calculate the starting position of the grid.
+        start_x = (WIDTH - square_size * word_length) / 2
+        start_y = (HEIGHT - square_size * max_guesses) / 4
+        # Draw the squares.
+        for i in range(squares_to_draw):
+            x = start_x + (i % word_length) * square_size
+            y = start_y + (i // word_length) * square_size
+            pygame.draw.rect(SCREEN, "white", (x, y, square_size, square_size))
+            pygame.draw.rect(SCREEN, OUTLINE, (x, y, square_size, square_size), 3)
+        pygame.display.update()
+draw_grid()
+        
 # create individual letters that can be added to a word guess in the game.
 class Letter:
     def __init__(self, text, bg_position):
@@ -205,14 +230,18 @@ def reset():
     # Resets all global variables to their default states.
     global guesses_count, CORRECT_WORD, guesses, current_guess, current_guess_string, game_result
     SCREEN.fill("white")
-    SCREEN.blit(BACKGROUND, BACKGROUND_RECT)
+    # SCREEN.blit(BACKGROUND, BACKGROUND_RECT)
     guesses_count = 0
     CORRECT_WORD = random.choice(WORDS)
     guesses = [[]] * max_guesses
     current_guess = []
     current_guess_string = ""
     game_result = ""
+    draw_grid()
+    draw_guide()
+
     pygame.display.update()
+
     for indicator in indicators:
         indicator.bg_color = OUTLINE
         indicator.draw()
