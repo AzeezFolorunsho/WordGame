@@ -92,7 +92,7 @@ class Grid():
     def draw_grid(squares_to_draw = squares_to_draw, square_size = square_size, start_x = start_x, start_y = start_y):
         # Draw the squares.
         for i in range(squares_to_draw):
-            x = start_x + (i % word_length) * (square_size + LETTER_X_SPACING)
+            x = start_x + (i % word_length) * (square_size + LETTER_X_SPACING - 63)
             y = start_y + (i // word_length) * (square_size + LETTER_Y_SPACING - 5)
             pygame.draw.rect(SCREEN, "white", (x, y, square_size, square_size))
             pygame.draw.rect(SCREEN, OUTLINE, (x, y, square_size, square_size), 3)
@@ -251,9 +251,8 @@ def create_new_letter():
     # Creates a new letter and adds it to the guess.
     global current_guess_string, current_letter_bg_x, current_letter_bg_y
     current_guess_string += key_pressed
-    new_letter = Letter(key_pressed, (current_letter_bg_x, current_letter_bg_y))
-    current_letter_bg_x += LETTER_X_SPACING
-    current_letter_bg_y += LETTER_Y_SPACING * guesses_count
+    new_letter = Letter(key_pressed, (current_letter_bg_x, guesses_count * square_size + LETTER_Y_SPACING))
+    current_letter_bg_x += LETTER_X_SPACING + 4
 
     guesses[guesses_count].append(new_letter)
     current_guess.append(new_letter)
@@ -268,7 +267,7 @@ def delete_letter():
     guesses[guesses_count].pop()
     current_guess_string = current_guess_string[:-1]
     current_guess.pop()
-    current_letter_bg_x -= LETTER_X_SPACING
+    current_letter_bg_x -= LETTER_X_SPACING + 4
 
 while True:
     if game_result != "":
