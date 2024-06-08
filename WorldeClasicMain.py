@@ -37,8 +37,8 @@ SCREEN.fill(WHITE)
 pygame.display.update()
 
 # defines the spacing between letters.
-LETTER_X_SPACING = 68
-LETTER_Y_SPACING = 10
+LETTER_X_SPACING = 20
+LETTER_Y_SPACING = 20
 
 # Global Variables
 
@@ -60,11 +60,12 @@ current_guess = []
 current_guess_string = ""
 
 # Calculate the size of each square.
-square_size = ((WIDTH - LETTER_X_SPACING * (word_length - 1)) / word_length) / 3
+square_size = (WIDTH - (LETTER_X_SPACING * (word_length - 1))) / (word_length * 3)
+
 
 # Calculate the starting position of the grid.
-start_x = (WIDTH - (square_size * word_length)) / 2
-start_y = (HEIGHT - (square_size * max_guesses)) / 10
+start_x = (WIDTH - ((square_size * word_length) + (LETTER_X_SPACING * (word_length - 1)))) / 2
+start_y = (HEIGHT - ((square_size * max_guesses) + (LETTER_Y_SPACING * (max_guesses - 1)))) / max_guesses
 
 # current_letter_bg_x is used to keep track of where the next letter will be drawn.
 current_letter_bg_x = start_x
