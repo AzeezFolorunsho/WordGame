@@ -45,7 +45,10 @@ pygame.display.update()
 # defines the spacing between letters.
 LETTER_X_SPACING = 68
 LETTER_Y_SPACING = 10
-LETTER_SIZE = 65
+LETTER_SIZE = 60
+
+# defines where the first letter will be drawn.
+LETTER_BG_X = (WIDTH - LETTER_X_SPACING*5) / 2
 
 # Global Variables
 
@@ -66,12 +69,6 @@ guesses = [[]] * max_guesses
 current_guess = []
 current_guess_string = ""
 
-# calculate the size of each letter square.
-square_size = ((WIDTH - LETTER_X_SPACING * (word_length - 1)) / word_length) / 3
-
-# defines where the first letter will be drawn on the x axis.
-LETTER_BG_X = (WIDTH - square_size * word_length) / 2
-
 # current_letter_bg_x is used to keep track of where the next letter will be drawn.
 current_letter_bg_x = LETTER_BG_X
 
@@ -89,24 +86,23 @@ def draw_guide():
     center_line_y = pygame.draw.rect(SCREEN, "black", ((WIDTH/2, 0), (2, HEIGHT)))
 draw_guide()
 
-# draws the empty grid of squares on the screen basesed on the lenggth of the word and the number of guesses.
 class Grid():
-    # global square_size
-
+    # Calculate the number of squares to draw based on the word length and number of guesses.
+    squares_to_draw = word_length * max_guesses
+    # Calculate the size of each square.
+    square_size = ((WIDTH - LETTER_X_SPACING * (word_length - 1)) / word_length) / 3
     # Calculate the starting position of the grid.
     start_x = (WIDTH - square_size * word_length) / 2
     start_y = (HEIGHT - square_size * max_guesses) / 30
 
     @staticmethod
-    def draw_grid(square_size = square_size, start_x = start_x, start_y = start_y):
+    def draw_grid(squares_to_draw = squares_to_draw, square_size = square_size, start_x = start_x, start_y = start_y):
         # Draw the squares.
-        for i in range(max_guesses):
-            y = start_y
-            y += i * (square_size + LETTER_Y_SPACING)
-            for j in range(word_length):
-                x = start_x + (j % word_length) * (square_size + LETTER_X_SPACING - 65)
-                pygame.draw.rect(SCREEN, "white", (x, y, square_size, square_size))
-                pygame.draw.rect(SCREEN, OUTLINE, (x, y, square_size, square_size), 3)
+        for i in range(squares_to_draw):
+            x = start_x + (i % word_length) * (square_size + LETTER_X_SPACING - 65)
+            y = start_y + (i // word_length) * (square_size + LETTER_Y_SPACING - 5)
+            pygame.draw.rect(SCREEN, "white", (x, y, square_size, square_size))
+            pygame.draw.rect(SCREEN, OUTLINE, (x, y, square_size, square_size), 3)
     pygame.display.update()
 Grid.draw_grid()
 
@@ -263,7 +259,7 @@ def create_new_letter():
     global current_guess_string, current_letter_bg_x
     current_guess_string += key_pressed
     new_letter = Letter(key_pressed, (current_letter_bg_x, guesses_count*80 + LETTER_Y_SPACING))
-    current_letter_bg_x += LETTER_X_SPACING 
+    current_letter_bg_x += LETTER_X_SPACING
     guesses[guesses_count].append(new_letter)
     current_guess.append(new_letter)
     for guess in guesses:
