@@ -9,7 +9,7 @@ pygame.init()
 
 # CONSTANTS
 
-WIDTH, HEIGHT = 1380, 720
+WIDTH, HEIGHT = 1280, 720
 
 SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
 
@@ -30,16 +30,15 @@ FILLED_OUTLINE = "#878a8c"
 # tempraraly "coder" for testing purposes, change to random.choice(WORDS).
 CORRECT_WORD = "coder"
 
-SCREEN_color = "white"
-SCREEN.fill(SCREEN_color)
+SCREEN.fill(WHITE)
 # SCREEN.blit(BACKGROUND, BACKGROUND_RECT)
 pygame.display.update()
 
 # defines the size of leters and spacing between letter boxes in the grid.
-LETTER_SIZE = 50
+LETTER_SIZE = 25
 LETTER_BOX_SIZE = LETTER_SIZE * 2
-LETTER_BOX_X_SPACING = LETTER_BOX_SIZE // 3
-LETTER_BOX_Y_SPACING = LETTER_BOX_SIZE // 3
+LETTER_BOX_X_SPACING = LETTER_BOX_SIZE * 1.4
+LETTER_BOX_Y_SPACING = LETTER_BOX_SIZE // 2
 
 # inisilizes the font of the guessed letter.
 GUESSED_LETTER_FONT = pygame.font.Font("assets/FreeSansBold.otf", LETTER_SIZE)
@@ -66,7 +65,7 @@ current_guess_string = ""
 
 # defines where the first letter will be drawn on the x and y axis.
 STARTING_LETTER_BG_X = (WIDTH - LETTER_BOX_SIZE * word_length) / 2
-STARTING_LETTER_BG_Y = (HEIGHT - LETTER_BOX_SIZE * max_guesses) / 30
+STARTING_LETTER_BG_Y = (HEIGHT - (LETTER_BOX_SIZE * max_guesses)) / 8
 
 # current_letter_bg_x is used to keep track of where the next letter will be drawn.
 current_letter_bg_x = STARTING_LETTER_BG_X
@@ -75,9 +74,9 @@ current_letter_bg_x = STARTING_LETTER_BG_X
 game_result = ""
 
 # inisilaising indicator
-indicat = Indicator(SCREEN, STARTING_LETTER_BG_X, STARTING_LETTER_BG_Y)
-indica = Indicator
+Indicator.draw_indicators(SCREEN, STARTING_LETTER_BG_X, HEIGHT - (STARTING_LETTER_BG_Y * max_guesses) - 100)
 # indicat.draw_indicators()
+# indicators_rect = ((starting_x, starting_y), (len(ALPHABET[0]) * LETTER_BOX_SIZE, len(ALPHABET) * LETTER_BOX_SIZE))
 
 # GAME FUNCTIONS
 
@@ -182,7 +181,7 @@ def check_guess(guess_to_check):
 
 def play_again():
     # Puts the play again text on the screen, genarates a box covering indicators.
-    pygame.draw.rect(SCREEN, SCREEN_color, (indicators[0].x, indicators[0].y, ((indicators[9].x - indicators[0].x) + (LETTER_BOX_SIZE - 10)), ((indicators[-1].y - indicators[0].y) + (LETTER_BOX_SIZE + 10))))
+    pygame.draw.rect(SCREEN, WHITE, (indicators[0].x, indicators[0].y, ((indicators[9].x - indicators[0].x) + (LETTER_BOX_SIZE - 10)), ((indicators[-1].y - indicators[0].y) + (LETTER_BOX_SIZE + 10))))
     play_again_font = pygame.font.Font("assets/FreeSansBold.otf", 40)
     play_again_text = play_again_font.render("Press ENTER to Play Again!", True, "black")
     play_again_rect = play_again_text.get_rect(center=(WIDTH/2, HEIGHT / 1.4))
@@ -206,7 +205,7 @@ def reset():
     draw_guide()
 
     Grid.draw_grid()
-    indicat.draw_indicators()
+    Indicator.draw_indicators()
 
     pygame.display.update()
 
