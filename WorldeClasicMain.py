@@ -37,7 +37,7 @@ SCREEN.fill(WHITE)
 pygame.display.update()
 
 # defines the spacing between letters.
-LETTER_X_SPACING = 20
+LETTER_X_SPACING = 8
 LETTER_Y_SPACING = 20
 
 # Global Variables
@@ -60,12 +60,12 @@ current_guess = []
 current_guess_string = ""
 
 # Calculate the size of each square.
-square_size = (WIDTH - (LETTER_X_SPACING * (word_length - 1))) / (word_length * 3)
+square_size = (WIDTH - (LETTER_X_SPACING * (word_length - 1))) / (word_length * 4)
 
 
 # Calculate the starting position of the grid.
 start_x = (WIDTH - ((square_size * word_length) + (LETTER_X_SPACING * (word_length - 1)))) / 2
-start_y = (HEIGHT - ((square_size * max_guesses) + (LETTER_Y_SPACING * (max_guesses - 1)))) / max_guesses
+start_y = (HEIGHT - ((square_size * max_guesses) + (LETTER_Y_SPACING * (max_guesses - 1)))) / (max_guesses + square_size)
 
 # current_letter_bg_x is used to keep track of where the next letter will be drawn.
 current_letter_bg_x = start_x
@@ -87,17 +87,16 @@ draw_guide()
 
 class Grid():
     # Calculate the number of squares to draw based on the word length and number of guesses.
-    squares_to_draw = word_length * max_guesses
-
     @staticmethod
-    def draw_grid(squares_to_draw = squares_to_draw, square_size = square_size, start_x = start_x, start_y = start_y):
+    def draw_grid(square_size = square_size, start_x = start_x, start_y = start_y):
         # Draw the squares.
-        for i in range(squares_to_draw):
-            x = start_x + (i % word_length) * (square_size + LETTER_X_SPACING - 63)
-            y = start_y + (i // word_length) * (square_size + LETTER_Y_SPACING - 5)
-            pygame.draw.rect(SCREEN, "white", (x, y, square_size, square_size))
-            pygame.draw.rect(SCREEN, OUTLINE, (x, y, square_size, square_size), 3)
-    pygame.display.update()
+        for i in range(max_guesses):
+            for j in range(word_length):
+                x = start_x + j * (square_size + LETTER_X_SPACING)
+                y = start_y + i * (square_size + LETTER_Y_SPACING)
+                pygame.draw.rect(SCREEN, "white", (x, y, square_size, square_size))
+                pygame.draw.rect(SCREEN, OUTLINE, (x, y, square_size, square_size), 3)
+        pygame.display.update()
 Grid.draw_grid()
 
 # create individual letters that can be added to a word guess in the game.
@@ -111,9 +110,9 @@ class Letter:
         self.bg_y = bg_position[1]
         self.bg_rect = (self.bg_x, self.bg_y, square_size, square_size)
         self.text = text
-        self.text_position = (self.bg_x+30, self.bg_y+30)
+        self.text_position = (self.bg_x + (square_size / 2), self.bg_y + (square_size / 2))
         self.text_surface = GUESSED_LETTER_FONT.render(self.text, True, self.text_color)
-        self.text_rect = self.text_surface.get_rect(center=self.text_position)
+        self.text_rect = self.text_surface.get_rect(center = self.text_position)
 
     def draw(self):
         # Puts the letter and text on the screen at the desired positions.
@@ -136,14 +135,15 @@ class Indicator:
         self.x = x
         self.y = y
         self.text = letter
-        self.rect = (self.x, self.y, square_size, square_size)
+        self.text_pos = (self.x + ((square_size / 1.5) / 2), self.y + (square_size / 2.5))
+        self.rect = (self.x, self.y, square_size / 1.5, square_size)
         self.bg_color = OUTLINE
 
     def draw(self):
         # Puts the indicator and its text on the screen at the desired position.
         pygame.draw.rect(SCREEN, self.bg_color, self.rect)
         self.text_surface = AVAILABLE_LETTER_FONT.render(self.text, True, "white")
-        self.text_rect = self.text_surface.get_rect(center=(self.x+27, self.y+30))
+        self.text_rect = self.text_surface.get_rect(center = self.text_pos)
         SCREEN.blit(self.text_surface, self.text_rect)
         pygame.display.update()
 
@@ -156,20 +156,22 @@ class Indicator:
     @staticmethod
     def draw_indicators():
     # Drawing the indicators on the screen.
-        global indicators, ALPHABET
-        indicator_x, indicator_y = start_x - (square_size * word_length + LETTER_X_SPACING) /2, start_y + (square_size * max_guesses + LETTER_Y_SPACING) * 1.1
+        global indicators
+        
+        indicator_x = start_x - ((square_size * word_length) - LETTER_X_SPACING )/ word_length
+        indicator_y = start_y + ((square_size * max_guesses) + (LETTER_Y_SPACING * (max_guesses - 1))) + (LETTER_Y_SPACING / 2)
 
         for i in range(3):
             for letter in ALPHABET[i]:
                 new_indicator = Indicator(indicator_x, indicator_y, letter)
                 indicators.append(new_indicator)
                 new_indicator.draw()
-                indicator_x += LETTER_X_SPACING * 1.1
-            indicator_y += LETTER_Y_SPACING * 8
+                indicator_x += square_size - LETTER_X_SPACING * 2
+            indicator_y += square_size + LETTER_X_SPACING * 2
             if i == 0:
-                indicator_x = start_x - (square_size * word_length + LETTER_X_SPACING) / 2.5
+                indicator_x = start_x - ((square_size * word_length) - LETTER_X_SPACING) / (word_length * 1.8)
             elif i == 1:
-                indicator_x = start_x - (square_size * word_length + LETTER_X_SPACING) / 4.5
+                indicator_x = start_x - ((square_size * word_length) - LETTER_X_SPACING) / (word_length) / 12
 Indicator.draw_indicators()
 
 def check_guess(guess_to_check):
@@ -230,7 +232,6 @@ def reset():
     # Resets all global variables to their default states.
     global guesses_count, CORRECT_WORD, guesses, current_guess, current_guess_string, game_result
     SCREEN.fill("white")
-    # SCREEN.blit(BACKGROUND, BACKGROUND_RECT)
     guesses_count = 0
     CORRECT_WORD = random.choice(WORDS)
     guesses = [[]] * max_guesses
@@ -252,8 +253,9 @@ def create_new_letter():
     # Creates a new letter and adds it to the guess.
     global current_guess_string, current_letter_bg_x, current_letter_bg_y
     current_guess_string += key_pressed
-    new_letter = Letter(key_pressed, (current_letter_bg_x, guesses_count * square_size + LETTER_Y_SPACING))
-    current_letter_bg_x += LETTER_X_SPACING + 4
+    new_letter = Letter(key_pressed, (current_letter_bg_x, current_letter_bg_y))
+    current_letter_bg_x += LETTER_X_SPACING
+    current_letter_bg_y += LETTER_Y_SPACING
 
     guesses[guesses_count].append(new_letter)
     current_guess.append(new_letter)
