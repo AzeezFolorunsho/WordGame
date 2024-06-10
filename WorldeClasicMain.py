@@ -23,6 +23,7 @@ YELLOW = "#c9b458"
 GREY = "#787c7e"
 OUTLINE = "#d3d6da"
 FILLED_OUTLINE = "#878a8c"
+Background_color = WHITE
 
 # tempraraly "coder" for testing purposes, change to random.choice(WORDS).
 CORRECT_WORD = "coder"
@@ -32,7 +33,7 @@ ALPHABET = ["QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM"]
 GUESSED_LETTER_FONT = pygame.font.Font("assets/FreeSansBold.otf", 50)
 AVAILABLE_LETTER_FONT = pygame.font.Font("assets/FreeSansBold.otf", 25)
 
-SCREEN.fill(WHITE)
+SCREEN.fill(Background_color)
 
 pygame.display.update()
 
@@ -169,9 +170,9 @@ class Indicator:
                 indicator_x += square_size - LETTER_X_SPACING * 2
             indicator_y += square_size + LETTER_X_SPACING * 2
             if i == 0:
-                indicator_x = start_x - ((square_size * word_length) - LETTER_X_SPACING) / (word_length * 1.8)
+                indicator_x = (start_x - ((square_size * word_length) - LETTER_X_SPACING )/ word_length) + (new_indicator.rect[2] / 2)
             elif i == 1:
-                indicator_x = start_x - ((square_size * word_length) - LETTER_X_SPACING) / (word_length) / 12
+                indicator_x = (start_x - ((square_size * word_length) - LETTER_X_SPACING )/ word_length) + (new_indicator.rect[2] * 1.6)
 Indicator.draw_indicators()
 
 def check_guess(guess_to_check):
@@ -231,7 +232,7 @@ def play_again():
 def reset():
     # Resets all global variables to their default states.
     global guesses_count, CORRECT_WORD, guesses, current_guess, current_guess_string, game_result
-    SCREEN.fill("white")
+    SCREEN.fill(Background_color)
     guesses_count = 0
     CORRECT_WORD = random.choice(WORDS)
     guesses = [[]] * max_guesses
@@ -251,11 +252,12 @@ def reset():
 
 def create_new_letter():
     # Creates a new letter and adds it to the guess.
-    global current_guess_string, current_letter_bg_x, current_letter_bg_y
+    global current_guess_string, current_letter_bg_x, current_letter_bg_y, guesses_count
+
     current_guess_string += key_pressed
+    current_letter_bg_y = start_y + guesses_count * (square_size + LETTER_Y_SPACING)    
     new_letter = Letter(key_pressed, (current_letter_bg_x, current_letter_bg_y))
-    current_letter_bg_x += LETTER_X_SPACING
-    current_letter_bg_y += LETTER_Y_SPACING
+    current_letter_bg_x = start_x + len(current_guess_string) * (square_size + LETTER_X_SPACING)    
 
     guesses[guesses_count].append(new_letter)
     current_guess.append(new_letter)
@@ -270,7 +272,8 @@ def delete_letter():
     guesses[guesses_count].pop()
     current_guess_string = current_guess_string[:-1]
     current_guess.pop()
-    current_letter_bg_x -= LETTER_X_SPACING + 4
+    current_letter_bg_x = start_x + len(current_guess_string) * (square_size + LETTER_X_SPACING)
+    
 
 while True:
     if game_result != "":
