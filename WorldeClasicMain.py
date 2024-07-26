@@ -274,7 +274,7 @@ def delete_letter():
     current_guess.pop()
     current_letter_bg_x = start_x + len(current_guess_string) * (square_size + LETTER_X_SPACING)
     
-
+# Game Loop
 while True:
     if game_result != "":
         play_again()
