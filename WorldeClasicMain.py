@@ -2,6 +2,8 @@ import pygame
 import sys
 import random
 from words import *
+from Funtions.grid import Grid
+#from Funtions.button import Button
 
 # initiates pygame session allowing pygame functions to be used .
 pygame.init()
@@ -80,6 +82,9 @@ game_result = ""
 
 # GAME FUNCTIONS
 
+example = Grid(SCREEN,square_size, max_guesses, word_length, LETTER_X_SPACING, LETTER_Y_SPACING, start_x, start_y)
+example.draw_grid()
+
 # temporary guides for checking alingment.
 def draw_guide():
     center_line_x = pygame.draw.rect(SCREEN, "black", ((0, HEIGHT/2), (WIDTH, 2)))
@@ -98,7 +103,7 @@ class Grid():
                 pygame.draw.rect(SCREEN, "white", (x, y, square_size, square_size))
                 pygame.draw.rect(SCREEN, OUTLINE, (x, y, square_size, square_size), 3)
         pygame.display.update()
-Grid.draw_grid()
+#Grid.draw_grid()
 
 # create individual letters that can be added to a word guess in the game.
 class Letter:
