@@ -16,6 +16,7 @@ class Letter:
         self.GUESSED_LETTER_FONT = GUESSED_LETTER_FONT
         self.SCREEN = SCREEN
         self.FILLED_OUTLINE = FILLED_OUTLINE
+        self.OUTLINE = "#d3d6da"
 
     # Puts the letter and text on the screen at the desired positions.
     def draw(self):
@@ -29,5 +30,5 @@ class Letter:
     # Fills the letter's spot with the default square, emptying it.
     def delete(self):
         pygame.draw.rect(self.SCREEN, "white", self.bg_rect)
-        pygame.draw.rect(self.SCREEN, OUTLINE, self.bg_rect, 3)
+        pygame.draw.rect(self.SCREEN, self.OUTLINE, self.bg_rect, 3)
         pygame.display.update()
