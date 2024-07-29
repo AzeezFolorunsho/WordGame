@@ -3,7 +3,7 @@ import sys
 import random
 from words import *
 from Funtions.grid import Grid
-from Funtions.letters import Letter
+from Funtions.letter import Letter
 
 
 # initiates pygame session allowing pygame functions to be used .
@@ -64,7 +64,8 @@ current_guess = []
 current_guess_string = ""
 
 # Calculate the size of each square.
-square_size = (WIDTH - (LETTER_X_SPACING * (word_length - 1))) / (word_length * 4)
+square_size = 62.4
+
 
 
 # Calculate the starting position of the grid.
