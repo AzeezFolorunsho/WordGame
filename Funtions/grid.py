@@ -4,8 +4,8 @@ OUTLINE = "#d3d6da"
 
 class Grid():
     # Calculate the number of squares to draw based on the word length and number of guesses.
-    def __init__(self, screen,square_size, max_guesses, word_length, letter_x_spaces, letter_y_spaces, start_x, start_y) -> None:
-        self.screen = screen
+    def __init__(self, SCREEN,square_size, max_guesses, word_length, letter_x_spaces, letter_y_spaces, start_x, start_y) -> None:
+        self.SCREEN = SCREEN
         self.square_size = square_size
         self.max_guesses = max_guesses
         self.word_length = word_length
@@ -19,6 +19,6 @@ class Grid():
             for j in range(self.word_length):
                 x = self.start_x + j * (self.square_size + self.letter_x_spaces)
                 y = self.start_y + i * (self.square_size + self.letter_y_spaces)
-                pygame.draw.rect(self.screen, "white", (x, y, self.square_size, self.square_size))
-                pygame.draw.rect(self.screen, OUTLINE, (x, y, self.square_size, self.square_size), 3)
+                pygame.draw.rect(self.SCREEN, "white", (x, y, self.square_size, self.square_size))
+                pygame.draw.rect(self.SCREEN, OUTLINE, (x, y, self.square_size, self.square_size), 3)
         pygame.display.update()
