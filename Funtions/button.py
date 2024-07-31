@@ -9,6 +9,9 @@ class Button():
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
         self.clicked = False
+    
+    def set_xand_y(self, x, y):
+        self.rect.topleft = (x, y)
         
     def draw(self, screen):
         action = False
