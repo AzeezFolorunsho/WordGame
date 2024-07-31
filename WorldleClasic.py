@@ -2,8 +2,8 @@ import pygame
 import sys
 import random
 from words import *
-from Funtions.grid import Grid
-from Funtions.letter import Letter
+from Funtions import grid
+#from Funtions import 
 
 
 # initiates pygame session allowing pygame functions to be used .
@@ -17,7 +17,7 @@ SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
 
 ICON = pygame.image.load("assets/wordle+logo.png")
 pygame.display.set_icon(ICON)
-pygame.display.set_caption("Wordle+")
+pygame.display.set_caption("Wordle+ Clasic")
 
 WHITE = "#FFFFFF"
 BLACK = "#000000"
@@ -84,8 +84,8 @@ game_result = ""
 
 # GAME FUNCTIONS
 
-example = Grid(SCREEN,square_size, max_guesses, word_length, LETTER_X_SPACING, LETTER_Y_SPACING, start_x, start_y)
-example.draw_grid()
+guess_grid = grid.Text_box_grid(square_size, max_guesses, word_length, LETTER_X_SPACING, LETTER_Y_SPACING, start_x, start_y)
+guess_grid.draw_grid(SCREEN)
 
 # temporary guides for checking alingment.
 def draw_guide():
