@@ -237,26 +237,27 @@ def delete_letter():
     current_guess.pop()
     current_letter_bg_x = start_x + len(current_guess_string) * (square_size + LETTER_X_SPACING)
     
-# Game Loop
-while True:
-    if game_result != "":
-        play_again()
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            sys.exit()
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_RETURN:
-                if game_result != "":
-                    reset()
+def play_classic():
+    # Game Loop
+    while True:
+        if game_result != "":
+            play_again()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RETURN:
+                    if game_result != "":
+                        reset()
+                    else:
+                        if len(current_guess_string) == word_length and current_guess_string.lower() in WORDS:
+                            check_guess(current_guess)
+                elif event.key == pygame.K_BACKSPACE:
+                    if len(current_guess_string) > 0:
+                        delete_letter()
                 else:
-                    if len(current_guess_string) == word_length and current_guess_string.lower() in WORDS:
-                        check_guess(current_guess)
-            elif event.key == pygame.K_BACKSPACE:
-                if len(current_guess_string) > 0:
-                    delete_letter()
-            else:
-                key_pressed = event.unicode.upper()
-                if key_pressed in "QWERTYUIOPASDFGHJKLZXCVBNM" and key_pressed != "":
-                    if len(current_guess_string) < word_length:
-                        create_new_letter()
+                    key_pressed = event.unicode.upper()
+                    if key_pressed in "QWERTYUIOPASDFGHJKLZXCVBNM" and key_pressed != "":
+                        if len(current_guess_string) < word_length:
+                            create_new_letter()

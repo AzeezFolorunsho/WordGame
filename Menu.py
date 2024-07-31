@@ -34,7 +34,7 @@ SCREEN.fill(BACKGROUND_COLOR)
 # Update the display
 pygame.display.update()
 
-# Gobal Variables
+# Global Variables
 
 # starting x and y for game buttons
 starting_x = 100
