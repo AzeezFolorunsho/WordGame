@@ -77,6 +77,9 @@ hangman_game_selector = game_selector(hangman_button, "Hangman")
 crosswordle_game_selector = game_selector(crosswordle_button, "Crosswordle")
 vs_ai_game_selector = game_selector(vs_ai_button, "Vs AI")
 
+draw_text("WELCOME TO WORDLE+", font, BLACK, SCREEN, (SCREEN_WIDTH/2) - 20, 50)
+
+
 # Game loop
 
 while True:
