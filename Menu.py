@@ -80,9 +80,6 @@ welcome_message.draw_line(SCREEN)
 
 pygame.display.update()
 
-draw_text("WELCOME TO WORDLE+", font, BLACK, SCREEN, (SCREEN_WIDTH/2) - 20, 50)
-
-
 # Game loop
 
 while True:
