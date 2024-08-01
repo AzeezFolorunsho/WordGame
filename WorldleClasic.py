@@ -3,7 +3,7 @@ import sys
 import random
 from words import *
 from Funtions import grid
-#from Funtions import 
+from Funtions import text_box
 
 
 # initiates pygame session allowing pygame functions to be used .
