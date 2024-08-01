@@ -204,7 +204,7 @@ def reset():
     game_result = ""
     draw_guide()
 
-    Grid.draw_grid()
+    guess_grid.draw_grid()
     Indicator.draw_indicators()
 
     pygame.display.update()
@@ -218,14 +218,14 @@ def create_new_letter():
 
     current_guess_string += key_pressed
     current_letter_bg_y = start_y + guesses_count * (square_size + LETTER_Y_SPACING)    
-    new_letter = Letter(key_pressed, (current_letter_bg_x, current_letter_bg_y), square_size, GUESSED_LETTER_FONT, SCREEN, FILLED_OUTLINE)
+    new_letter = text_box.Text_box(key_pressed, GUESSED_LETTER_FONT, square_size, BLACK, WHITE, OUTLINE, current_letter_bg_x, current_letter_bg_y, SCREEN)
     current_letter_bg_x = start_x + len(current_guess_string) * (square_size + LETTER_X_SPACING)    
 
     guesses[guesses_count].append(new_letter)
     current_guess.append(new_letter)
     for guess in guesses:
         for letter in guess:
-            letter.draw()
+            new_letter.draw()
 
 
 def delete_letter():
