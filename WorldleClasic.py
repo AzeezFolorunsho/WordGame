@@ -2,8 +2,9 @@ import pygame
 import sys
 import random
 from words import *
-from Funtions import grid
+from Funtions import text_box_grid
 from Funtions import text_box
+from Funtions import indication
 
 
 # initiates pygame session allowing pygame functions to be used .
@@ -66,7 +67,8 @@ current_guess_string = ""
 # Calculate the size of each square.
 square_size = 62.4
 
-
+# determins whether or not the color indicaions should be drawn
+indicate = True
 
 # Calculate the starting position of the grid.
 start_x = (WIDTH - ((square_size * word_length) + (LETTER_X_SPACING * (word_length - 1)))) / 2
@@ -84,7 +86,7 @@ game_result = ""
 
 # GAME FUNCTIONS
 
-guess_grid = grid.Text_box_grid(square_size, max_guesses, word_length, LETTER_X_SPACING, LETTER_Y_SPACING, start_x, start_y)
+guess_grid = text_box_grid.Text_box_grid(square_size, max_guesses, word_length, LETTER_X_SPACING, LETTER_Y_SPACING, start_x, start_y)
 guess_grid.draw_grid(SCREEN)
 
 # temporary guides for checking alingment.
@@ -141,33 +143,37 @@ Indicator.draw_indicators()
 def check_guess(guess_to_check):
     # Goes through each letter and checks if it should be green, yellow, or grey.
     # updates the indicators as well, and if all letters are green, the game is won.
-    global current_guess, current_guess_string, guesses_count, current_letter_bg_x, game_result
+    global current_guess, current_guess_string, guesses_count, current_letter_bg_x, game_result, guesses
+    color_chagnging = indication.Indication(indicators, guesses)
     game_decided = False
-    for i in range(word_length):
+
+    for i in range(len(guess_to_check)):
         lowercase_letter = guess_to_check[i].text.lower()
+        
         if lowercase_letter in CORRECT_WORD:
             if lowercase_letter == CORRECT_WORD[i]:
-                guess_to_check[i].bg_color = GREEN
-                for indicator in indicators:
-                    indicator.update(lowercase_letter, GREEN)
+                if indicate == True:
+                    color_chagnging.update(lowercase_letter, GREEN)
+                
+                # for indicator in indicators:
+                #     indicator.update(lowercase_letter, GREEN)
                 if not game_decided:
                     game_result = "W"
             else:
-                guess_to_check[i].bg_color = YELLOW
-                for indicator in indicators:
-                    indicator.update(lowercase_letter, YELLOW)
+                # guess_to_check[i].solid_color(YELLOW, WHITE)
+                # for indicator in indicators:
+                #     indicator.update(lowercase_letter, YELLOW)
                 game_result = ""
                 game_decided = True
         else:
-            guess_to_check[i].bg_color = GREY
-            for indicator in indicators:
-                indicator.update(lowercase_letter, GREY)
+            # guess_to_check[i].solid_color(GREY, WHITE)
+            # for indicator in indicators:
+            #     indicator.update(lowercase_letter, GREY)
             game_result = ""
             game_decided = True
         
         # chanes text color to white for better contrast and updates the text and screen.
-        guess_to_check[i].text_color = "white"
-        guess_to_check[i].draw()
+        #guesses[guesses_count][i].draw()
         pygame.display.update()
     
     # incraments the number of guesses and resets the current guess for the next guess.
@@ -204,7 +210,7 @@ def reset():
     game_result = ""
     draw_guide()
 
-    guess_grid.draw_grid()
+    guess_grid.draw_grid(SCREEN)
     Indicator.draw_indicators()
 
     pygame.display.update()
@@ -225,8 +231,8 @@ def create_new_letter():
     current_guess.append(new_letter)
     for guess in guesses:
         for letter in guess:
-            new_letter.draw()
-
+            letter.draw()
+            print(letter.bg_color)
 
 def delete_letter():
     # Deletes the last letter from the guess.
@@ -241,10 +247,12 @@ def delete_letter():
 while True:
     if game_result != "":
         play_again()
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
+    
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_RETURN:
                 if game_result != "":
