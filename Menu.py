@@ -25,8 +25,9 @@ tagline_font = pygame.font.SysFont('Comic Sans MS', 20)
 # Colors
 BLACK = "#000000"
 WHITE = "#FFFFFF"
+GREY = "#787c7e"
+RED = "#FF0000"
 BACKGROUND_COLOR = "#72E2FF"
-TAGLINE_COLOR = BLACK
 
 # fill the screen with a color to wipe away anything from last frame
 SCREEN.fill(BACKGROUND_COLOR)
@@ -50,10 +51,13 @@ crosswordle_img = pygame.image.load("assets/crosswordle_btn.png").convert_alpha(
 vs_ai_img = pygame.image.load("assets/vs_ai_btn.png").convert_alpha()
 
 # Button instances
-classic_button = button.Button(0, 0, classic_img, 0.5)
-hangman_button = button.Button(0, 0, hangman_img, 0.5)
-crosswordle_button = button.Button(0, 0, crosswordle_img, 0.5)
-vs_ai_button = button.Button(0, 0, vs_ai_img, 0.5)
+classic_button = button.img_Button(0, 0, classic_img, 0.5)
+hangman_button = button.img_Button(0, 0, hangman_img, 0.5)
+crosswordle_button = button.img_Button(0, 0, crosswordle_img, 0.5)
+vs_ai_button = button.img_Button(0, 0, vs_ai_img, 0.5)
+
+#text button example
+# text_button = button.Text_Button("text", tagline_font, BLACK, GREY, SCREEN_WIDTH/2, 200, 100, 50)
 
 # Functions and logic
 
@@ -61,10 +65,10 @@ def game_selector(button, tagline_message):
     global starting_x
 
     # changes button position to be in aligment with other buttons
-    button.set_xand_y(starting_x, starting_y)
+    button.set_x_and_y(starting_x, starting_y)
 
     # prints tagline message under button
-    tagline_text = text.Text(tagline_message, tagline_font, TAGLINE_COLOR, starting_x, starting_y + button.rect.height, button.rect.width)
+    tagline_text = text.Text(tagline_message, tagline_font, BLACK, starting_x, starting_y + button.rect.height, button.rect.width)
     tagline_text.draw_wrapped(SCREEN)
 
     # changes position for the next game selector
@@ -92,6 +96,8 @@ while True:
         print("Crosswordle")
     if vs_ai_button.draw(SCREEN):
         print("Vs AI")
+    # if text_button.draw(SCREEN):
+    #     print("text")
 
     # pygame.QUIT event means the user clicked X to close your window
     for event in pygame.event.get():
