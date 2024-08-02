@@ -6,6 +6,7 @@ from Funtions import text_box_grid
 from Funtions import text_box
 from Funtions import indication
 from Funtions import guides
+from Funtions import on_screen_keyboard
 
 
 # initiates pygame session allowing pygame functions to be used .
@@ -71,7 +72,7 @@ current_guess_string = ""
 square_size = 62.4
 
 # determins whether or not the color indicaions should be drawn
-indicate = True
+indicate = False
 
 # Calculate the starting position of the grid.
 start_x = (WIDTH - ((square_size * word_length) + (LETTER_X_SPACING * (word_length - 1)))) / 2
@@ -206,7 +207,6 @@ def reset():
     current_guess = []
     current_guess_string = ""
     game_result = ""
-    draw_guide()
 
     guess_grid.draw_grid(SCREEN)
     Indicator.draw_indicators()

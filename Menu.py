@@ -1,7 +1,9 @@
 import pygame
 import sys
-from Funtions import button
+from Funtions import buttons
 from Funtions import text
+from Funtions import on_screen_keyboard
+
 
 # pygame setup
 pygame.init()
@@ -19,8 +21,10 @@ pygame.display.set_icon(ICON)
 pygame.display.set_caption("Wordle+")
 
 # Fonts
-welcome_font = pygame.font.SysFont('Comic Sans MS', 50)
-tagline_font = pygame.font.SysFont('Comic Sans MS', 20)
+WELCOME_FONT = pygame.font.SysFont('Comic Sans MS', 50)
+TAGLINE_FONT = pygame.font.SysFont('Comic Sans MS', 20)
+
+
 
 # Colors
 BLACK = "#000000"
@@ -51,13 +55,20 @@ crosswordle_img = pygame.image.load("assets/crosswordle_btn.png").convert_alpha(
 vs_ai_img = pygame.image.load("assets/vs_ai_btn.png").convert_alpha()
 
 # Button instances
-classic_button = button.img_Button(0, 0, classic_img, 0.5)
-hangman_button = button.img_Button(0, 0, hangman_img, 0.5)
-crosswordle_button = button.img_Button(0, 0, crosswordle_img, 0.5)
-vs_ai_button = button.img_Button(0, 0, vs_ai_img, 0.5)
+classic_button = buttons.img_Button(0, 0, classic_img, 0.5)
+hangman_button = buttons.img_Button(0, 0, hangman_img, 0.5)
+crosswordle_button = buttons.img_Button(0, 0, crosswordle_img, 0.5)
+vs_ai_button = buttons.img_Button(0, 0, vs_ai_img, 0.5)
 
-#text button example
-# text_button = button.Text_Button("text", tagline_font, BLACK, GREY, SCREEN_WIDTH/2, 200, 100, 50)
+# tempoary tests:
+
+# textbutton example
+text_button = buttons.Text_Button("text", TAGLINE_FONT, BLACK, GREY, SCREEN_WIDTH/2, 200, 100, 50)
+# text_button.set_x_and_y(SCREEN_WIDTH/5, 200)
+text_button.x = SCREEN_WIDTH/5
+
+# on screen keyboard test
+keyboard = on_screen_keyboard.On_Screen_Keyboard(SCREEN_WIDTH / 2, SCREEN_HEIGHT/ 2, WELCOME_FONT, GREY)
 
 # Functions and logic
 
@@ -68,7 +79,7 @@ def game_selector(button, tagline_message):
     button.set_x_and_y(starting_x, starting_y)
 
     # prints tagline message under button
-    tagline_text = text.Text(tagline_message, tagline_font, BLACK, starting_x, starting_y + button.rect.height, button.rect.width)
+    tagline_text = text.Text(tagline_message, TAGLINE_FONT, BLACK, starting_x, starting_y + button.rect.height, button.rect.width)
     tagline_text.draw_wrapped(SCREEN)
 
     # changes position for the next game selector
@@ -79,7 +90,7 @@ hangman_game_selector = game_selector(hangman_button, "Guess the word before the
 crosswordle_game_selector = game_selector(crosswordle_button, "Try your best to guess the word, don't get crossed up.")
 vs_ai_game_selector = game_selector(vs_ai_button, "Prepare for the coming AI takeover, practice your skill against your future oppressors!")
 
-welcome_message = text.Text("Welcome to Wordle+!", welcome_font, WHITE, (SCREEN_WIDTH / 2) - (499 / 2), 50, SCREEN_WIDTH)
+welcome_message = text.Text("Welcome to Wordle+!", WELCOME_FONT, WHITE, (SCREEN_WIDTH / 2) - (499 / 2), 50, SCREEN_WIDTH)
 welcome_message.draw_line(SCREEN)
 
 pygame.display.update()
@@ -96,8 +107,10 @@ while True:
         print("Crosswordle")
     if vs_ai_button.draw(SCREEN):
         print("Vs AI")
-    # if text_button.draw(SCREEN):
-    #     print("text")
+    if text_button.draw(SCREEN):
+        print("text")
+    if keyboard.draw(SCREEN) == "Del":
+        print("DELETE")
 
     # pygame.QUIT event means the user clicked X to close your window
     for event in pygame.event.get():
