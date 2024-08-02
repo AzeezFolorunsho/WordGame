@@ -11,6 +11,7 @@ class Text_box:
         self.x = x
         self.y = y
         self.bg_rect = (self.x, self.y, self.square_size, self.square_size)
+        self.text_position = (self.x + (self.square_size / 2), self.y + (self.square_size / 2))
         self.screen = screen
 
     def draw_empty_box(self):
@@ -19,7 +20,6 @@ class Text_box:
 
     # Puts the letter and text on the screen at the desired positions.
     def draw(self):
-        self.text_position = (self.x + (self.square_size / 2), self.y + (self.square_size / 2))
         self.text_surface = self.font.render(self.text, True, self.text_color)
         self.text_rect = self.text_surface.get_rect(center=self.text_position)
 
@@ -31,22 +31,11 @@ class Text_box:
     def delete(self):
         self.draw_empty_box()
         pygame.display.update()
-    
-    def solid_bg(self, color):
-        self.bg_color = color
-        self.outline_color = color
-        self.text_surface = self.font.render(self.text, True, self.text_color)
-        self.text_rect = self.text_surface.get_rect(center=self.text_position)
-        self.draw()
 
-    def update(self, letter, updated_bg_color):
+    def update(self, letter, color):
         # Updates the color of the indicator according to the guessed letter, and the input color.
-
-        # if self.text == letter.upper():
-        #     self.text_color = "#FFFFFF"
-        #     self.bg_color = bg_color
-        #     self.outline_color = bg_color
-        #     self.draw()
-        self.text = letter
-        self.solid_bg_color(updated_bg_color)
-        self.draw()
+        if self.text == letter.upper():
+            self.text_color = "#FFFFFF"
+            self.bg_color = color
+            self.outline_color = color
+            self.draw()

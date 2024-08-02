@@ -5,6 +5,7 @@ from words import *
 from Funtions import text_box_grid
 from Funtions import text_box
 from Funtions import indication
+from Funtions import guides
 
 
 # initiates pygame session allowing pygame functions to be used .
@@ -25,6 +26,8 @@ BLACK = "#000000"
 GREEN = "#6aaa64"
 YELLOW = "#c9b458"
 GREY = "#787c7e"
+RED = "#FF0000"
+
 OUTLINE = "#d3d6da"
 FILLED_OUTLINE = "#878a8c"
 Background_color = WHITE
@@ -90,10 +93,9 @@ guess_grid = text_box_grid.Text_box_grid(square_size, max_guesses, word_length, 
 guess_grid.draw_grid(SCREEN)
 
 # temporary guides for checking alingment.
-def draw_guide():
-    center_line_x = pygame.draw.rect(SCREEN, "black", ((0, HEIGHT/2), (WIDTH, 2)))
-    center_line_y = pygame.draw.rect(SCREEN, "black", ((WIDTH/2, 0), (2, HEIGHT)))
-draw_guide()
+alignment_guides = guides.Guide(SCREEN)
+alignment_guides.draw_guides_cross(BLACK)
+alignment_guides.draw_guides_thirds(RED)
 
 class Indicator:
     def __init__(self, x, y, letter):
@@ -143,7 +145,7 @@ Indicator.draw_indicators()
 def check_guess(guess_to_check):
     # Goes through each letter and checks if it should be green, yellow, or grey.
     # updates the indicators as well, and if all letters are green, the game is won.
-    global current_guess, current_guess_string, guesses_count, current_letter_bg_x, game_result, guesses
+    global current_guess, current_guess_string, guesses_count, current_letter_bg_x, game_result
     color_chagnging = indication.Indication(indicators, guesses)
     game_decided = False
 
@@ -154,26 +156,22 @@ def check_guess(guess_to_check):
             if lowercase_letter == CORRECT_WORD[i]:
                 if indicate == True:
                     color_chagnging.update(lowercase_letter, GREEN)
-                
-                # for indicator in indicators:
-                #     indicator.update(lowercase_letter, GREEN)
+  
                 if not game_decided:
                     game_result = "W"
+
             else:
-                # guess_to_check[i].solid_color(YELLOW, WHITE)
-                # for indicator in indicators:
-                #     indicator.update(lowercase_letter, YELLOW)
+                if indicate == True:
+                    color_chagnging.update(lowercase_letter, YELLOW)
                 game_result = ""
                 game_decided = True
+
         else:
-            # guess_to_check[i].solid_color(GREY, WHITE)
-            # for indicator in indicators:
-            #     indicator.update(lowercase_letter, GREY)
+            if indicate == True:
+                color_chagnging.update(lowercase_letter, GREY)
             game_result = ""
             game_decided = True
         
-        # chanes text color to white for better contrast and updates the text and screen.
-        #guesses[guesses_count][i].draw()
         pygame.display.update()
     
     # incraments the number of guesses and resets the current guess for the next guess.
@@ -232,7 +230,6 @@ def create_new_letter():
     for guess in guesses:
         for letter in guess:
             letter.draw()
-            print(letter.bg_color)
 
 def delete_letter():
     # Deletes the last letter from the guess.

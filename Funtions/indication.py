@@ -16,7 +16,6 @@ class Indication:
 
         for guess in self.guesses:
             for letters in guess:
-                if letters.text == letter:
-                    letters.update(letter, updated_bg_color)
+                letters.update(letter, updated_bg_color)
 
         pygame.display.update()
