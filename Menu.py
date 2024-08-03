@@ -3,6 +3,7 @@ import sys
 from Funtions import buttons
 from Funtions import text
 from Funtions import on_screen_keyboard
+from Funtions import game_results
 
 
 # pygame setup
@@ -24,6 +25,7 @@ pygame.display.set_caption("Wordle+")
 WELCOME_FONT = pygame.font.SysFont('Comic Sans MS', 50)
 TAGLINE_FONT = pygame.font.SysFont('Comic Sans MS', 20)
 
+test_font = pygame.font.SysFont('Comic Sans MS', 35)
 
 
 # Colors
@@ -70,6 +72,9 @@ text_button.x = SCREEN_WIDTH/5
 # on screen keyboard test
 keyboard = on_screen_keyboard.On_Screen_Keyboard(SCREEN_WIDTH / 2, SCREEN_HEIGHT/ 2, WELCOME_FONT, GREY)
 
+# game results test
+results = game_results.Game_Results(0, 0, test_font, BLACK, RED, "You won! nice job", "100", "Press enter to play again", "cat", "Dolphin", "Tripod", "Oragnesy")
+
 # Functions and logic
 
 def game_selector(button, tagline_message):
@@ -111,6 +116,8 @@ while True:
         print("text")
     if keyboard.draw(SCREEN) == "Del":
         print("DELETE")
+    
+    results.draw_results(SCREEN)
 
     # pygame.QUIT event means the user clicked X to close your window
     for event in pygame.event.get():

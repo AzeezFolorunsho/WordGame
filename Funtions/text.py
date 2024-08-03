@@ -7,11 +7,22 @@ class Text:
         self.color = color
         self.x = x
         self.y = y
+        self.max_width = max_width
+
+        # text rendering
         self.rendered_text = self.font.render(self.text, True, self.color)
         self.text_rect = self.rendered_text.get_rect()
         self.text_rect.topleft = (self.x, self.y)
-        self.max_width = max_width
+        
+        # text wrapping
         self.wraped_text = self.wrap_text()
+        self.line_number = len(self.wraped_text)
+        
+        self.longest_line = max(self.wraped_text, key=lambda line: line.get_width())
+
+        # text size
+        self.width = self.longest_line.get_width()
+        self.height = self.rendered_text.get_height() * self.line_number
 
     def draw_line(self, surface):
         surface.blit(self.rendered_text, self.text_rect)
