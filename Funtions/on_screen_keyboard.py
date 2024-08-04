@@ -2,7 +2,7 @@ import pygame
 from Funtions.buttons import Text_Button
 
 class On_Screen_Keyboard:
-    def __init__(self, x, y, x_spacing, y_spacing, width, height, font, text_color, bg_color):
+    def __init__(self, x, y, x_spacing, y_spacing, width, height, font, text_color, bg_color, hover_color):
         # Initializes variables such as color, size, position, and letter.
         self.x = x
         self.y = y
@@ -13,6 +13,7 @@ class On_Screen_Keyboard:
         self.font = font
         self.text_color = text_color
         self.bg_color = bg_color
+        self.hover_color = hover_color
 
         self.key_button_list = []
 
@@ -36,7 +37,7 @@ class On_Screen_Keyboard:
                 if len(curent_key) > 1:
                     curent_width += self.width/2 * (len(curent_key) - 2)
                 
-                self.key_button_list.append(Text_Button(curent_key, self.font, self.text_color, self.bg_color, curent_x, curent_y, curent_width, self.height))
+                self.key_button_list.append(Text_Button(curent_key, self.font, self.text_color, self.bg_color, self.hover_color, curent_x, curent_y, curent_width, self.height))
 
                 # moves x for next button in a row
                 curent_x += curent_width + self.x_spacing
@@ -53,5 +54,4 @@ class On_Screen_Keyboard:
         # Updates the color of the indicator according to the guessed letter, and the input color.
         for keys in self.key_button_list:
             if keys.text.upper() == letter.upper():
-                if keys.bg_color != "#6aaa64" and keys.bg_color != "#c9b458":
-                    keys.bg_color = color
+                keys.bg_color_cache = color

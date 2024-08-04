@@ -33,11 +33,13 @@ class Img_Button():
         return action
     
 class Text_Button:
-    def __init__(self, text, font, text_color, bg_color, x, y, widith, height):
+    def __init__(self, text, font, text_color, bg_color, hover_color, x, y, widith, height):
         self.text = text
         self.font = font
         self.text_color = text_color
         self.bg_color = bg_color
+        self.hover_color = hover_color
+        self.bg_color_cache = bg_color
         self.x = x
         self.y = y
         self.width = widith
@@ -57,9 +59,6 @@ class Text_Button:
         self.width = widith_size
         self.height = height_size
     
-    def get_text(self):
-        return self.text
-    
     def draw(self, screen):
         # Draws the button background and text
         pygame.draw.rect(screen, self.bg_color, self.bg_rect)
@@ -72,10 +71,13 @@ class Text_Button:
         
         # Mouseover & clicking
         if self.bg_rect.collidepoint(pos):
+            self.bg_color = self.hover_color
             if pygame.mouse.get_pressed()[0] == 1 and self.clicked == False:
                 self.clicked = True
                 action = True
-        
+        else: 
+            self.bg_color = self.bg_color_cache
+
         if pygame.mouse.get_pressed()[0] == 0:
             self.clicked = False
         

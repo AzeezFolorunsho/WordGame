@@ -1,15 +1,15 @@
 import pygame
 import sys
 import random
+
 from words import *
 from Funtions.text import *
 from Funtions.textbox_grid import *
 from Funtions.textbox import *
-from Funtions.indication import *
 from Funtions.on_screen_keyboard import *
 from Funtions.game_results import *
 
-from Funtions import *
+# temporary imports will not be used in the final version
 from Funtions.guides import *
 
 
@@ -123,7 +123,7 @@ textbox_grid_obj = Textbox_grid(TEXTBOX_SIZE, max_guesses, correct_word_length, 
 textbox_grid_obj.draw_grid(SCREEN)
 
 # ONSCREEN_KEYBOARD (draws the on screen keyboard)
-on_screen_keyboard_obj = On_Screen_Keyboard(ON_SCREEN_KEYBOARD_START_X, ON_SCREEN_KEYBOARD_START_Y, ON_SCREEN_KEYBOARD_X_SPACING, ON_SCREEN_KEYBOARD_Y_SPACING, ON_SCREEN_KEYBOARD_WIDTH, ON_SCREEN_KEYBOARD_HEIGHT, ON_SCREEN_KEYBOARD_FONT, WHITE, LIGHT_GREY)
+on_screen_keyboard_obj = On_Screen_Keyboard(ON_SCREEN_KEYBOARD_START_X, ON_SCREEN_KEYBOARD_START_Y, ON_SCREEN_KEYBOARD_X_SPACING, ON_SCREEN_KEYBOARD_Y_SPACING, ON_SCREEN_KEYBOARD_WIDTH, ON_SCREEN_KEYBOARD_HEIGHT, ON_SCREEN_KEYBOARD_FONT, WHITE, LIGHT_GREY, MEDIUM_GREY)
     
 # GAME RESULTS (draws the game results)
 score = 100 # temporary random score
@@ -132,33 +132,38 @@ score = 100 # temporary random score
 
 # GAME FUNCTIONS
 
-def check_guess(guess_to_check):
+def update_guesses_bg_color(index, letter, color):
+    global on_screen_keyboard_obj
+    if indicate == True:
+        on_screen_keyboard_obj.update_bg_color(letter, color)
+        current_guess[index].update_bg_color(letter, color)
+
+def check_guess():
     # Goes through each letter and checks if it should be green, yellow, or grey.
-    # updates the indicators as well, and if all letters are green, the game is won.
+    # updates the on screen keyboard as well, and if all letters are green, the game is won.
     global current_guess, current_guess_string, guesses_count, current_textbox_x, game_result, on_screen_keyboard_obj
-    color_chagnging = Indication(on_screen_keyboard_obj, guesses)
+    
     game_decided = False
 
-    for i in range(len(guess_to_check)):
-        lowercase_letter = guess_to_check[i].text.lower()
+    for i in range(len(current_guess)):
+        lowercase_letter = current_guess[i].text.lower()
         
         if lowercase_letter in CORRECT_WORD:
             if lowercase_letter == CORRECT_WORD[i]:
-                if indicate == True:
-                    color_chagnging.update_bg_color(lowercase_letter, GREEN)
+                update_guesses_bg_color(i, lowercase_letter, GREEN)
   
                 if not game_decided:
                     game_result = "W"
 
             else:
-                if indicate == True:
-                    color_chagnging.update_bg_color(lowercase_letter, YELLOW)
+                update_guesses_bg_color(i, lowercase_letter, YELLOW)
+
                 game_result = ""
                 game_decided = True
 
         else:
-            if indicate == True:
-                color_chagnging.update_bg_color(lowercase_letter, GREY)
+            update_guesses_bg_color(i, lowercase_letter, GREY)
+
             game_result = ""
             game_decided = True
         
@@ -186,6 +191,7 @@ def reset():
     game_result = ""
 
     textbox_grid_obj.draw_grid(SCREEN)
+
     for letters in ALPHABET:
         on_screen_keyboard_obj.update_bg_color(letters, LIGHT_GREY)
 
@@ -202,6 +208,7 @@ def create_new_letter(letter):
 
     guesses[guesses_count].append(new_letter)
     current_guess.append(new_letter)
+
     for guess in guesses:
         for letter in guess:
             letter.draw()
@@ -229,7 +236,7 @@ while True:
                 reset()
             else:
                 if len(current_guess_string) == correct_word_length and current_guess_string.lower() in WORDS:
-                    check_guess(current_guess)
+                    check_guess()
         elif button_clicked == "DEL":
             if len(current_guess_string) > 0:
                 delete_letter()
@@ -252,7 +259,7 @@ while True:
                     reset()
                 else:
                     if len(current_guess_string) == correct_word_length and current_guess_string.lower() in WORDS:
-                        check_guess(current_guess)
+                        check_guess()
             elif event.key == pygame.K_BACKSPACE:
                 if len(current_guess_string) > 0:
                     delete_letter()
@@ -265,9 +272,9 @@ while True:
     if game_result != "":
         # play_again()
         if game_result == "W":
-            game_results_obj = Game_Results(0, 0, GAME_RESULTS_FONT, BLACK, WHITE, "You won! =^)", str(score), "Press ENTER to Play Again!", CORRECT_WORD)
+            game_results_obj = Game_Results(20, 20, GAME_RESULTS_FONT, BLACK, WHITE, "You won! =^)", str(score), "Press ENTER to Play Again!", CORRECT_WORD)
         else:
-            game_results_obj = Game_Results(0, 0, GAME_RESULTS_FONT, BLACK, WHITE, "You Lost! =^(", str(score), "Press ENTER to Play Again!", CORRECT_WORD)
+            game_results_obj = Game_Results(20, 20, GAME_RESULTS_FONT, BLACK, WHITE, "You Lost! =^(", str(score), "Press ENTER to Play Again!", CORRECT_WORD)
         
         game_results_obj.draw_results(SCREEN)
     
