@@ -2,6 +2,7 @@ import pygame
 import sys
 from Funtions import button
 from Funtions import text
+from WorldeClasicMain import play_classic
 
 # pygame setup
 pygame.init()
@@ -86,6 +87,7 @@ while True:
 
     if classic_button.draw(SCREEN):
         print("Classic")
+        play_classic()
     if hangman_button.draw(SCREEN):
         print("Hangman")
     if crosswordle_button.draw(SCREEN):
