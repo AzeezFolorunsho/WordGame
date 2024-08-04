@@ -12,6 +12,7 @@ class Text_box_grid():
         self.start_y = start_y
         self.outline_color = outline_color
         self.bg_color = bg_color
+        
     def draw_grid(self, screen):
         self.screen = screen
         # Draw the squares.

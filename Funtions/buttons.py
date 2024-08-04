@@ -42,9 +42,11 @@ class Text_Button:
         self.y = y
         self.width = widith
         self.height = height
+
         self.text_position = (self.x + (self.width / 2), self.y + (self.height / 2))
         self.text_surface = self.font.render(self.text, True, self.text_color)
         self.text_rect = self.text_surface.get_rect(center=self.text_position)
+        self.bg_rect = pygame.Rect(self.x, self.y, self.width, self.height)
         self.clicked = False
 
     def set_x_and_y(self, x_pos, y_pos):
@@ -60,7 +62,7 @@ class Text_Button:
     
     def draw(self, screen):
         # Draws the button background and text
-        pygame.draw.rect(screen, self.bg_color, self.text_rect)
+        pygame.draw.rect(screen, self.bg_color, self.bg_rect)
         screen.blit(self.text_surface, self.text_rect)
         pygame.display.update()
 
@@ -69,7 +71,7 @@ class Text_Button:
         pos = pygame.mouse.get_pos()
         
         # Mouseover & clicking
-        if self.text_rect.collidepoint(pos):
+        if self.bg_rect.collidepoint(pos):
             if pygame.mouse.get_pressed()[0] == 1 and self.clicked == False:
                 self.clicked = True
                 action = True

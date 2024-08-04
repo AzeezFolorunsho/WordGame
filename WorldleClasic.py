@@ -3,8 +3,8 @@ import sys
 import random
 from words import *
 from Funtions.text import *
-from Funtions.text_box_grid import *
-from Funtions.text_box import *
+from Funtions.textbox_grid import *
+from Funtions.textbox import *
 from Funtions.indication import *
 from Funtions.on_screen_keyboard import *
 from Funtions.game_results import *
@@ -53,27 +53,40 @@ GAME_RESULTS_FONT = pygame.font.Font("assets/FreeSansBold.otf", 40)
 #       a list of letters in the alphabet
 # ALPHABET = "QWERTYUIOPASDFGHJKLZXCVBNM"
 
-#   c). TEXTBOX SPACING (defines the spacing between letters)
+#   c). TEXTBOX:
+
+#       Calculate the starting position of the textbox_grid and textbox`es
+TEXTBOX_START_X = 468
+#       *IGNORE* a calculated x position: (SCREEN_WIDTH - ((square_size * word_length) + (TEXTBOX_X_SPACING * (word_length - 1)))) / 2
+TEXTBOX_START_Y = 3.6
+#       *IGNORE* a calculated y postion: (SCREEN_HEIGHT - ((square_size * max_guesses) + (TEXTBOX_Y_SPACING * (max_guesses - 1)))) / (max_guesses + square_size)
+
+#       textbox spacing
 TEXTBOX_X_SPACING = 8
 TEXTBOX_Y_SPACING = 20
 
-#   d). TEXTBOX POSITION AND SIZE
-
-#       Calculate the starting position of the grid.
-START_X = 468
-#       a calculated x position: (SCREEN_WIDTH - ((square_size * word_length) + (TEXTBOX_X_SPACING * (word_length - 1)))) / 2
-
-START_Y = 3.6
-#       a calculated y postion: (SCREEN_HEIGHT - ((square_size * max_guesses) + (TEXTBOX_Y_SPACING * (max_guesses - 1)))) / (max_guesses + square_size)
-
 #        Calculate the size of each square.
-TEXT_BOX_SIZE = 62.4
+TEXTBOX_SIZE = 62.4
+
+#   d). ON SCREEN KEYBOARD:
+
+#       Calculate the starting position of the on screen keyboard
+ON_SCREEN_KEYBOARD_START_X = SCREEN_WIDTH / 3
+ON_SCREEN_KEYBOARD_START_Y = SCREEN_HEIGHT / 1.5
+
+#       Calculate the spacing between each button
+ON_SCREEN_KEYBOARD_X_SPACING = 10
+ON_SCREEN_KEYBOARD_Y_SPACING = 20
+
+#       Calculate the size of each button
+ON_SCREEN_KEYBOARD_WIDTH = TEXTBOX_SIZE / 1.5 #42
+ON_SCREEN_KEYBOARD_HEIGHT = TEXTBOX_SIZE #62
 
 # 2) Global Variables (that will be used throughout the program)
 
 #   keeps track of where the next letter will be drawn
-current_textbox_x = START_X
-current_textbox_y = START_Y
+current_textbox_x = TEXTBOX_START_X
+current_textbox_y = TEXTBOX_START_Y
 
 #   word_length is the number of letters in the correct word.
 correct_word_length = len(CORRECT_WORD)
@@ -84,7 +97,7 @@ guesses_count = 0
 #   max_guesses is the maximum number of guesses that can be made.
 max_guesses = 6
 
-#   guesses is a 2D list that will store guesses. A guess will be a list of text_boxe objects.
+#   guesses is a 2D list that will store guesses. A guess will be a list of textboxe objects.
 #   The list will be iterated through and each letter in each guess will be drawn on the screen.
 guesses = [[]] * max_guesses
 
@@ -97,6 +110,8 @@ indicate = True
 
 # Indicators is a list storing all the Indicator object. An indicator is that button thing with all the letters you see.
 indicators = []
+
+# on_screen_keyboard_keys is a list storing all the on screen keyboard keys
 on_screen_keyboard_keys = []
 
 # game_result is used to keep track of if the game has been won or not.
@@ -105,32 +120,22 @@ game_result = ""
 # legacy code for testing purposes (TO BE REMOVED)
 ALPHABET = ["QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM"]
 
-# Experiment
-
-LETTER_KEYS = [["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"], 
-        ["A", "S", "D", "F", "G", "H", "J", "K", "L"], 
-        ["Z", "X", "C", "V", "B", "N", "M"]]
-
 #3.) GAME OBJECTS
 
-# TEXT_BOX_GRID (draws the empty grid based on the number of guesses and the length of the word)
-guess_grid = Text_box_grid(TEXT_BOX_SIZE, max_guesses, correct_word_length, TEXTBOX_X_SPACING, TEXTBOX_Y_SPACING, START_X, START_Y, LIGHT_GREY, WHITE)
+# temporary guides for checking alingment.
+alignment_guides = Guide(SCREEN)
+alignment_guides.draw_guides_cross(BLACK)
+alignment_guides.draw_guides_thirds(RED)
+
+# TEXTBOX_GRID (draws the empty grid based on the number of guesses and the length of the word)
+guess_grid = Text_box_grid(TEXTBOX_SIZE, max_guesses, correct_word_length, TEXTBOX_X_SPACING, TEXTBOX_Y_SPACING, TEXTBOX_START_X, TEXTBOX_START_Y, LIGHT_GREY, WHITE)
+guess_grid.draw_grid(SCREEN)
 
 # ONSCREEN_KEYBOARD (draws the on screen keyboard)
-on_screen_keyboard = On_Screen_Keyboard(START_X - TEXT_BOX_SIZE, START_Y + (TEXT_BOX_SIZE + TEXTBOX_Y_SPACING) * max_guesses, ON_SCREEN_KEYBOARD_FONT, MEDIUM_GREY)
+onscreen_keyboard = On_Screen_Keyboard(ON_SCREEN_KEYBOARD_START_X, ON_SCREEN_KEYBOARD_START_Y, ON_SCREEN_KEYBOARD_X_SPACING, ON_SCREEN_KEYBOARD_Y_SPACING, ON_SCREEN_KEYBOARD_WIDTH, ON_SCREEN_KEYBOARD_HEIGHT, ON_SCREEN_KEYBOARD_FONT, WHITE, LIGHT_GREY)
+onscreen_keyboard.draw(SCREEN)
 
 # GAME FUNCTIONS
-
-def generate_on_screen_keyboard():
-    # Generates the on screen keyboard keys
-    global on_screen_keyboard_keys
-    on_screen_keyboard_keys = []
-
-    
-
-    for row in LETTER_KEYS:
-        for key in LETTER_KEYS[row]:
-            on_screen_keyboard_keys.append(Text_Button(key, TEXT_BOX_SIZE, LETTER_KEYS.index(row) * (TEXT_BOX_SIZE + TEXTBOX_Y_SPACING), TEXT_BOX_SIZE, TEXT_BOX_SIZE, LIGHT_GREY, WHITE))
 
 class Indicator:
     def __init__(self, x, y, letter):
@@ -138,8 +143,8 @@ class Indicator:
         self.x = x
         self.y = y
         self.text = letter
-        self.text_pos = (self.x + ((TEXT_BOX_SIZE / 1.5) / 2), self.y + (TEXT_BOX_SIZE / 2.5))
-        self.rect = (self.x, self.y, TEXT_BOX_SIZE / 1.5, TEXT_BOX_SIZE)
+        self.text_pos = (self.x + ((TEXTBOX_SIZE / 1.5) / 2), self.y + (TEXTBOX_SIZE / 2.5))
+        self.rect = (self.x, self.y, TEXTBOX_SIZE / 1.5, TEXTBOX_SIZE)
         self.bg_color = LIGHT_GREY
 
     def draw(self):
@@ -161,21 +166,21 @@ class Indicator:
     # Drawing the indicators on the screen.
         global indicators
         
-        indicator_x = START_X - ((TEXT_BOX_SIZE * correct_word_length) - TEXTBOX_X_SPACING )/ correct_word_length
-        indicator_y = START_Y + ((TEXT_BOX_SIZE * max_guesses) + (TEXTBOX_Y_SPACING * (max_guesses - 1))) + (TEXTBOX_Y_SPACING / 2)
+        indicator_x = TEXTBOX_START_X - ((TEXTBOX_SIZE * correct_word_length) - TEXTBOX_X_SPACING )/ correct_word_length
+        indicator_y = TEXTBOX_START_Y + ((TEXTBOX_SIZE * max_guesses) + (TEXTBOX_Y_SPACING * (max_guesses - 1))) + (TEXTBOX_Y_SPACING / 2)
 
         for i in range(3):
             for letter in ALPHABET[i]:
                 new_indicator = Indicator(indicator_x, indicator_y, letter)
                 indicators.append(new_indicator)
                 new_indicator.draw()
-                indicator_x += TEXT_BOX_SIZE - TEXTBOX_X_SPACING * 2
-            indicator_y += TEXT_BOX_SIZE + TEXTBOX_X_SPACING * 2
+                indicator_x += TEXTBOX_SIZE - TEXTBOX_X_SPACING * 2
+            indicator_y += TEXTBOX_SIZE + TEXTBOX_X_SPACING * 2
             if i == 0:
-                indicator_x = (START_X - ((TEXT_BOX_SIZE * correct_word_length) - TEXTBOX_X_SPACING )/ correct_word_length) + (new_indicator.rect[2] / 2)
+                indicator_x = (TEXTBOX_START_X - ((TEXTBOX_SIZE * correct_word_length) - TEXTBOX_X_SPACING )/ correct_word_length) + (new_indicator.rect[2] / 2)
             elif i == 1:
-                indicator_x = (START_X - ((TEXT_BOX_SIZE * correct_word_length) - TEXTBOX_X_SPACING )/ correct_word_length) + (new_indicator.rect[2] * 1.6)
-Indicator.draw_indicators()
+                indicator_x = (TEXTBOX_START_X - ((TEXTBOX_SIZE * correct_word_length) - TEXTBOX_X_SPACING )/ correct_word_length) + (new_indicator.rect[2] * 1.6)
+# Indicator.draw_indicators()
 
 def check_guess(guess_to_check):
     # Goes through each letter and checks if it should be green, yellow, or grey.
@@ -213,7 +218,7 @@ def check_guess(guess_to_check):
     guesses_count += 1
     current_guess = []
     current_guess_string = ""
-    current_textbox_x = START_X
+    current_textbox_x = TEXTBOX_START_X
 
     # Checks if your out of guesses and havent guessed the correct word and end game.
     if guesses_count == max_guesses and game_result == "":
@@ -221,7 +226,7 @@ def check_guess(guess_to_check):
 
 def play_again():
     # Puts the play again text on the screen, genarates a box covering indicators.
-    pygame.draw.rect(SCREEN, "white", (indicators[0].x, indicators[0].y, ((indicators[9].x - indicators[0].x) + TEXT_BOX_SIZE), ((indicators[-1].y - indicators[0].y) + TEXT_BOX_SIZE)))
+    pygame.draw.rect(SCREEN, "white", (indicators[0].x, indicators[0].y, ((indicators[9].x - indicators[0].x) + TEXTBOX_SIZE), ((indicators[-1].y - indicators[0].y) + TEXTBOX_SIZE)))
     play_again_font = pygame.font.Font("assets/FreeSansBold.otf", 40)
     play_again_text = play_again_font.render("Press ENTER to Play Again!", True, "black")
     play_again_rect = play_again_text.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT / 1.4))
@@ -258,9 +263,9 @@ def create_new_letter(letter):
     global current_guess_string, current_textbox_x, current_textbox_y, guesses_count
 
     current_guess_string += letter
-    current_textbox_y = START_Y + guesses_count * (TEXT_BOX_SIZE + TEXTBOX_Y_SPACING)    
-    new_letter = Text_box(letter, GUESSED_LETTER_FONT, TEXT_BOX_SIZE, BLACK, WHITE, LIGHT_GREY, current_textbox_x, current_textbox_y, SCREEN)
-    current_textbox_x = START_X + len(current_guess_string) * (TEXT_BOX_SIZE + TEXTBOX_X_SPACING)    
+    current_textbox_y = TEXTBOX_START_Y + guesses_count * (TEXTBOX_SIZE + TEXTBOX_Y_SPACING)    
+    new_letter = TextBox(letter, GUESSED_LETTER_FONT, TEXTBOX_SIZE, BLACK, WHITE, LIGHT_GREY, current_textbox_x, current_textbox_y, SCREEN)
+    current_textbox_x = TEXTBOX_START_X + len(current_guess_string) * (TEXTBOX_SIZE + TEXTBOX_X_SPACING)    
 
     guesses[guesses_count].append(new_letter)
     current_guess.append(new_letter)
@@ -275,13 +280,12 @@ def delete_letter():
     guesses[guesses_count].pop()
     current_guess_string = current_guess_string[:-1]
     current_guess.pop()
-    current_textbox_x = START_X + len(current_guess_string) * (TEXT_BOX_SIZE + TEXTBOX_X_SPACING)
+    current_textbox_x = TEXTBOX_START_X + len(current_guess_string) * (TEXTBOX_SIZE + TEXTBOX_X_SPACING)
     
 # Game Loop
 while True:
 
     # draw the empty grid based on the number of guesses and the length of the word
-    guess_grid.draw_grid(SCREEN)
 
     # draw the on screen keyboard
     # button_clicked = on_screen_keyboard.draw(SCREEN)
@@ -300,11 +304,6 @@ while True:
     #         letter_pressed = button_clicked.upper()
     #         if len(current_guess_string) < correct_word_length:
     #             create_new_letter(letter_pressed)
-
-    # temporary guides for checking alingment.
-    alignment_guides = Guide(SCREEN)
-    alignment_guides.draw_guides_cross(BLACK)
-    alignment_guides.draw_guides_thirds(RED)
 
     if game_result != "":
         # play_again()
