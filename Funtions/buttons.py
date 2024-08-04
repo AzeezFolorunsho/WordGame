@@ -1,7 +1,7 @@
 import pygame
 
 # Button class
-class img_Button():
+class Img_Button():
     def __init__(self, x, y, image, scale):
         width = image.get_width()
         height = image.get_height()
@@ -79,4 +79,4 @@ class Text_Button:
         if pygame.mouse.get_pressed()[0] == 0:
             self.clicked = False
         
-        return self.text if action == True else False
+        return self.text if action == True else None

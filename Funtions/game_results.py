@@ -30,6 +30,10 @@ class Game_Results:
         # messages box
         self.background_rect = pygame.Rect(self.x, self.y, self.longest_line, self.message_height)
 
+    def set_finish_message(self, message):
+        self.finish_message = message
+        self.draw_results()
+
     def draw_results(self, screen):
         pygame.draw.rect(screen, self.bg_color, self.background_rect)
         self.finish_message_text.draw_line(screen)

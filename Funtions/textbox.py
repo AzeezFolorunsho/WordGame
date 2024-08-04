@@ -1,6 +1,6 @@
 import pygame
 
-class TextBox:
+class Textbox:
     def __init__(self, text, font, square_size, text_color, bg_color, outline_color, x, y, screen):
         self.text = text
         self.font = font
@@ -32,7 +32,7 @@ class TextBox:
         self.draw_empty_box()
         pygame.display.update()
 
-    def update(self, letter, color):
+    def update_bg_color(self, letter, color):
         # Updates the color of the indicator according to the guessed letter, and the input color.
         if self.text.upper() == letter.upper():
             self.text_color = "#FFFFFF"

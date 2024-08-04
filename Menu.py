@@ -57,10 +57,10 @@ crosswordle_img = pygame.image.load("assets/crosswordle_btn.png").convert_alpha(
 vs_ai_img = pygame.image.load("assets/vs_ai_btn.png").convert_alpha()
 
 # Button instances
-classic_button = buttons.img_Button(0, 0, classic_img, 0.5)
-hangman_button = buttons.img_Button(0, 0, hangman_img, 0.5)
-crosswordle_button = buttons.img_Button(0, 0, crosswordle_img, 0.5)
-vs_ai_button = buttons.img_Button(0, 0, vs_ai_img, 0.5)
+classic_button = buttons.Img_Button(0, 0, classic_img, 0.5)
+hangman_button = buttons.Img_Button(0, 0, hangman_img, 0.5)
+crosswordle_button = buttons.Img_Button(0, 0, crosswordle_img, 0.5)
+vs_ai_button = buttons.Img_Button(0, 0, vs_ai_img, 0.5)
 
 # tempoary tests:
 
@@ -70,7 +70,7 @@ text_button = buttons.Text_Button("text", TAGLINE_FONT, BLACK, GREY, SCREEN_WIDT
 text_button.x = SCREEN_WIDTH/5
 
 # on screen keyboard test
-keyboard = on_screen_keyboard.On_Screen_Keyboard(SCREEN_WIDTH / 2, SCREEN_HEIGHT/ 2, WELCOME_FONT, GREY)
+keyboard = on_screen_keyboard.On_Screen_Keyboard(SCREEN_WIDTH / 3.3, SCREEN_HEIGHT / 1.47, 10, 20, 62 / 1.5, 62, test_font, WHITE, GREY)
 
 # game results test
 results = game_results.Game_Results(0, 0, test_font, BLACK, RED, "You won! nice job", "100", "Press enter to play again", "cat", "Dolphin", "Tripod", "Oragnesy")
@@ -114,8 +114,8 @@ while True:
         print("Vs AI")
     # if text_button.draw(SCREEN):
     #     print("text")
-    # if keyboard.draw(SCREEN) == "Del":
-    #     print("DELETE")
+    if keyboard.draw(SCREEN) == "Q":
+        print("DELETE")
     
     # results.draw_results(SCREEN)
 

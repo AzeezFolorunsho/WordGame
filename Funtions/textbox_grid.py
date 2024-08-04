@@ -1,6 +1,6 @@
 import pygame
 
-class Text_box_grid():
+class Textbox_grid():
     # Calculate the number of squares to draw based on the word length and number of guesses.
     def __init__(self,square_size, rows, columns, x_spacing, y_spacing, start_x, start_y, outline_color, bg_color):
         self.square_size = square_size

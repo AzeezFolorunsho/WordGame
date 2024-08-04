@@ -38,7 +38,7 @@ RED = "#FF0000"
 
 BACKGROUND_COLOR = WHITE
 
-#       fill the screen with a color to wipe away anything from last frame
+# fill the screen with a color to wipe away anything from last frame
 SCREEN.fill(BACKGROUND_COLOR)
 
 #       the correct word, that is being guessed
@@ -48,10 +48,10 @@ CORRECT_WORD = "coder" # tempraraly "coder" for testing purposes, change to rand
 
 GUESSED_LETTER_FONT = pygame.font.Font("assets/FreeSansBold.otf", 50)
 ON_SCREEN_KEYBOARD_FONT = pygame.font.Font("assets/FreeSansBold.otf", 25)
-GAME_RESULTS_FONT = pygame.font.Font("assets/FreeSansBold.otf", 40)
+GAME_RESULTS_FONT = pygame.font.Font("assets/FreeSansBold.otf", 30)
 
 #       a list of letters in the alphabet
-# ALPHABET = "QWERTYUIOPASDFGHJKLZXCVBNM"
+ALPHABET = "QWERTYUIOPASDFGHJKLZXCVBNM"
 
 #   c). TEXTBOX:
 
@@ -71,8 +71,8 @@ TEXTBOX_SIZE = 62.4
 #   d). ON SCREEN KEYBOARD:
 
 #       Calculate the starting position of the on screen keyboard
-ON_SCREEN_KEYBOARD_START_X = SCREEN_WIDTH / 3
-ON_SCREEN_KEYBOARD_START_Y = SCREEN_HEIGHT / 1.5
+ON_SCREEN_KEYBOARD_START_X = SCREEN_WIDTH / 3.3
+ON_SCREEN_KEYBOARD_START_Y = SCREEN_HEIGHT / 1.47
 
 #       Calculate the spacing between each button
 ON_SCREEN_KEYBOARD_X_SPACING = 10
@@ -108,85 +108,35 @@ current_guess_string = ""
 # determins whether or not the color indicaions should be drawn
 indicate = True
 
-# Indicators is a list storing all the Indicator object. An indicator is that button thing with all the letters you see.
-indicators = []
-
-# on_screen_keyboard_keys is a list storing all the on screen keyboard keys
-on_screen_keyboard_keys = []
-
 # game_result is used to keep track of if the game has been won or not.
 game_result = ""
-
-# legacy code for testing purposes (TO BE REMOVED)
-ALPHABET = ["QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM"]
 
 #3.) GAME OBJECTS
 
 # temporary guides for checking alingment.
-alignment_guides = Guide(SCREEN)
-alignment_guides.draw_guides_cross(BLACK)
-alignment_guides.draw_guides_thirds(RED)
+guides_obj = Guide(SCREEN)
+guides_obj.draw_guides_cross(BLACK)
+guides_obj.draw_guides_thirds(RED)
 
 # TEXTBOX_GRID (draws the empty grid based on the number of guesses and the length of the word)
-guess_grid = Text_box_grid(TEXTBOX_SIZE, max_guesses, correct_word_length, TEXTBOX_X_SPACING, TEXTBOX_Y_SPACING, TEXTBOX_START_X, TEXTBOX_START_Y, LIGHT_GREY, WHITE)
-guess_grid.draw_grid(SCREEN)
+textbox_grid_obj = Textbox_grid(TEXTBOX_SIZE, max_guesses, correct_word_length, TEXTBOX_X_SPACING, TEXTBOX_Y_SPACING, TEXTBOX_START_X, TEXTBOX_START_Y, LIGHT_GREY, WHITE)
+textbox_grid_obj.draw_grid(SCREEN)
 
 # ONSCREEN_KEYBOARD (draws the on screen keyboard)
-onscreen_keyboard = On_Screen_Keyboard(ON_SCREEN_KEYBOARD_START_X, ON_SCREEN_KEYBOARD_START_Y, ON_SCREEN_KEYBOARD_X_SPACING, ON_SCREEN_KEYBOARD_Y_SPACING, ON_SCREEN_KEYBOARD_WIDTH, ON_SCREEN_KEYBOARD_HEIGHT, ON_SCREEN_KEYBOARD_FONT, WHITE, LIGHT_GREY)
-onscreen_keyboard.draw(SCREEN)
+on_screen_keyboard_obj = On_Screen_Keyboard(ON_SCREEN_KEYBOARD_START_X, ON_SCREEN_KEYBOARD_START_Y, ON_SCREEN_KEYBOARD_X_SPACING, ON_SCREEN_KEYBOARD_Y_SPACING, ON_SCREEN_KEYBOARD_WIDTH, ON_SCREEN_KEYBOARD_HEIGHT, ON_SCREEN_KEYBOARD_FONT, WHITE, LIGHT_GREY)
+    
+# GAME RESULTS (draws the game results)
+score = 100 # temporary random score
+
+# game_results_obj = Game_Results(0, 0, GAME_RESULTS_FONT, BLACK, WHITE, "Game Results: ", str(score), "Press ENTER to Play Again!", CORRECT_WORD)
 
 # GAME FUNCTIONS
-
-class Indicator:
-    def __init__(self, x, y, letter):
-        # Initializes variables such as color, size, position, and letter.
-        self.x = x
-        self.y = y
-        self.text = letter
-        self.text_pos = (self.x + ((TEXTBOX_SIZE / 1.5) / 2), self.y + (TEXTBOX_SIZE / 2.5))
-        self.rect = (self.x, self.y, TEXTBOX_SIZE / 1.5, TEXTBOX_SIZE)
-        self.bg_color = LIGHT_GREY
-
-    def draw(self):
-        # Puts the indicator and its text on the screen at the desired position.
-        pygame.draw.rect(SCREEN, self.bg_color, self.rect)
-        self.text_surface = ON_SCREEN_KEYBOARD_FONT.render(self.text, True, "white")
-        self.text_rect = self.text_surface.get_rect(center = self.text_pos)
-        SCREEN.blit(self.text_surface, self.text_rect)
-        pygame.display.update()
-
-    def update(self, letter, color):
-        # Updates the color of the indicator according to the guessed letter, and the input color.
-        if self.text == letter.upper():
-            self.bg_color = color
-            self.draw()
-    
-    @staticmethod
-    def draw_indicators():
-    # Drawing the indicators on the screen.
-        global indicators
-        
-        indicator_x = TEXTBOX_START_X - ((TEXTBOX_SIZE * correct_word_length) - TEXTBOX_X_SPACING )/ correct_word_length
-        indicator_y = TEXTBOX_START_Y + ((TEXTBOX_SIZE * max_guesses) + (TEXTBOX_Y_SPACING * (max_guesses - 1))) + (TEXTBOX_Y_SPACING / 2)
-
-        for i in range(3):
-            for letter in ALPHABET[i]:
-                new_indicator = Indicator(indicator_x, indicator_y, letter)
-                indicators.append(new_indicator)
-                new_indicator.draw()
-                indicator_x += TEXTBOX_SIZE - TEXTBOX_X_SPACING * 2
-            indicator_y += TEXTBOX_SIZE + TEXTBOX_X_SPACING * 2
-            if i == 0:
-                indicator_x = (TEXTBOX_START_X - ((TEXTBOX_SIZE * correct_word_length) - TEXTBOX_X_SPACING )/ correct_word_length) + (new_indicator.rect[2] / 2)
-            elif i == 1:
-                indicator_x = (TEXTBOX_START_X - ((TEXTBOX_SIZE * correct_word_length) - TEXTBOX_X_SPACING )/ correct_word_length) + (new_indicator.rect[2] * 1.6)
-# Indicator.draw_indicators()
 
 def check_guess(guess_to_check):
     # Goes through each letter and checks if it should be green, yellow, or grey.
     # updates the indicators as well, and if all letters are green, the game is won.
-    global current_guess, current_guess_string, guesses_count, current_textbox_x, game_result
-    color_chagnging = Indication(indicators, guesses)
+    global current_guess, current_guess_string, guesses_count, current_textbox_x, game_result, on_screen_keyboard_obj
+    color_chagnging = Indication(on_screen_keyboard_obj, guesses)
     game_decided = False
 
     for i in range(len(guess_to_check)):
@@ -195,20 +145,20 @@ def check_guess(guess_to_check):
         if lowercase_letter in CORRECT_WORD:
             if lowercase_letter == CORRECT_WORD[i]:
                 if indicate == True:
-                    color_chagnging.update(lowercase_letter, GREEN)
+                    color_chagnging.update_bg_color(lowercase_letter, GREEN)
   
                 if not game_decided:
                     game_result = "W"
 
             else:
                 if indicate == True:
-                    color_chagnging.update(lowercase_letter, YELLOW)
+                    color_chagnging.update_bg_color(lowercase_letter, YELLOW)
                 game_result = ""
                 game_decided = True
 
         else:
             if indicate == True:
-                color_chagnging.update(lowercase_letter, GREY)
+                color_chagnging.update_bg_color(lowercase_letter, GREY)
             game_result = ""
             game_decided = True
         
@@ -224,23 +174,9 @@ def check_guess(guess_to_check):
     if guesses_count == max_guesses and game_result == "":
         game_result = "L"
 
-def play_again():
-    # Puts the play again text on the screen, genarates a box covering indicators.
-    pygame.draw.rect(SCREEN, "white", (indicators[0].x, indicators[0].y, ((indicators[9].x - indicators[0].x) + TEXTBOX_SIZE), ((indicators[-1].y - indicators[0].y) + TEXTBOX_SIZE)))
-    play_again_font = pygame.font.Font("assets/FreeSansBold.otf", 40)
-    play_again_text = play_again_font.render("Press ENTER to Play Again!", True, "black")
-    play_again_rect = play_again_text.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT / 1.4))
-    word_was_text = play_again_font.render(f"The word was {CORRECT_WORD.upper()}!", True, "black")
-    word_was_rect = word_was_text.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT / 1.2))
-    SCREEN.blit(word_was_text, word_was_rect)
-    SCREEN.blit(play_again_text, play_again_rect)
-    pygame.display.update()
-score = 100
-results = Game_Results(0, 0, GAME_RESULTS_FONT, BLACK, RED, "You won!", str(score), "Press ENTER to Play Again!", CORRECT_WORD)
-
 def reset():
     # Resets all global variables to their default states.
-    global guesses_count, CORRECT_WORD, guesses, current_guess, current_guess_string, game_result
+    global guesses_count, CORRECT_WORD, guesses, current_guess, current_guess_string, game_result, textbox_grid_obj, on_screen_keyboard_obj
     SCREEN.fill(BACKGROUND_COLOR)
     guesses_count = 0
     CORRECT_WORD = random.choice(WORDS)
@@ -249,14 +185,11 @@ def reset():
     current_guess_string = ""
     game_result = ""
 
-    guess_grid.draw_grid(SCREEN)
-    Indicator.draw_indicators()
+    textbox_grid_obj.draw_grid(SCREEN)
+    for letters in ALPHABET:
+        on_screen_keyboard_obj.update_bg_color(letters, LIGHT_GREY)
 
     pygame.display.update()
-
-    for indicator in indicators:
-        indicator.bg_color = LIGHT_GREY
-        indicator.draw()
 
 def create_new_letter(letter):
     # Creates a new letter and adds it to the current guess.
@@ -264,7 +197,7 @@ def create_new_letter(letter):
 
     current_guess_string += letter
     current_textbox_y = TEXTBOX_START_Y + guesses_count * (TEXTBOX_SIZE + TEXTBOX_Y_SPACING)    
-    new_letter = TextBox(letter, GUESSED_LETTER_FONT, TEXTBOX_SIZE, BLACK, WHITE, LIGHT_GREY, current_textbox_x, current_textbox_y, SCREEN)
+    new_letter = Textbox(letter, GUESSED_LETTER_FONT, TEXTBOX_SIZE, BLACK, WHITE, LIGHT_GREY, current_textbox_x, current_textbox_y, SCREEN)
     current_textbox_x = TEXTBOX_START_X + len(current_guess_string) * (TEXTBOX_SIZE + TEXTBOX_X_SPACING)    
 
     guesses[guesses_count].append(new_letter)
@@ -278,37 +211,36 @@ def delete_letter():
     global current_guess_string, current_textbox_x
     guesses[guesses_count][-1].delete()
     guesses[guesses_count].pop()
+
     current_guess_string = current_guess_string[:-1]
     current_guess.pop()
     current_textbox_x = TEXTBOX_START_X + len(current_guess_string) * (TEXTBOX_SIZE + TEXTBOX_X_SPACING)
     
+
 # Game Loop
 while True:
 
-    # draw the empty grid based on the number of guesses and the length of the word
+    # on_screen_keyboard events
+    for keys in on_screen_keyboard_obj.key_button_list:
+        button_clicked = keys.draw(SCREEN)
+        
+        if button_clicked == "ENT":
+            if game_result != "":
+                reset()
+            else:
+                if len(current_guess_string) == correct_word_length and current_guess_string.lower() in WORDS:
+                    check_guess(current_guess)
+        elif button_clicked == "DEL":
+            if len(current_guess_string) > 0:
+                delete_letter()
+        else:
+            if str(button_clicked) in ALPHABET:
+                letter_pressed = button_clicked.upper()
 
-    # draw the on screen keyboard
-    # button_clicked = on_screen_keyboard.draw(SCREEN)
-    
-    # if button_clicked == "ENT":
-    #     if game_result != "":
-    #         reset()
-    #     else:
-    #         if len(current_guess_string) == correct_word_length and current_guess_string.lower() in WORDS:
-    #             check_guess(current_guess)
-    # elif button_clicked == "DEL":
-    #     if len(current_guess_string) > 0:
-    #         delete_letter()
-    # else:
-    #     if button_clicked == "QWERTYUIOPASDFGHJKLZXCVBNM":
-    #         letter_pressed = button_clicked.upper()
-    #         if len(current_guess_string) < correct_word_length:
-    #             create_new_letter(letter_pressed)
+                if len(current_guess_string) < correct_word_length:
+                    create_new_letter(letter_pressed)
 
-    if game_result != "":
-        # play_again()
-        results.draw_results(SCREEN)
-
+    # keyboard events
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
@@ -326,9 +258,18 @@ while True:
                     delete_letter()
             else:
                 key_pressed = event.unicode.upper()
-                if key_pressed in "QWERTYUIOPASDFGHJKLZXCVBNM" and key_pressed != "":
+                if key_pressed in ALPHABET and key_pressed != "":
                     if len(current_guess_string) < correct_word_length:
                         create_new_letter(key_pressed)
     
-     # flip() the display to put your work on screen
+    if game_result != "":
+        # play_again()
+        if game_result == "W":
+            game_results_obj = Game_Results(0, 0, GAME_RESULTS_FONT, BLACK, WHITE, "You won! =^)", str(score), "Press ENTER to Play Again!", CORRECT_WORD)
+        else:
+            game_results_obj = Game_Results(0, 0, GAME_RESULTS_FONT, BLACK, WHITE, "You Lost! =^(", str(score), "Press ENTER to Play Again!", CORRECT_WORD)
+        
+        game_results_obj.draw_results(SCREEN)
+    
+    # flip() the display to put your work on screen
     pygame.display.flip()

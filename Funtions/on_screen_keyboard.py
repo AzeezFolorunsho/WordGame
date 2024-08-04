@@ -14,7 +14,7 @@ class On_Screen_Keyboard:
         self.text_color = text_color
         self.bg_color = bg_color
 
-        self.letter_key_list = []
+        self.key_button_list = []
 
         self.LETTER_KEYS = [["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"], 
                             ["A", "S", "D", "F", "G", "H", "J", "K", "L"], 
@@ -27,13 +27,19 @@ class On_Screen_Keyboard:
         curent_y = self.y
         
         for rows in range (len(self.LETTER_KEYS)):
-            for key in range (len(self.LETTER_KEYS)):
+            for key in range (len(self.LETTER_KEYS[rows])):
                 # sets the position of the button
                 curent_key = self.LETTER_KEYS[rows][key]
-                self.letter_key_list.append(Text_Button(curent_key, self.font, self.text_color, self.bg_color, curent_x, curent_y, self.width * (len(curent_key)), self.height))
+                curent_width = self.width
+
+                # adjusts the width of the button if it is longer than 1 character
+                if len(curent_key) > 1:
+                    curent_width += self.width/2 * (len(curent_key) - 2)
+                
+                self.key_button_list.append(Text_Button(curent_key, self.font, self.text_color, self.bg_color, curent_x, curent_y, curent_width, self.height))
 
                 # moves x for next button in a row
-                curent_x += self.width + self.x_spacing
+                curent_x += curent_width + self.x_spacing
             
             # resets x and moves y for next row
             curent_x = self.x
@@ -43,16 +49,9 @@ class On_Screen_Keyboard:
             if rows == 0:
                 curent_x += self.width / 2
 
-    def update(self, letter, color):
+    def update_bg_color(self, letter, color):
         # Updates the color of the indicator according to the guessed letter, and the input color.
-        for keys in self.letter_key_list:
+        for keys in self.key_button_list:
             if keys.text.upper() == letter.upper():
-                keys.bg_color = color
-                self.draw()
-    
-
-    def draw(self, screen):
-        # Drawing all the letters on the screen.
-        for keys in self.letter_key_list:
-            if keys.draw(screen) == True:
-                return keys.text
+                if keys.bg_color != "#6aaa64" and keys.bg_color != "#c9b458":
+                    keys.bg_color = color
