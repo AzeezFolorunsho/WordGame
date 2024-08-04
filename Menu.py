@@ -112,12 +112,12 @@ while True:
         print("Crosswordle")
     if vs_ai_button.draw(SCREEN):
         print("Vs AI")
-    if text_button.draw(SCREEN):
-        print("text")
-    if keyboard.draw(SCREEN) == "Del":
-        print("DELETE")
+    # if text_button.draw(SCREEN):
+    #     print("text")
+    # if keyboard.draw(SCREEN) == "Del":
+    #     print("DELETE")
     
-    results.draw_results(SCREEN)
+    # results.draw_results(SCREEN)
 
     # pygame.QUIT event means the user clicked X to close your window
     for event in pygame.event.get():

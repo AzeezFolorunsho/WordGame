@@ -47,7 +47,7 @@ class On_Screen_Keyboard:
 
             for key in range (len(self.letter_key_list[rows])):
                 # sets the position of the button
-                self.letter_key_list[rows][key].set_x_and_y(self.currnt_x, self.currnt_y)
+                self.letter_key_list[rows][key].set_x_and_y(x_pos=self.currnt_x, y_pos=self.currnt_y)
 
                 # moves x for next button in a row
                 self.currnt_x += self.button_width + self.x_spacing
@@ -75,11 +75,11 @@ class On_Screen_Keyboard:
             for key in range (len(self.letter_key_list[rows])):
                 # draws the buttons and checks if the button was clicked, and returns the text of the button if so
                 if self.letter_key_list[rows][key].draw(screen):
-                    return self.letter_key_list[rows][key].text
+                    return str(self.letter_key_list[rows][key].text)
         
         # draws the enter and delete keys, and checks if the button was clicked, and returns the text of the button if so
         if self.enter_key.draw(screen):
-            return self.enter_key.text
+            return str(self.enter_key.text)
 
         if self.delete_key.draw(screen):
-            return self.delete_key.text
+            return str(self.delete_key.text)

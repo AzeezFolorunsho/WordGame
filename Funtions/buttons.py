@@ -49,8 +49,7 @@ class Text_Button:
 
     def set_x_and_y(self, x_pos, y_pos):
         self.x = x_pos 
-        self.y = y_pos
-        
+        self.y = y_pos    
 
     def set_width_and_height(self, widith_size, height_size):
         self.width = widith_size
@@ -63,7 +62,7 @@ class Text_Button:
         # Draws the button background and text
         pygame.draw.rect(screen, self.bg_color, self.text_rect)
         screen.blit(self.text_surface, self.text_rect)
-        # pygame.display.update()
+        pygame.display.update()
 
         action = False
         # get mouse pos
@@ -78,4 +77,4 @@ class Text_Button:
         if pygame.mouse.get_pressed()[0] == 0:
             self.clicked = False
         
-        return action
+        return self.text if action == True else False
