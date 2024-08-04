@@ -52,12 +52,14 @@ classic_img = pygame.image.load("assets/classic_btn.png").convert_alpha()
 hangman_img = pygame.image.load("assets/hangman_btn.png").convert_alpha()
 crosswordle_img = pygame.image.load("assets/crosswordle_btn.png").convert_alpha()
 vs_ai_img = pygame.image.load("assets/vs_ai_btn.png").convert_alpha()
+settings_img = pygame.image.load("assets/settings_icon.png").convert_alpha()
 
 # Button instances
 classic_button = button.Button(0, 0, classic_img, 0.5)
 hangman_button = button.Button(0, 0, hangman_img, 0.5)
 crosswordle_button = button.Button(0, 0, crosswordle_img, 0.5)
 vs_ai_button = button.Button(0, 0, vs_ai_img, 0.5)
+settings_button = button.Button(SCREEN_WIDTH - 80 , 20 , settings_img, 0.9)
 
 # Functions and logic
 
@@ -100,6 +102,8 @@ while True:
     if vs_ai_button.draw(SCREEN):
         print("Vs AI")
         play_ai()
+    if settings_button.draw(SCREEN):
+        print("Settings")
 
     # pygame.QUIT event means the user clicked X to close your window
     for event in pygame.event.get():
