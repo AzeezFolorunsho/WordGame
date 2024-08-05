@@ -78,12 +78,12 @@ while True:
     if classic_button.draw(SCREEN):
         print("Classic")
         game = WordleClassic()
-        game.game_loop()
+        game.game_loop(True)
 
     if hangman_button.draw(SCREEN):
         print("Hangman")
         game = WordleHangman()
-        game.game_loop()
+        game.game_loop(True)
     if crosswordle_button.draw(SCREEN):
         print("Crosswordle")
         play_crossword()

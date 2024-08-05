@@ -50,8 +50,13 @@ class On_Screen_Keyboard:
             if rows == 0:
                 curent_x += self.width / 2
 
-    def update_bg_color(self, letter, color):
-        # Updates the color of the indicator according to the guessed letter, and the input color.
+    def update_key_color(self, letter, color):
+        # Updates the color of the keyboard according to the input letter, and the input color.
         for keys in self.key_button_list:
             if keys.text.upper() == letter.upper():
                 keys.bg_color_cache = color
+
+    def reset_key_color(self):
+        for rows in self.LETTER_KEYS:
+            for letter in rows:
+                self.update_key_color(letter, self.bg_color)
