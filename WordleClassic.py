@@ -45,7 +45,7 @@ class KeyboardManager:
         for letter in self.alphabet:
             self.keyboard.update_bg_color(letter, self.inactive_color)
 
-class WordleHangman:
+class WordleClassic:
     def __init__(self):
         self.setup_constants()
         self.setup_pygame()

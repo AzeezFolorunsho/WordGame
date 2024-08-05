@@ -1,10 +1,10 @@
 import pygame
 import sys
-from Funtions.buttons import *
+from Funtions.buttons import Img_Button
 from Funtions.text import Text
-from WordleClasic import play_classic
+from WordleClassic import WordleClassic
+from WordleHangman import WordleHangman
 from WordleCrosswordle import play_crossword
-from WordleHangman import play_hangman
 from WordleVsAI import play_ai
 
 # Pygame setup
@@ -67,20 +67,26 @@ STARTING_X = game_selector(vs_ai_button, "Prepare for the coming AI takeover, pr
 
 # Display welcome message
 welcome_message = Text("Welcome to Wordle+!", WELCOME_FONT, WHITE, (SCREEN_WIDTH / 2) - (499 / 2), 50, SCREEN_WIDTH)
-welcome_message.draw_line(SCREEN)
+
 pygame.display.update()
 
 # Game loop
 while True:
+    # Draw welcome message
+    welcome_message.draw_line(SCREEN)
+    # Draw buttons
     if classic_button.draw(SCREEN):
         print("Classic")
-        play_classic()
+        game = WordleClassic()
+        game.game_loop()
+
     if hangman_button.draw(SCREEN):
         print("Hangman")
-        play_crossword()
+        game = WordleHangman()
+        game.game_loop()
     if crosswordle_button.draw(SCREEN):
         print("Crosswordle")
-        play_hangman()
+        play_crossword()
     if vs_ai_button.draw(SCREEN):
         print("Vs AI")
         play_ai()
