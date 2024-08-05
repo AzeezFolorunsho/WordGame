@@ -1,6 +1,7 @@
 import pygame
 import sys
-from Funtions import buttons, text
+from Funtions.buttons import *
+from Funtions.text import Text
 from WordleClasic import play_classic
 from WordleCrosswordle import play_crossword
 from WordleHangman import play_hangman
@@ -42,17 +43,19 @@ CLASSIC_IMG = pygame.image.load("assets/classic_btn.png").convert_alpha()
 HANGMAN_IMG = pygame.image.load("assets/hangman_btn.png").convert_alpha()
 CROSSWORDLE_IMG = pygame.image.load("assets/crosswordle_btn.png").convert_alpha()
 VS_AI_IMG = pygame.image.load("assets/vs_ai_btn.png").convert_alpha()
+settings_img = pygame.image.load("assets/settings_icon.png").convert_alpha()
 
 # Button instances
-classic_button = buttons.Img_Button(0, 0, CLASSIC_IMG, 0.5)
-hangman_button = buttons.Img_Button(0, 0, HANGMAN_IMG, 0.5)
-crosswordle_button = buttons.Img_Button(0, 0, CROSSWORDLE_IMG, 0.5)
-vs_ai_button = buttons.Img_Button(0, 0, VS_AI_IMG, 0.5)
+classic_button = Img_Button(0, 0, CLASSIC_IMG, 0.5)
+hangman_button = Img_Button(0, 0, HANGMAN_IMG, 0.5)
+crosswordle_button = Img_Button(0, 0, CROSSWORDLE_IMG, 0.5)
+vs_ai_button = Img_Button(0, 0, VS_AI_IMG, 0.5)
+settings_button = Img_Button(SCREEN_WIDTH - 80 , 20 , settings_img, 0.9)
 
 # Functions and logic
 def game_selector(button, tagline_message, start_x):
     button.set_x_and_y(start_x, STARTING_Y)
-    tagline_text = text.Text(tagline_message, TAGLINE_FONT, BLACK, start_x, STARTING_Y + button.rect.height, button.rect.width)
+    tagline_text = Text(tagline_message, TAGLINE_FONT, BLACK, start_x, STARTING_Y + button.rect.height, button.rect.width)
     tagline_text.draw_wrapped(SCREEN)
     return start_x + button.rect.width + X_SPACING
 
@@ -63,7 +66,7 @@ STARTING_X = game_selector(crosswordle_button, "Try your best to guess the word,
 STARTING_X = game_selector(vs_ai_button, "Prepare for the coming AI takeover, practice your skill against your future oppressors!", STARTING_X)
 
 # Display welcome message
-welcome_message = text.Text("Welcome to Wordle+!", WELCOME_FONT, WHITE, (SCREEN_WIDTH / 2) - (499 / 2), 50, SCREEN_WIDTH)
+welcome_message = Text("Welcome to Wordle+!", WELCOME_FONT, WHITE, (SCREEN_WIDTH / 2) - (499 / 2), 50, SCREEN_WIDTH)
 welcome_message.draw_line(SCREEN)
 pygame.display.update()
 
@@ -81,6 +84,8 @@ while True:
     if vs_ai_button.draw(SCREEN):
         print("Vs AI")
         play_ai()
+    if settings_button.draw(SCREEN):
+        print("Settings")
 
     # Handle quit event
     for event in pygame.event.get():
