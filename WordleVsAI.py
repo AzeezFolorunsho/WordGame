@@ -1,21 +1,20 @@
 import pygame
 
-# pygame setup
-pygame.init()
+def play_ai():
+    # pygame setup
+    pygame.init()
 
-WIDTH, HEIGHT = 1280, 720
+    WIDTH, HEIGHT = 1280, 720
 
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
+    screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
-# fill the screen with a color to wipe away anything from last frame
-screen.fill("white")
-pygame.display.update()
+    # fill the screen with a color to wipe away anything from last frame
+    screen.fill("blue")
+    pygame.display.update()
 
-
-
-while True:
-    # poll for events
-    # pygame.QUIT event means the user clicked X to close your window
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
+    while True:
+        # poll for events
+        # pygame.QUIT event means the user clicked X to close your window
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()

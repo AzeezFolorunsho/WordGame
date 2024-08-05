@@ -1,6 +1,10 @@
 import pygame
 import sys
-from Funtions import buttons, text, on_screen_keyboard, game_results
+from Funtions import buttons, text
+from WordleClasic import play_classic
+from WordleCrosswordle import play_crossword
+from WordleHangman import play_hangman
+from WordleVsAI import play_ai
 
 # Pygame setup
 pygame.init()
@@ -67,12 +71,16 @@ pygame.display.update()
 while True:
     if classic_button.draw(SCREEN):
         print("Classic")
+        play_classic()
     if hangman_button.draw(SCREEN):
         print("Hangman")
+        play_crossword()
     if crosswordle_button.draw(SCREEN):
         print("Crosswordle")
+        play_hangman()
     if vs_ai_button.draw(SCREEN):
         print("Vs AI")
+        play_ai()
 
     # Handle quit event
     for event in pygame.event.get():
