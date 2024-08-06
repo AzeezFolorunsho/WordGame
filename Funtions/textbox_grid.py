@@ -31,12 +31,8 @@ class Textbox_grid():
             for j in range(self.columns):
                 x = self.start_x + j * (self.square_size + self.x_spacing)
                 y = self.start_y + i * (self.square_size + self.y_spacing)
-                # Draw the square
                 pygame.draw.rect(self.screen, self.bg_color, (x, y, self.square_size, self.square_size))
                 pygame.draw.rect(self.screen, self.outline_color, (x, y, self.square_size, self.square_size), 3)
-                
-                # Draw the underline
-                underline_y = y + self.square_size + 5  # 5 pixels below the square
-                pygame.draw.line(self.screen, self.BLACK, (x, underline_y), (x + self.square_size, underline_y), 3)
-                
+                underline_y = y + self.square_size + 5 
+                pygame.draw.line(self.screen, self.BLACK, (x, underline_y), (x + self.square_size, underline_y), 3)            
         pygame.display.update()

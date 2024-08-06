@@ -62,6 +62,10 @@ class WordleHangman:
         self.guide.draw_guides_thirds(self.BLACK)
         self.guide.draw_guides_cross(self.RED)
 
+        # Importing Hangman images and storing as a list
+        self.hangman_images = [pygame.image.load(f"assets/hangman_images/hangman{i}.png") for i in range(7)]
+        self.current_hangman_image = self.hangman_images[0]
+
     def setup_constants(self):
         ################################### CONSTANTS (will not change throughout the game) ###################################
         
@@ -199,6 +203,8 @@ class WordleHangman:
         for guess in self.guesses:
             for letter in guess:
                 letter.draw()
+
+    def image_swap()
 
     def delete_letter(self):
         # deletes the last letter in the current guess and covers it with an empty textbox
