@@ -35,14 +35,27 @@ class WordleHangman:
         self.current_textbox_y = self.TEXTBOX_START_Y
 
         # Initialize game objects
+        # Text box grid for guess word
         self.textbox_grid_obj = Textbox_grid(
             self.SCREEN, self.TEXTBOX_SIZE, 1, 
             self.correct_word_length, self.TEXTBOX_X_SPACING, 
             self.TEXTBOX_Y_SPACING, self.TEXTBOX_START_X, 
             self.TEXTBOX_START_Y, self.LIGHT_GREY, self.WHITE
         )
+        # Text box grid for guess letters
+        self.offset = self.TEXTBOX_START_X + (self.textbox_grid_obj.columns * (self.textbox_grid_obj.square_size + self.textbox_grid_obj.x_spacing))
+        # guess textbox dimensions
+        self.GUESS_TEXTBOX_START_X = self.offset + self.TEXTBOX_SIZE
+        self.GUESS_TEXTBOX_START_Y = self.TEXTBOX_START_Y - self.TEXTBOX_SIZE
+        
+        self.textbox_grid_obj_2 = Textbox_grid(
+            self.SCREEN, self.TEXTBOX_SIZE, 1, 
+            1, 0, 0, self.GUESS_TEXTBOX_START_X, 
+            self.GUESS_TEXTBOX_START_Y, self.LIGHT_GREY, self.WHITE
+        )
         # Draws the grid
         self.textbox_grid_obj.draw_underlined_grid()
+        self.textbox_grid_obj_2.draw_grid()
 
         self.on_screen_keyboard_obj = On_Screen_Keyboard(
             self.KEYBOARD_START_X, self.KEYBOARD_START_Y, 
@@ -88,6 +101,7 @@ class WordleHangman:
         self.TEXTBOX_START_Y = self.SCREEN_HEIGHT/2
         self.TEXTBOX_X_SPACING = 8
         self.TEXTBOX_Y_SPACING = 20
+        
         # On Screen Keyboard Dimensions
         self.KEYBOARD_START_X = self.SCREEN_WIDTH / 3.3
         self.KEYBOARD_START_Y = self.SCREEN_HEIGHT / 1.47
@@ -185,74 +199,25 @@ class WordleHangman:
     def create_new_letter(self, letter):
         # creates a new textbox for the current letter, appends it to the gueeses and prints it to the screen
 
-        # self.current_guess_string += letter # adds a new letter to the current guess
-        # # updates the textbox y position for the next letter
-        # self.current_textbox_y = self.TEXTBOX_START_Y + self.guesses_count * (self.TEXTBOX_SIZE + self.TEXTBOX_Y_SPACING)
-        # creates a new textbox and appends it to the current guess               #shouldn't apply to the guess box --- but still append to end of guess string and take the last letter?
-        # new_letter = Textbox(letter, self.GUESSED_LETTER_FONT, self.TEXTBOX_SIZE, self.BLACK, self.WHITE, self.LIGHT_GREY, self.current_textbox_x, self.current_textbox_y, self.SCREEN)
-        # # updates the textbox x position for the next letter
-        # self.current_textbox_x = self.TEXTBOX_START_X + len(self.current_guess_string) * (self.TEXTBOX_SIZE + self.TEXTBOX_X_SPACING)
-        
-        # # appends the new textbox to the guesses and the current guess lists
-        # self.guesses[self.guesses_count].append(new_letter)
-        # self.current_guess.append(new_letter)
-
-        # # draws all the current guesses to the screen
-        # for guess in self.guesses:
-        #     for letter in guess:
-        #         letter.draw()
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         self.current_guess_string += letter # adds a new letter to the current guess
-        # print(self.current_guess_string)
-        # print(self.guesses)
-        
-        # creates a new textbox for the guesses
-        # if len(self.current_guess_string) < self.correct_word_length: # checks if the current guess is less than the length of the correct length, if so, runs the create new letter function
-        guess_box = Textbox(letter, self.GUESSED_LETTER_FONT, self.TEXTBOX_SIZE, self.BLACK, self.WHITE, self.LIGHT_GREY, (self.current_textbox_x + 500), (self.current_textbox_y + 200), self.SCREEN)
-        guess_box.draw()
-        
+        # updates the textbox y position for the next letter
+        self.current_textbox_y = self.TEXTBOX_START_Y + self.guesses_count * (self.TEXTBOX_SIZE + self.TEXTBOX_Y_SPACING)
+        self.current_guess_textbox_y = self.GUESS_TEXTBOX_START_Y
+        self.current_guess_textbox_x = self.GUESS_TEXTBOX_START_X
+        # creates a new textbox and appends it to the current guess               #shouldn't apply to the guess box --- but still append to end of guess string and take the last letter?
+        new_letter = Textbox(letter, self.GUESSED_LETTER_FONT, self.TEXTBOX_SIZE, self.BLACK, self.WHITE, self.LIGHT_GREY, self.current_guess_textbox_x, self.current_guess_textbox_y, self.SCREEN)
+        # updates the textbox x position for the next letter
+        self.current_textbox_x = self.TEXTBOX_START_X + len(self.current_guess_string) * (self.TEXTBOX_SIZE + self.TEXTBOX_X_SPACING)
+        # appends the new textbox to the guesses and the current guess lists
+        self.guesses[self.guesses_count].append(new_letter)
+        self.current_guess.append(new_letter)
+
         # draws all the current guesses to the screen
         for guess in self.guesses:
             for letter in guess:
                 letter.draw()
-                print(self.current_guess_string)
-                # print(letter)
-                # print(self.guesses_count)
-                self.guesses[self.guesses_count].append(letter)
-                self.current_guess.append(letter)
         
         
-        
-            
-            
-            
-            
-            
-            
-            
-        # # trying to check each letter in the word against the guessed letter -- realized it wasn't my assigned part
-        # for i in range(self.correct_word_length):
-        #     if self.current_guess_string[0] == self.correct_word[i]:
-        #         print('correct letter guessed')
-            
-            
-                
-                
-                
-                
-                
                 
     def delete_letter(self):
         # deletes the last letter in the current guess and covers it with an empty textbox
@@ -294,7 +259,7 @@ class WordleHangman:
                 else:
                     if str(button_clicked) in self.ALPHABET: # checks if the button clicked is in the alphabet
                         letter_pressed = button_clicked.upper()
-                        if len(self.current_guess_string) < self.correct_word_length: # checks if the current guess is less than the length of the correct length, if so, runs the create new letter function
+                        if len(self.current_guess_string) <= 1: # checks if the current guess is less than the length of the correct length, if so, runs the create new letter function
                             self.create_new_letter(letter_pressed)
 
             # Keyboard events
@@ -317,7 +282,7 @@ class WordleHangman:
                     else:
                         key_pressed = event.unicode.upper() # converts the key pressed to uppercase
                         if key_pressed in self.ALPHABET and key_pressed != "": # checks if the key pressed is in the alphabet
-                            if len(self.current_guess_string) < self.correct_word_length: # checks if the current guess is less than the length of the correct length, if so, runs the create new letter function
+                            if len(self.current_guess_string) <= 1: # checks if the current guess is less than the length of the correct length, if so, runs the create new letter function
                                 self.create_new_letter(key_pressed)
                                 
             # if the game is over, draws the game results
