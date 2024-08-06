@@ -87,7 +87,7 @@ class WordleHangman:
         self.RED = "#FF0000"
         self.BACKGROUND_COLOR = self.WHITE
         # the maximum number of guesses
-        self.MAX_GUESSES = 6
+        self.MAX_GUESSES = 7
         # Textbox Dimensions
         self.TEXTBOX_SIZE = 62.4
         self.TEXTBOX_START_X = 468
