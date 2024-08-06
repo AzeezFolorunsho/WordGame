@@ -42,7 +42,7 @@ class WordleHangman:
             self.TEXTBOX_START_Y, self.LIGHT_GREY, self.WHITE
         )
         # Draws the grid
-        self.textbox_grid_obj.draw_grid()
+        self.textbox_grid_obj.draw_underlined_grid()
 
         self.on_screen_keyboard_obj = On_Screen_Keyboard(
             self.KEYBOARD_START_X, self.KEYBOARD_START_Y, 
@@ -175,7 +175,7 @@ class WordleHangman:
         self.score = 0 
 
         # resets the objects
-        self.textbox_grid_obj.draw_grid() # redraws the grid
+        self.textbox_grid_obj.draw_underlined_grid() # redraws the grid
         self.on_screen_keyboard_obj.reset_key_color() # resets the on screen keyboard key colors
 
         pygame.display.update()
