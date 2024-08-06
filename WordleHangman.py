@@ -80,6 +80,8 @@ class WordleHangman:
         self.BACKGROUND_COLOR = self.WHITE
         # the maximum number of guesses
         self.MAX_GUESSES = 6
+        # maximum length of hangman guess (just the one letter)
+        self.GUESS_LENGTH = 1
         # Textbox Dimensions
         self.TEXTBOX_SIZE = 62.4
         self.TEXTBOX_START_X = 468
@@ -183,23 +185,75 @@ class WordleHangman:
     def create_new_letter(self, letter):
         # creates a new textbox for the current letter, appends it to the gueeses and prints it to the screen
 
-        self.current_guess_string += letter # adds a new letter to the current guess
-        # updates the textbox y position for the next letter
-        self.current_textbox_y = self.TEXTBOX_START_Y + self.guesses_count * (self.TEXTBOX_SIZE + self.TEXTBOX_Y_SPACING)
-        # creates a new textbox and appends it to the current guess
-        new_letter = Textbox(letter, self.GUESSED_LETTER_FONT, self.TEXTBOX_SIZE, self.BLACK, self.WHITE, self.LIGHT_GREY, self.current_textbox_x, self.current_textbox_y, self.SCREEN)
-        # updates the textbox x position for the next letter
-        self.current_textbox_x = self.TEXTBOX_START_X + len(self.current_guess_string) * (self.TEXTBOX_SIZE + self.TEXTBOX_X_SPACING)
+        # self.current_guess_string += letter # adds a new letter to the current guess
+        # # updates the textbox y position for the next letter
+        # self.current_textbox_y = self.TEXTBOX_START_Y + self.guesses_count * (self.TEXTBOX_SIZE + self.TEXTBOX_Y_SPACING)
+        # creates a new textbox and appends it to the current guess               #shouldn't apply to the guess box --- but still append to end of guess string and take the last letter?
+        # new_letter = Textbox(letter, self.GUESSED_LETTER_FONT, self.TEXTBOX_SIZE, self.BLACK, self.WHITE, self.LIGHT_GREY, self.current_textbox_x, self.current_textbox_y, self.SCREEN)
+        # # updates the textbox x position for the next letter
+        # self.current_textbox_x = self.TEXTBOX_START_X + len(self.current_guess_string) * (self.TEXTBOX_SIZE + self.TEXTBOX_X_SPACING)
         
-        # appends the new textbox to the guesses and the current guess lists
-        self.guesses[self.guesses_count].append(new_letter)
-        self.current_guess.append(new_letter)
+        # # appends the new textbox to the guesses and the current guess lists
+        # self.guesses[self.guesses_count].append(new_letter)
+        # self.current_guess.append(new_letter)
 
+        # # draws all the current guesses to the screen
+        # for guess in self.guesses:
+        #     for letter in guess:
+        #         letter.draw()
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        self.current_guess_string += letter # adds a new letter to the current guess
+        # print(self.current_guess_string)
+        # print(self.guesses)
+        
+        # creates a new textbox for the guesses
+        # if len(self.current_guess_string) < self.correct_word_length: # checks if the current guess is less than the length of the correct length, if so, runs the create new letter function
+        guess_box = Textbox(letter, self.GUESSED_LETTER_FONT, self.TEXTBOX_SIZE, self.BLACK, self.WHITE, self.LIGHT_GREY, (self.current_textbox_x + 500), (self.current_textbox_y + 200), self.SCREEN)
+        guess_box.draw()
+        
         # draws all the current guesses to the screen
         for guess in self.guesses:
             for letter in guess:
                 letter.draw()
-
+                print(self.current_guess_string)
+                # print(letter)
+                # print(self.guesses_count)
+                self.guesses[self.guesses_count].append(letter)
+                self.current_guess.append(letter)
+        
+        
+        
+            
+            
+            
+            
+            
+            
+            
+        # # trying to check each letter in the word against the guessed letter -- realized it wasn't my assigned part
+        # for i in range(self.correct_word_length):
+        #     if self.current_guess_string[0] == self.correct_word[i]:
+        #         print('correct letter guessed')
+            
+            
+                
+                
+                
+                
+                
+                
     def delete_letter(self):
         # deletes the last letter in the current guess and covers it with an empty textbox
 
@@ -226,7 +280,7 @@ class WordleHangman:
             for keys in self.on_screen_keyboard_obj.key_button_list:
                 button_clicked = keys.draw(self.SCREEN) # draws the button and checks if it was clicked
                 
-                # checks whitch button was clicked and updates the game accordingly
+                # checks which button was clicked and updates the game accordingly
                 if button_clicked == "ENT":
                     if self.game_result != "": # if the enter key is pressed, checks if the game is over, if so, resets the game
                         self.reset()
@@ -240,7 +294,7 @@ class WordleHangman:
                 else:
                     if str(button_clicked) in self.ALPHABET: # checks if the button clicked is in the alphabet
                         letter_pressed = button_clicked.upper()
-                        if len(self.current_guess_string) < self.correct_word_length: # checks if the current guess is less than the length of the correct length, if so, runs the create new letter function,
+                        if len(self.current_guess_string) < self.correct_word_length: # checks if the current guess is less than the length of the correct length, if so, runs the create new letter function
                             self.create_new_letter(letter_pressed)
 
             # Keyboard events
@@ -265,6 +319,7 @@ class WordleHangman:
                         if key_pressed in self.ALPHABET and key_pressed != "": # checks if the key pressed is in the alphabet
                             if len(self.current_guess_string) < self.correct_word_length: # checks if the current guess is less than the length of the correct length, if so, runs the create new letter function
                                 self.create_new_letter(key_pressed)
+                                
             # if the game is over, draws the game results
             if self.game_result != "":
                 # checks if the game result is W or L, if so, draws the game results 
