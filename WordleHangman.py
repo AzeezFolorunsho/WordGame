@@ -66,6 +66,10 @@ class WordleHangman:
         self.hangman_images = [pygame.image.load(f"assets/hangman_images/hangman{i}.png") for i in range(7)]
         self.current_hangman_image = self.hangman_images[0]
 
+        # Draw the initial hangman image on the screen
+        self.SCREEN.blit(self.current_hangman_image, (410, 10))  
+        pygame.display.update()
+
     def setup_constants(self):
         ################################### CONSTANTS (will not change throughout the game) ###################################
         
@@ -204,8 +208,6 @@ class WordleHangman:
             for letter in guess:
                 letter.draw()
 
-    def image_swap()
-
     def delete_letter(self):
         # deletes the last letter in the current guess and covers it with an empty textbox
 
@@ -219,6 +221,11 @@ class WordleHangman:
 
         # updates the textbox x position for the next letter
         self.current_textbox_x = self.TEXTBOX_START_X + len(self.current_guess_string) * (self.TEXTBOX_SIZE + self.TEXTBOX_X_SPACING)
+
+    def image_swap(self):
+        self.current_hangman_image = self.hangman_images[self.guesses_count]
+        self.SCREEN.blit(self.current_hangman_image, (100, 100))
+        pygame.display.update()
 
     def game_loop(self, game_runing):
         while game_runing:
