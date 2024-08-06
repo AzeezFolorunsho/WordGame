@@ -220,7 +220,7 @@ class WordleHangman:
                 print("Return to Menu")
                 self.reset()
                 game_runing = False
-                #return  # Exit the game loop and return to the menu
+                return  # exit the game loop and return to the menu
 
             # On-screen keyboard events
             for keys in self.on_screen_keyboard_obj.key_button_list:
