@@ -36,13 +36,13 @@ class WordleHangman:
 
         # Initialize game objects
         self.textbox_grid_obj = Textbox_grid(
-            self.SCREEN, self.TEXTBOX_SIZE, self.MAX_GUESSES, 
+            self.SCREEN, self.TEXTBOX_SIZE, 1, 
             self.correct_word_length, self.TEXTBOX_X_SPACING, 
             self.TEXTBOX_Y_SPACING, self.TEXTBOX_START_X, 
             self.TEXTBOX_START_Y, self.LIGHT_GREY, self.WHITE
         )
         # Draws the grid
-        self.textbox_grid_obj.draw_grid()
+        self.textbox_grid_obj.draw_underlined_grid()
 
         self.on_screen_keyboard_obj = On_Screen_Keyboard(
             self.KEYBOARD_START_X, self.KEYBOARD_START_Y, 
@@ -54,8 +54,8 @@ class WordleHangman:
 
         self.return_button = Text_Button(
             "Return", self.ON_SCREEN_KEYBOARD_FONT, 
-            self.BLACK, self.GREY, self.LIGHT_GREY, 
-            self.SCREEN_WIDTH - 100, 15, 100, 40
+            self.WHITE, self.BLACK, self.LIGHT_GREY, 
+            self.SCREEN_WIDTH - 140, 27, 110, 45
         )
 
         self.guide = Guide(self.SCREEN)
@@ -85,7 +85,7 @@ class WordleHangman:
         # Textbox Dimensions
         self.TEXTBOX_SIZE = 62.4
         self.TEXTBOX_START_X = 468
-        self.TEXTBOX_START_Y = 3.6
+        self.TEXTBOX_START_Y = self.SCREEN_HEIGHT/2
         self.TEXTBOX_X_SPACING = 8
         self.TEXTBOX_Y_SPACING = 20
         # On Screen Keyboard Dimensions
@@ -177,7 +177,7 @@ class WordleHangman:
         self.score = 0 
 
         # resets the objects
-        self.textbox_grid_obj.draw_grid() # redraws the grid
+        self.textbox_grid_obj.draw_underlined_grid() # redraws the grid
         self.on_screen_keyboard_obj.reset_key_color() # resets the on screen keyboard key colors
 
         pygame.display.update()
@@ -274,7 +274,7 @@ class WordleHangman:
                 print("Return to Menu")
                 self.reset()
                 game_runing = False
-                #return  # Exit the game loop and return to the menu
+                return  # exit the game loop and return to the menu
 
             # On-screen keyboard events
             for keys in self.on_screen_keyboard_obj.key_button_list:
