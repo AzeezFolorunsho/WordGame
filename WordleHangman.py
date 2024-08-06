@@ -36,7 +36,7 @@ class WordleHangman:
 
         # Initialize game objects
         self.textbox_grid_obj = Textbox_grid(
-            self.SCREEN, self.TEXTBOX_SIZE, self.MAX_GUESSES, 
+            self.SCREEN, self.TEXTBOX_SIZE, 1, 
             self.correct_word_length, self.TEXTBOX_X_SPACING, 
             self.TEXTBOX_Y_SPACING, self.TEXTBOX_START_X, 
             self.TEXTBOX_START_Y, self.LIGHT_GREY, self.WHITE
@@ -83,7 +83,7 @@ class WordleHangman:
         # Textbox Dimensions
         self.TEXTBOX_SIZE = 62.4
         self.TEXTBOX_START_X = 468
-        self.TEXTBOX_START_Y = 3.6
+        self.TEXTBOX_START_Y = self.SCREEN_HEIGHT/2
         self.TEXTBOX_X_SPACING = 8
         self.TEXTBOX_Y_SPACING = 20
         # On Screen Keyboard Dimensions
