@@ -54,8 +54,8 @@ class WordleClassic:
 
         self.return_button = Text_Button(
             "Return", self.ON_SCREEN_KEYBOARD_FONT, 
-            self.BLACK, self.GREY, self.LIGHT_GREY, 
-            self.SCREEN_WIDTH - 100, 15, 100, 40
+            self.WHITE, self.BLACK, self.LIGHT_GREY, 
+            self.SCREEN_WIDTH - 140, 27, 110, 45
         )
 
         self.guide = Guide(self.SCREEN)
