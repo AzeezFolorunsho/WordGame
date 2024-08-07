@@ -18,46 +18,51 @@ class WordleHangman:
         
         ################################### Global Variables (will be accesed and changed througout the game) ###################################
         
+        self.current_guess = [] # tracks the current guesses
+        self.incorect_guesses = 0 # tracks the number of incorrect guesses
+        
+        self.game_result = "" # tracks the game result "W" = Win, "L" = Loss, "" = undesided
+        
+        self.score = 100 # tracks the score, will be set to a prpber calculation later
+        
+        # sets the current textbox position
+        self.correct_word_textbox_current_x = self.CORRECT_WORD_TEXTBOX_START_X
+
         # sets the correct word
         self.correct_word = "coder" # hardcoded for testing, will be replaced with: random.choice(WORDS)
         self.correct_word_length = len(self.correct_word)
-        # tracks the guesses
-        self.guesses_count = 0
-        self.guesses = []
-        self.current_guess = []
-        self.current_guess_string = ""
-        self.incorect_guesses = []
-        # tracks the game result "W" = Win, "L" = Loss, "" = undesided
-        self.game_result = ""
-        # tracks the score
-        self.score = 100 # will be set to a prpber calculation later
-        # sets the current textbox position
-        self.current_textbox_x = self.TEXTBOX_START_X
-        self.current_textbox_y = self.TEXTBOX_START_Y
+        self.correct_word_textbox_list = self.set_correct_word_textbox_list()
 
         # Initialize game objects
-        # Text box grid for guess word
-        self.textbox_grid_obj = Textbox_grid(
-            self.SCREEN, self.TEXTBOX_SIZE, 1, 
-            self.correct_word_length, self.TEXTBOX_X_SPACING, 
-            self.TEXTBOX_Y_SPACING, self.TEXTBOX_START_X, 
-            self.TEXTBOX_START_Y, self.LIGHT_GREY, self.WHITE
-        )
-        # Text box grid for guess letters
-        self.offset = self.TEXTBOX_START_X + (self.textbox_grid_obj.columns * (self.textbox_grid_obj.square_size + self.textbox_grid_obj.x_spacing))
-        # guess textbox dimensions
-        self.GUESS_TEXTBOX_START_X = self.offset + self.TEXTBOX_SIZE
-        self.GUESS_TEXTBOX_START_Y = self.TEXTBOX_START_Y - self.TEXTBOX_SIZE
         
-        self.textbox_grid_obj_2 = Textbox_grid(
+        # Text box grid for the correct word
+        self.correct_word_textbox_grid_obj = Textbox_grid(
             self.SCREEN, self.TEXTBOX_SIZE, 1, 
-            1, 0, 0, self.GUESS_TEXTBOX_START_X, 
-            self.GUESS_TEXTBOX_START_Y, self.LIGHT_GREY, self.WHITE
+            self.correct_word_length, self.CORRECT_WORD_TEXTBOX_X_SPACING, 
+            self.CORRECT_WORD_TEXTBOX_Y_SPACING, self.CORRECT_WORD_TEXTBOX_START_X, 
+            self.CORRECT_WORD_TEXTBOX_START_Y, self.LIGHT_GREY, self.WHITE
         )
-        # Draws the grid
-        self.textbox_grid_obj.draw_underlined_grid()
-        self.textbox_grid_obj_2.draw_grid()
+        
+        # Text box grid offset
+        self.offset = self.CORRECT_WORD_TEXTBOX_START_X + (self.correct_word_textbox_grid_obj.columns * 
+                                              (self.correct_word_textbox_grid_obj.square_size + 
+                                               self.correct_word_textbox_grid_obj.x_spacing))
+        
+        # guess textbox grid dimensions
+        self.CURRENT_GUESS_TEXTBOX_X = self.offset + self.TEXTBOX_SIZE
+        self.CURRENT_GUESS_TEXTBOX_Y = self.CORRECT_WORD_TEXTBOX_START_Y - self.TEXTBOX_SIZE
+        # sets the current guess textbox grid
+        self.current_guess_textbox_grid_obj = Textbox_grid(
+            self.SCREEN, self.TEXTBOX_SIZE, 1, 
+            1, 0, 0, self.CURRENT_GUESS_TEXTBOX_X, 
+            self.CURRENT_GUESS_TEXTBOX_Y, self.LIGHT_GREY, self.WHITE
+        )
 
+        # Draws the grid the first time
+        self.correct_word_textbox_grid_obj.draw_underlined_grid()
+        self.current_guess_textbox_grid_obj.draw_grid()
+
+        # sets the on screen Keyboard
         self.on_screen_keyboard_obj = On_Screen_Keyboard(
             self.KEYBOARD_START_X, self.KEYBOARD_START_Y, 
             self.KEYBOARD_X_SPACING, self.KEYBOARD_Y_SPACING, 
@@ -66,12 +71,14 @@ class WordleHangman:
             self.LIGHT_GREY, self.MEDIUM_GREY
         )
 
+        # sets the return button
         self.return_button = Text_Button(
             "Return", self.ON_SCREEN_KEYBOARD_FONT, 
             self.WHITE, self.BLACK, self.LIGHT_GREY, 
             self.SCREEN_WIDTH - 140, 27, 110, 45
         )
 
+        # sets the temporary guides
         self.guide = Guide(self.SCREEN)
         self.guide.draw_guides_thirds(self.BLACK)
         self.guide.draw_guides_cross(self.RED)
@@ -93,15 +100,13 @@ class WordleHangman:
         self.RED = "#FF0000"
         self.BACKGROUND_COLOR = self.WHITE
         # the maximum number of guesses
-        self.MAX_GUESSES = 6
-
+        self.MAX_GUESSES = 7
         # Textbox Dimensions
         self.TEXTBOX_SIZE = 62.4
-        self.TEXTBOX_START_X = 468
-        self.TEXTBOX_START_Y = self.SCREEN_HEIGHT/2
-        self.TEXTBOX_X_SPACING = 8
-        self.TEXTBOX_Y_SPACING = 20
-        
+        self.CORRECT_WORD_TEXTBOX_START_X = 468
+        self.CORRECT_WORD_TEXTBOX_START_Y = self.SCREEN_HEIGHT/2
+        self.CORRECT_WORD_TEXTBOX_X_SPACING = 8
+        self.CORRECT_WORD_TEXTBOX_Y_SPACING = 20
         # On Screen Keyboard Dimensions
         self.KEYBOARD_START_X = self.SCREEN_WIDTH / 3.3
         self.KEYBOARD_START_Y = self.SCREEN_HEIGHT / 1.47
@@ -125,51 +130,63 @@ class WordleHangman:
         # fills screen with white
         self.SCREEN.fill(self.BACKGROUND_COLOR)
 
+    def set_correct_word_textbox_list(self):
+        self.correct_word_letters_temp = []
+        for letter in self.correct_word:
+            self.correct_word_letters_temp.append(Textbox(letter.upper(), self.GUESSED_LETTER_FONT, 
+                                                          self.TEXTBOX_SIZE, self.BLACK, self.WHITE, 
+                                                          self.LIGHT_GREY, self.correct_word_textbox_current_x, 
+                                                          self.CORRECT_WORD_TEXTBOX_START_Y, self.SCREEN
+                                                          ))
+            self.correct_word_textbox_current_x += self.TEXTBOX_SIZE + self.CORRECT_WORD_TEXTBOX_X_SPACING
+        return self.correct_word_letters_temp
+
+
     def update_guesses_bg_color(self, index, letter, color):
         # updates the background color of a given textbox and the on screen keyboard key of the same letter to the given color
         if self.IS_INDICATING:
             self.on_screen_keyboard_obj.update_key_color(letter, color)
-            self.current_guess[index].update_bg_color(letter, color)
+            self.correct_word_textbox_list[index].update_bg_color(letter, color)
 
     def check_guess(self):
-        # checks if the current guess is the correct
-        
-        game_decided = False # used to determine if the game has been lost, if any letters are not in the correct word at the correct place
+        letter_in_correct_word = False # used to determine if the current guess is in the correct word
+        game_is_won = False # used to determine if the game has been won
 
-        # loops through each letter in the current guess and updates the background color accordingly
-        # also checks if the game has been won or lost based on if all letters in the current guess are in the correct word at the corect place
-        for i in range(len(self.current_guess)):
+        # checks if the current guess is in the correct word
+        for i in range(len(self.correct_word)):
             
-            current_letter = self.current_guess[i].text.lower() # converts the current letter to lowercase beacuse the guess word list is all lowercase
+            current_letter = self.current_guess[-1].text.lower() # converts the current letter to lowercase beacuse the guess word list is all lowercase
 
-            if current_letter in self.correct_word: # checks if the current letter is in the correct word
-                if current_letter == self.correct_word[i]: # checks if the current letter is in the correct place
-                    # updates the letter and key background color to green, if the current letter is in the correct word at the correct place
-                    self.update_guesses_bg_color(i, current_letter, self.GREEN)
-                    # sets the game result to "W" if non of the leters so far have been guessed uncorrectly (yellow or gray)
-                    if not game_decided:
-                        self.game_result = "W"
-                else:
-                    # updates the letter and key background color to yellow, and sets the game result to "" if any letters in the current guess are not in the correct word at the correct place
-                    self.update_guesses_bg_color(i, current_letter, self.YELLOW)
-                    self.game_result = ""
-                    game_decided = True
-            else:
-                # updates the letter and key background color to grey, and clears the game result if any letters in the current guess are not in the correct word
-                self.update_guesses_bg_color(i, current_letter, self.GREY) 
-                self.game_result = ""
-                game_decided = True
+            if self.correct_word[i] == current_letter: # checks if the current letter is in the correct word
+                self.update_guesses_bg_color(i, current_letter, self.GREEN)
+                self.correct_word_textbox_list[i].draw()
+                letter_in_correct_word = True
+
+        if letter_in_correct_word == False:    
+            self.on_screen_keyboard_obj.update_key_color(current_letter, self.GREY)
             
-            pygame.display.update() # updates the screen after changing the background colors
+        if letter_in_correct_word == False: # if the current guess is not in the correct word
+            self.incorect_guesses += 1
+            # RUN HANGMAN
+            
+        pygame.display.update() # updates the screen after changing the background colors
         
+        self.current_guess[-1].delete()
         # increments the number of guesses and resets the current guess to prepare for the next guess
-        self.guesses_count += 1
         self.current_guess = []
-        self.current_guess_string = ""
-        self.current_textbox_x = self.TEXTBOX_START_X
+        
+        for textbox in self.correct_word_textbox_list:
+            if textbox.bg_color == self.GREEN:
+                game_is_won = True
+            else:
+                game_is_won = False
+                break
+        
+        if game_is_won == True:
+            self.game_result = "W"
 
         # checks if you have run out of guesses and not won the game, if so sets the game result to lose
-        if self.guesses_count == self.MAX_GUESSES and self.game_result == "":
+        if self.incorect_guesses == self.MAX_GUESSES and game_is_won == False:
             self.game_result = "L"
 
     def reset(self):
@@ -181,53 +198,33 @@ class WordleHangman:
         # resets the global variables
         self.correct_word = random.choice(WORDS) # picks a new random word from the word list
         self.correct_word_length = len(self.correct_word)
-        self.guesses_count = 0
-        self.guesses = [[] for _ in range(self.MAX_GUESSES)]
         self.current_guess = []
-        self.current_guess_string = ""
         self.game_result = ""
-        self.current_textbox_x = self.TEXTBOX_START_X
-        self.current_textbox_y = self.TEXTBOX_START_Y
         self.score = 0 
+        self.incorect_guesses = 0
+
+        # sets the correct word textbox list
+        self.correct_word_textbox_list = self.set_correct_word_textbox_list()
 
         # resets the objects
-        self.textbox_grid_obj.draw_underlined_grid() # redraws the grid
+        self.correct_word_textbox_grid_obj.draw_underlined_grid() # redraws the grid
         self.on_screen_keyboard_obj.reset_key_color() # resets the on screen keyboard key colors
+        self.current_guess_textbox_grid_obj.draw_grid()
 
         pygame.display.update()
 
     def create_new_letter(self, letter):
-        # creates a new textbox for the current letter, appends it to the gueeses and prints it to the screen
-
-        self.current_guess_string += letter # adds a new letter to the current guess
-        # updates the textbox y position for the next letter
-        self.current_textbox_y = self.TEXTBOX_START_Y + self.guesses_count * (self.TEXTBOX_SIZE + self.TEXTBOX_Y_SPACING)
-        self.current_guess_textbox_y = self.GUESS_TEXTBOX_START_Y
-        self.current_guess_textbox_x = self.GUESS_TEXTBOX_START_X
         # creates a new textbox and appends it to the current guess
-        new_letter = Textbox(letter, self.GUESSED_LETTER_FONT, self.TEXTBOX_SIZE, self.BLACK, self.WHITE, self.LIGHT_GREY, self.current_guess_textbox_x, self.current_guess_textbox_y, self.SCREEN)
-        # updates the textbox x position for the next letter
-        self.current_textbox_x = self.TEXTBOX_START_X + len(self.current_guess_string) * (self.TEXTBOX_SIZE + self.TEXTBOX_X_SPACING)
-        # appends the new textbox to the guesses and the current guess lists
-        self.guesses.append(new_letter)
+        new_letter = Textbox(letter, self.GUESSED_LETTER_FONT, self.TEXTBOX_SIZE, self.BLACK, self.WHITE, self.LIGHT_GREY, self.CURRENT_GUESS_TEXTBOX_X, self.CURRENT_GUESS_TEXTBOX_Y, self.SCREEN)
+        # appends the new textbox to the current guess lists
         self.current_guess.append(new_letter)
-
-        self.guesses[-1].draw()
-
+        # draws the new textbox
+        self.current_guess[-1].draw()
 
     def delete_letter(self):
-        # deletes the last letter in the current guess and covers it with an empty textbox
-
         # covers up the last letter with an empty textbox, and removes it from the list
-        self.guesses[-1].delete()
-        self.guesses.pop()
-
-        # removes the last letter from the current guess string and current guess list
-        self.current_guess_string = self.current_guess_string[:-1]
+        self.current_guess[-1].delete()
         self.current_guess.pop()
-
-        # updates the textbox x position for the next letter
-        self.current_textbox_x = self.TEXTBOX_START_X + len(self.current_guess_string) * (self.TEXTBOX_SIZE + self.TEXTBOX_X_SPACING)
 
     def game_loop(self, game_runing):
         while game_runing:
@@ -246,16 +243,15 @@ class WordleHangman:
                     if self.game_result != "": # if the enter key is pressed, checks if the game is over, if so, resets the game
                         self.reset()
                     else:
-                        # checks if the current guess is 1) the correct length and 2) in the word list, if so, runs the check guess function
-                        if len(self.current_guess_string) == self.correct_word_length and self.current_guess_string.lower() in WORDS:
+                        if len(self.current_guess) > 0:
                             self.check_guess()
                 elif button_clicked == "DEL":
-                    if len(self.current_guess_string) > 0: #checks if there are any letters in the current guess,. if so, deletes the last letter
+                    if len(self.current_guess) > 0: #checks if there are any letters in the current guess,. if so, deletes the last letter
                         self.delete_letter()
                 else:
                     if str(button_clicked) in self.ALPHABET: # checks if the button clicked is in the alphabet
                         letter_pressed = button_clicked.upper()
-                        if len(self.current_guess_string) < 1: # checks if the current guess is less than 2
+                        if len(self.current_guess) < 1: # checks if the current guess is less than 2
                             self.create_new_letter(letter_pressed)
 
             # Keyboard events
@@ -269,16 +265,15 @@ class WordleHangman:
                         if self.game_result != "":
                             self.reset()
                         else:
-                            # checks if the current guess is 1) the correct length and 2) in the word list, if so, runs the check guess function
-                            if len(self.current_guess_string) == self.correct_word_length and self.current_guess_string.lower() in WORDS:
+                            if len(self.current_guess) > 0:
                                 self.check_guess()
                     elif event.key == pygame.K_BACKSPACE:
-                        if len(self.current_guess_string) > 0: # checks if there are any letters in the current guess,. if so, deletes the last letter
+                        if len(self.current_guess) > 0: # checks if there are any letters in the current guess,. if so, deletes the last letter
                             self.delete_letter()
                     else:
                         key_pressed = event.unicode.upper() # converts the key pressed to uppercase
                         if key_pressed in self.ALPHABET and key_pressed != "": # checks if the key pressed is in the alphabet
-                            if len(self.current_guess_string) < 1: # checks if the current guess is less than the length of the correct length, if so, runs the create new letter function
+                            if len(self.current_guess) < 1: # checks if the current guess is less than the length of the correct length, if so, runs the create new letter function
                                 self.create_new_letter(key_pressed)
                                 
             # if the game is over, draws the game results
