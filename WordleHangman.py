@@ -83,6 +83,15 @@ class WordleHangman:
         self.guide.draw_guides_thirds(self.BLACK)
         self.guide.draw_guides_cross(self.RED)
 
+        # Importing Hangman images and storing as a list
+        self.hangman_images = [pygame.image.load(f"assets/hangman_images/hangman{i}.png") for i in range(7)]
+        self.current_hangman_image = self.hangman_images[0]
+
+        # Draw the initial hangman image on the screen
+        # self.SCREEN.blit(self.current_hangman_image, (410, 10))  
+        self.image_swap()
+        pygame.display.update()
+
     def setup_constants(self):
         ################################### CONSTANTS (will not change throughout the game) ###################################
         
@@ -107,6 +116,9 @@ class WordleHangman:
         self.CORRECT_WORD_TEXTBOX_START_Y = self.SCREEN_HEIGHT/2
         self.CORRECT_WORD_TEXTBOX_X_SPACING = 8
         self.CORRECT_WORD_TEXTBOX_Y_SPACING = 20
+        # hangman image dimensions
+        self.HANGMAN_IMAGE_X = 410
+        self.HANGMAN_IMAGE_Y = 10
         # On Screen Keyboard Dimensions
         self.KEYBOARD_START_X = self.SCREEN_WIDTH / 3.3
         self.KEYBOARD_START_Y = self.SCREEN_HEIGHT / 1.47
@@ -141,7 +153,6 @@ class WordleHangman:
             self.correct_word_textbox_current_x += self.TEXTBOX_SIZE + self.CORRECT_WORD_TEXTBOX_X_SPACING
         return self.correct_word_letters_temp
 
-
     def update_guesses_bg_color(self, index, letter, color):
         # updates the background color of a given textbox and the on screen keyboard key of the same letter to the given color
         if self.IS_INDICATING:
@@ -167,6 +178,7 @@ class WordleHangman:
             
         if letter_in_correct_word == False: # if the current guess is not in the correct word
             self.incorect_guesses += 1
+            self.image_swap()
             # RUN HANGMAN
             
         pygame.display.update() # updates the screen after changing the background colors
@@ -225,6 +237,11 @@ class WordleHangman:
         # covers up the last letter with an empty textbox, and removes it from the list
         self.current_guess[-1].delete()
         self.current_guess.pop()
+
+    def image_swap(self):
+        self.current_hangman_image = self.hangman_images[self.incorect_guesses]
+        self.SCREEN.blit(self.current_hangman_image, (self.HANGMAN_IMAGE_X, self.HANGMAN_IMAGE_Y))
+        pygame.display.update()
 
     def game_loop(self, game_runing):
         while game_runing:
