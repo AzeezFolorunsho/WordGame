@@ -20,9 +20,7 @@ class WordleHangman:
         
         self.current_guess = [] # tracks the current guesses
         self.incorect_guesses = 0 # tracks the number of incorrect guesses
-        
         self.game_result = "" # tracks the game result "W" = Win, "L" = Loss, "" = undesided
-        
         self.score = 100 # tracks the score, will be set to a prpber calculation later
         
         # sets the current textbox position
@@ -30,15 +28,14 @@ class WordleHangman:
 
         # sets the correct word
         self.correct_word = "coder" # hardcoded for testing, will be replaced with: random.choice(WORDS)
-        self.correct_word_length = len(self.correct_word)
-        self.correct_word_textbox_list = self.set_correct_word_textbox_list()
+        self.correct_word_textbox_list = self.set_correct_word_textbox_list() # sets the correct word text box list
 
         # Initialize game objects
         
         # Text box grid for the correct word
         self.correct_word_textbox_grid_obj = Textbox_grid(
             self.SCREEN, self.TEXTBOX_SIZE, 1, 
-            self.correct_word_length, self.CORRECT_WORD_TEXTBOX_X_SPACING, 
+            len(self.correct_word), self.CORRECT_WORD_TEXTBOX_X_SPACING, 
             self.CORRECT_WORD_TEXTBOX_Y_SPACING, self.CORRECT_WORD_TEXTBOX_START_X, 
             self.CORRECT_WORD_TEXTBOX_START_Y, self.LIGHT_GREY, self.WHITE
         )
@@ -51,6 +48,7 @@ class WordleHangman:
         # guess textbox grid dimensions
         self.CURRENT_GUESS_TEXTBOX_X = self.offset + self.TEXTBOX_SIZE
         self.CURRENT_GUESS_TEXTBOX_Y = self.CORRECT_WORD_TEXTBOX_START_Y - self.TEXTBOX_SIZE
+        
         # sets the current guess textbox grid
         self.current_guess_textbox_grid_obj = Textbox_grid(
             self.SCREEN, self.TEXTBOX_SIZE, 1, 
@@ -86,9 +84,6 @@ class WordleHangman:
         # Importing Hangman images and storing as a list
         self.hangman_images = [pygame.image.load(f"assets/hangman_images/hangman{i}.png") for i in range(7)]
         self.current_hangman_image = self.hangman_images[0]
-
-        # Draw the initial hangman image on the screen
-        # self.SCREEN.blit(self.current_hangman_image, (410, 10))  
         self.image_swap()
         pygame.display.update()
 
@@ -175,17 +170,14 @@ class WordleHangman:
 
         if letter_in_correct_word == False:    
             self.on_screen_keyboard_obj.update_key_color(current_letter, self.GREY)
-            
-        if letter_in_correct_word == False: # if the current guess is not in the correct word
             self.incorect_guesses += 1
             self.image_swap()
-            # RUN HANGMAN
             
         pygame.display.update() # updates the screen after changing the background colors
         
+        # deletes the last letter from the current guess
         self.current_guess[-1].delete()
-        # increments the number of guesses and resets the current guess to prepare for the next guess
-        self.current_guess = []
+        self.current_guess.pop()
         
         for textbox in self.correct_word_textbox_list:
             if textbox.bg_color == self.GREEN:
@@ -209,14 +201,15 @@ class WordleHangman:
         
         # resets the global variables
         self.correct_word = random.choice(WORDS) # picks a new random word from the word list
-        self.correct_word_length = len(self.correct_word)
         self.current_guess = []
         self.game_result = ""
         self.score = 0 
         self.incorect_guesses = 0
 
         # sets the correct word textbox list
+        self.correct_word_textbox_current_x = self.CORRECT_WORD_TEXTBOX_START_X
         self.correct_word_textbox_list = self.set_correct_word_textbox_list()
+        self.image_swap()
 
         # resets the objects
         self.correct_word_textbox_grid_obj.draw_underlined_grid() # redraws the grid
@@ -227,7 +220,9 @@ class WordleHangman:
 
     def create_new_letter(self, letter):
         # creates a new textbox and appends it to the current guess
-        new_letter = Textbox(letter, self.GUESSED_LETTER_FONT, self.TEXTBOX_SIZE, self.BLACK, self.WHITE, self.LIGHT_GREY, self.CURRENT_GUESS_TEXTBOX_X, self.CURRENT_GUESS_TEXTBOX_Y, self.SCREEN)
+        new_letter = Textbox(letter, self.GUESSED_LETTER_FONT, self.TEXTBOX_SIZE, 
+                             self.BLACK, self.WHITE, self.LIGHT_GREY, self.CURRENT_GUESS_TEXTBOX_X, 
+                             self.CURRENT_GUESS_TEXTBOX_Y, self.SCREEN)
         # appends the new textbox to the current guess lists
         self.current_guess.append(new_letter)
         # draws the new textbox
@@ -246,7 +241,7 @@ class WordleHangman:
     def game_loop(self, game_runing):
         while game_runing:
             if self.return_button.draw(self.SCREEN):
-                print("Return to Menu")
+                # print("Return to Menu")
                 self.reset()
                 game_runing = False
                 return  # exit the game loop and return to the menu
@@ -297,7 +292,7 @@ class WordleHangman:
             if self.game_result != "":
                 # checks if the game result is W or L, if so, draws the game results 
                 if self.game_result == "W": 
-                    game_results_obj = Game_Results(20, 20, self.GAME_RESULTS_FONT, self.BLACK, self.WHITE, "You won! =^)", str(self.score), "Press ENTER to Play Again!", self.correct_word)
+                    game_results_obj = Game_Results(20, 20, self.GAME_RESULTS_FONT, self.BLACK, self.RED, "You won! =^)", str(self.score), "Press ENTER to Play Again!", self.correct_word)
                 else:
                     game_results_obj = Game_Results(20, 20, self.GAME_RESULTS_FONT, self.BLACK, self.WHITE, "You Lost! =^(", str(self.score), "Press ENTER to Play Again!", self.correct_word)
                 # draws the game results
