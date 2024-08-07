@@ -21,3 +21,4 @@
 - Azeez Folorunsho
 - Gloria Precious
 - Sonu Gupta
+https://linktr.ee/Wordle_Plus
