@@ -238,7 +238,7 @@ class WordleClassic:
                     if len(self.current_guess_string) > 0: #checks if there are any letters in the current guess,. if so, deletes the last letter
                         self.delete_letter()
                 else:
-                    if str(button_clicked) in self.ALPHABET: # checks if the button clicked is in the alphabet
+                    if str(button_clicked) in self.ALPHABET and self.game_result == "": # checks if the button clicked is in the alphabet
                         letter_pressed = button_clicked.upper()
                         if len(self.current_guess_string) < self.correct_word_length: # checks if the current guess is less than the length of the correct length, if so, runs the create new letter function,
                             self.create_new_letter(letter_pressed)
@@ -262,7 +262,7 @@ class WordleClassic:
                             self.delete_letter()
                     else:
                         key_pressed = event.unicode.upper() # converts the key pressed to uppercase
-                        if key_pressed in self.ALPHABET and key_pressed != "": # checks if the key pressed is in the alphabet
+                        if key_pressed != "" and key_pressed in self.ALPHABET and self.game_result == "": # checks if the key pressed is in the alphabet
                             if len(self.current_guess_string) < self.correct_word_length: # checks if the current guess is less than the length of the correct length, if so, runs the create new letter function
                                 self.create_new_letter(key_pressed)
             # if the game is over, draws the game results

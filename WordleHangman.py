@@ -76,16 +76,16 @@ class WordleHangman:
             self.SCREEN_WIDTH - 140, 27, 110, 45
         )
 
+        # Importing Hangman images and storing as a list
+        self.hangman_images = [pygame.image.load(f"assets/hangman_images/hangman{i}.png") for i in range(8)]
+        # self.current_hangman_image = self.hangman_images[0]
+        self.image_swap()
+        pygame.display.update()
+
         # sets the temporary guides
         self.guide = Guide(self.SCREEN)
         self.guide.draw_guides_thirds(self.BLACK)
         self.guide.draw_guides_cross(self.RED)
-
-        # Importing Hangman images and storing as a list
-        self.hangman_images = [pygame.image.load(f"assets/hangman_images/hangman{i}.png") for i in range(7)]
-        self.current_hangman_image = self.hangman_images[0]
-        self.image_swap()
-        pygame.display.update()
 
     def setup_constants(self):
         ################################### CONSTANTS (will not change throughout the game) ###################################
@@ -261,7 +261,7 @@ class WordleHangman:
                     if len(self.current_guess) > 0: #checks if there are any letters in the current guess,. if so, deletes the last letter
                         self.delete_letter()
                 else:
-                    if str(button_clicked) in self.ALPHABET: # checks if the button clicked is in the alphabet
+                    if str(button_clicked) in self.ALPHABET and self.game_result == "": # checks if the button clicked is in the alphabet
                         letter_pressed = button_clicked.upper()
                         if len(self.current_guess) < 1: # checks if the current guess is less than 2
                             self.create_new_letter(letter_pressed)
@@ -284,7 +284,7 @@ class WordleHangman:
                             self.delete_letter()
                     else:
                         key_pressed = event.unicode.upper() # converts the key pressed to uppercase
-                        if key_pressed in self.ALPHABET and key_pressed != "": # checks if the key pressed is in the alphabet
+                        if key_pressed != "" and key_pressed in self.ALPHABET and self.game_result == "": # checks if the key pressed is in the alphabet
                             if len(self.current_guess) < 1: # checks if the current guess is less than the length of the correct length, if so, runs the create new letter function
                                 self.create_new_letter(key_pressed)
                                 
