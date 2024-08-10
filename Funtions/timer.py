@@ -7,22 +7,28 @@ class Timer:
         self.x = x
         self.y = y
         self.background_color = background_color
-        self.time = 0
-        self.round_running = True
+
+        self.start_time = 0
+        self.active = False
+        self.time_passed = 0
         self.TIMER_FONT = pygame.font.Font("assets/FreeSansBold.otf", 30)
         
+    def activate_timer(self):
+        self.active = True
+        self.time_passed = 0
+        self.start_time = pygame.time.get_ticks()
+
     def draw(self):
-        if self.round_running == True:
-            self.time += 1
-            time_msg = Text("Timer: " + str(self.time), self.TIMER_FONT, "#000000", self.x, self.y, 100)
-            pygame.draw.rect(self.screen, self.background_color, (time_msg.text_rect))
+        if self.active == True:
+            current_time = pygame.time.get_ticks()
+            self.time_passed = current_time - self.start_time
+
+            # draws timer on screen
+            time_msg = Text("Timer: " + str(self.time_passed), self.TIMER_FONT, "#000000", self.x, self.y, 0)
+            pygame.draw.rect(self.screen, self.background_color, (time_msg.text_rect)) # draws white background
             time_msg.draw_line(self.screen)
             
-    def pause_time(self):
-        self.round_running = False
-        return self.time
-    
-    def reset_timer(self):
-        self.time = 0
-        self.round_running = True
-        
+    def stop_timer(self):
+        self.active = False
+        self.start_time = 0
+        return self.time_passed
