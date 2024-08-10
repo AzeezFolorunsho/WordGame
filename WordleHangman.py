@@ -310,6 +310,8 @@ class WordleHangman:
             # if the game is over, draws the game results
             if self.game_result != "":
                 # checks if the game result is W or L, if so, draws the game results 
+                self.score = Game_Results * Timer
+
                 if self.game_result == "W": 
                     game_results_obj = Game_Results(20, 20, self.GAME_RESULTS_FONT, self.BLACK, self.RED, "You won! =^)", str(self.score), "Press ENTER to Play Again!", self.correct_word)
                 else:
