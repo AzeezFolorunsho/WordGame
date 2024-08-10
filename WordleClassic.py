@@ -31,11 +31,11 @@ class WordleClassic:
         # tracks the game result "W" = Win, "L" = Loss, "" = undesided
         self.game_result = ""
         # tracks the score
-        self.score = 100 # will be set to a prpber calculation later
+        self.score = 0
         # sets the current textbox position
         self.current_textbox_x = self.TEXTBOX_START_X
         self.current_textbox_y = self.TEXTBOX_START_Y
-        # sets the timer for each game
+        # tracks the duration for each round
         self.game_duration = 0
         
         # Initialize game objects

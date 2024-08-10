@@ -21,7 +21,7 @@ class Timer:
     def draw(self):
         if self.active == True:
             current_time = pygame.time.get_ticks()
-            self.time_passed = current_time - self.start_time
+            self.time_passed = (current_time - self.start_time) // 1000
 
             # draws timer on screen
             time_msg = Text("Timer: " + str(self.time_passed), self.TIMER_FONT, "#000000", self.x, self.y, 0)
