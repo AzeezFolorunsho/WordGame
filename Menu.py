@@ -6,20 +6,19 @@ from WordleClassic import WordleClassic
 from WordleHangman import WordleHangman
 from WordleCrosswordle import play_crossword
 from WordleVsAI import play_ai
+from Funtions.settings import Settings  # Import the Settings class
+
+# Load settings
+settings = Settings('Local_Files\Settings.json')
+screen_width = settings.get("General", {}).get("Screen Dimensions", {}).get("width", 1280)
+screen_height = settings.get("General", {}).get("Screen Dimensions", {}).get("height", 720)
+background_color = settings.get("General", {}).get("Background Color", "#72E2FF")
 
 # Pygame setup
 pygame.init()
 
-# Constants
-SCREEN_WIDTH, SCREEN_HEIGHT = 1280, 720
-BLACK = "#000000"
-WHITE = "#FFFFFF"
-GREY = "#787c7e"
-RED = "#FF0000"
-BACKGROUND_COLOR = "#72E2FF"
-
 # Initialize screen for pygame
-SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+SCREEN = pygame.display.set_mode((screen_width, screen_height))
 ICON = pygame.image.load("assets/wordle+logo.png")
 pygame.display.set_icon(ICON)
 pygame.display.set_caption("Wordle+")
@@ -30,12 +29,12 @@ TAGLINE_FONT = pygame.font.SysFont('Comic Sans MS', 20)
 TEST_FONT = pygame.font.SysFont('Comic Sans MS', 35)
 
 # Fill the screen with background color
-SCREEN.fill(BACKGROUND_COLOR)
+SCREEN.fill(background_color)
 pygame.display.update()
 
 # Global Variables
 STARTING_X = 100
-STARTING_Y = (SCREEN_HEIGHT / 2) - 100
+STARTING_Y = (screen_height / 2) - 100
 X_SPACING = 100
 
 # Global Variables
@@ -54,14 +53,14 @@ classic_button = Img_Button(0, 0, CLASSIC_IMG, 0.5)
 hangman_button = Img_Button(0, 0, HANGMAN_IMG, 0.5)
 crosswordle_button = Img_Button(0, 0, CROSSWORDLE_IMG, 0.5)
 vs_ai_button = Img_Button(0, 0, VS_AI_IMG, 0.5)
-settings_button = Img_Button(SCREEN_WIDTH - 80 , 20 , SETTINGS_IMG, 0.9)
+settings_button = Img_Button(screen_width - 80 , 20 , SETTINGS_IMG, 0.9)
 
 # Functions and logic
 def game_selector(button, tagline_message):
     global current_x, tagline_list
 
     button.set_x_and_y(current_x, STARTING_Y)
-    tagline_text = Text(tagline_message, TAGLINE_FONT, BLACK, current_x, STARTING_Y + button.rect.height, button.rect.width)
+    tagline_text = Text(tagline_message, TAGLINE_FONT, "#000000", current_x, STARTING_Y + button.rect.height, button.rect.width)
     tagline_list.append(tagline_text)
     current_x += button.rect.width + X_SPACING
 
@@ -72,7 +71,7 @@ crosswordle__game_selector = game_selector(crosswordle_button, "Try your best to
 vs_ai_game_selector = game_selector(vs_ai_button, "Prepare for the coming AI takeover, practice your skill against your future oppressors!")
 
 # Display welcome message
-welcome_message = Text("Welcome to Wordle+!", WELCOME_FONT, WHITE, (SCREEN_WIDTH / 2) - (499 / 2), 50, SCREEN_WIDTH)
+welcome_message = Text("Welcome to Wordle+!", WELCOME_FONT, "#FFFFFF", (screen_width / 2) - (499 / 2), 50, screen_width)
 
 pygame.display.update()
 
@@ -88,29 +87,29 @@ while True:
     # Draw buttons
     if classic_button.draw(SCREEN):
         print("Classic")
-        game = WordleClassic()
+        game = WordleClassic(settings)
         game.game_loop(True)
-        SCREEN.fill(BACKGROUND_COLOR)
+        SCREEN.fill(background_color)
 
     if hangman_button.draw(SCREEN):
         print("Hangman")
-        game = WordleHangman()
+        game = WordleHangman(settings)
         game.game_loop(True)
-        SCREEN.fill(BACKGROUND_COLOR)
+        SCREEN.fill(background_color)
 
     if crosswordle_button.draw(SCREEN):
         print("Crosswordle")
         play_crossword()
-        SCREEN.fill(BACKGROUND_COLOR)
+        SCREEN.fill(background_color)
 
     if vs_ai_button.draw(SCREEN):
         print("Vs AI")
         play_ai()
-        SCREEN.fill(BACKGROUND_COLOR)
+        SCREEN.fill(background_color)
 
     if settings_button.draw(SCREEN):
         print("Settings")
-        SCREEN.fill(BACKGROUND_COLOR)
+        SCREEN.fill(background_color)
 
     # Handle quit event
     for event in pygame.event.get():
