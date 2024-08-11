@@ -291,8 +291,9 @@ class WordleClassic:
             # if the game is over, draws the game results
             if self.game_result != "":
                 # checks if the game result is W or L, if so, draws the game results 
-                self.score = self.game_duration * self.correct_word
+                
                 if self.game_result == "W":
+                    self.score = self.game_duration * self.guesses_count
                     game_results_obj = Game_Results(20, 20, self.GAME_RESULTS_FONT, self.BLACK, self.WHITE, "You won! =^)", str(self.score), "Press ENTER to Play Again!", self.correct_word)
                 else:
                     game_results_obj = Game_Results(20, 20, self.GAME_RESULTS_FONT, self.BLACK, self.WHITE, "You Lost! =^(", str(self.score), "Press ENTER to Play Again!", self.correct_word)
