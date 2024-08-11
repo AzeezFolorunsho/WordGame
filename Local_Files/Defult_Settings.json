@@ -1,0 +1,16 @@
+{
+    "General": {
+        "Screen Dimensions": {
+            "width": 1280,
+            "height": 720
+        },
+        "Background Color": "#FFFFFF"
+    },
+    "User_Profiles": {
+        "Username": "Player1",
+        "Profile Pics": "assets/Avatars/avatar1.png"
+    },
+    "Game_Settings": {
+        "Current Difficulty Level": "Normal"
+    }
+}

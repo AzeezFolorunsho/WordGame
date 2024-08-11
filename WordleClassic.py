@@ -13,8 +13,9 @@ from Funtions.guides import Guide  # Temporary import for testing
 
 
 class WordleClassic:
-    def __init__(self):
+    def __init__(self, settings):
         # Initialize Constants and pygame
+        self.settings = settings
         self.setup_constants()
         self.setup_pygame()
         
@@ -73,7 +74,11 @@ class WordleClassic:
     def setup_constants(self):
         ################################### CONSTANTS (will not change throughout the game) ###################################
         
-        self.SCREEN_WIDTH, self.SCREEN_HEIGHT = 1280, 720 # Screen Dimensions
+        # loads the settings
+        self.SCREEN_WIDTH = self.settings.get("General", {}).get("Screen Dimensions", {}).get("width", 1280)
+        self.SCREEN_HEIGHT = self.settings.get("General", {}).get("Screen Dimensions", {}).get("height", 720)
+        self.BACKGROUND_COLOR = self.settings.get("General", {}).get("Background Color", "#FFFFFF")
+
         self.IS_INDICATING = True # determines if the color of the textboxes and key board should change
         self.ALPHABET = "QWERTYUIOPASDFGHJKLZXCVBNM" # alphabet for checking if the key typed or click is a letter
         # Colors
@@ -85,7 +90,6 @@ class WordleClassic:
         self.GREEN = "#6aaa64"
         self.YELLOW = "#c9b458"
         self.RED = "#FF0000"
-        self.BACKGROUND_COLOR = self.WHITE
         # the maximum number of guesses
         self.MAX_GUESSES = 6
         # Textbox Dimensions
