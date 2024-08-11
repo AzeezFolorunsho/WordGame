@@ -6,11 +6,11 @@
         },
         "Background Color": "#72E2FF"
     },
-    "User_Profiles": {
-        "Username": "Player1",
-        "Profile Pics": "assets/Avatars/avatar1.png"
+    "User Profiles": {
+        "Username": "Defult Username",
+        "Current Avatar": "assets/Avatars/avatar1.png"
     },
-    "Game_Settings": {
+    "Game Settings": {
         "Current Difficulty Level": "Normal"
     }
 }

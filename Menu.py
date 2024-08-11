@@ -13,6 +13,7 @@ settings = Settings('Local_Files\Settings.json')
 screen_width = settings.get("General", {}).get("Screen Dimensions", {}).get("width", 1280)
 screen_height = settings.get("General", {}).get("Screen Dimensions", {}).get("height", 720)
 background_color = settings.get("General", {}).get("Background Color", "#72E2FF")
+username = settings.get("User Profiles", {}).get("Username", "Player1")
 
 # Pygame setup
 pygame.init()
@@ -24,7 +25,8 @@ pygame.display.set_icon(ICON)
 pygame.display.set_caption("Wordle+")
 
 # Fonts
-WELCOME_FONT = pygame.font.SysFont('Comic Sans MS', 50)
+WELCOME_FONT = pygame.font.Font("assets/FreeSansBold.otf", 50)
+USERNAME_FONT = pygame.font.SysFont('Comic Sans MS', 25)
 TAGLINE_FONT = pygame.font.SysFont('Comic Sans MS', 20)
 TEST_FONT = pygame.font.SysFont('Comic Sans MS', 35)
 
@@ -32,10 +34,16 @@ TEST_FONT = pygame.font.SysFont('Comic Sans MS', 35)
 SCREEN.fill(background_color)
 pygame.display.update()
 
-# Global Variables
+# CONSTANTS
+
+# Game selection dimensions
 STARTING_X = 100
 STARTING_Y = (screen_height / 2) - 100
 X_SPACING = 100
+
+# Color
+BLACK = "#000000"
+WHITE = "#FFFFFF"
 
 # Global Variables
 current_x = STARTING_X
@@ -60,7 +68,7 @@ def game_selector(button, tagline_message):
     global current_x, tagline_list
 
     button.set_x_and_y(current_x, STARTING_Y)
-    tagline_text = Text(tagline_message, TAGLINE_FONT, "#000000", current_x, STARTING_Y + button.rect.height, button.rect.width)
+    tagline_text = Text(tagline_message, TAGLINE_FONT, BLACK, current_x, STARTING_Y + button.rect.height, button.rect.width)
     tagline_list.append(tagline_text)
     current_x += button.rect.width + X_SPACING
 
@@ -71,14 +79,18 @@ crosswordle__game_selector = game_selector(crosswordle_button, "Try your best to
 vs_ai_game_selector = game_selector(vs_ai_button, "Prepare for the coming AI takeover, practice your skill against your future oppressors!")
 
 # Display welcome message
-welcome_message = Text("Welcome to Wordle+!", WELCOME_FONT, "#FFFFFF", (screen_width / 2) - (499 / 2), 50, screen_width)
+welcome_message_text = Text("Welcome to Wordle+!", WELCOME_FONT, BLACK, (screen_width / 2) - (499 / 2), 50, screen_width)
+username_text = Text(username, USERNAME_FONT, BLACK, (screen_width / 2), 150, screen_width)
 
 pygame.display.update()
 
 # Game loop
 while True:
     # Draw welcome message
-    welcome_message.draw_line(SCREEN)
+    welcome_message_text.draw_line(SCREEN)
+
+    # Draw username
+    username_text.draw_line(SCREEN)
 
     # Draw taglines
     for tagline in tagline_list:
