@@ -8,11 +8,14 @@ from Funtions.textbox import Textbox
 from Funtions.buttons import Text_Button
 from Funtions.on_screen_keyboard import On_Screen_Keyboard
 from Funtions.game_results import Game_Results
+from Funtions.timer import Timer
 from Funtions.guides import Guide  # Temporary import for testing
 
+
 class WordleClassic:
-    def __init__(self):
+    def __init__(self, settings):
         # Initialize Constants and pygame
+        self.settings = settings
         self.setup_constants()
         self.setup_pygame()
         
@@ -29,12 +32,18 @@ class WordleClassic:
         # tracks the game result "W" = Win, "L" = Loss, "" = undesided
         self.game_result = ""
         # tracks the score
-        self.score = 100 # will be set to a prpber calculation later
+        self.score = 0
         # sets the current textbox position
         self.current_textbox_x = self.TEXTBOX_START_X
         self.current_textbox_y = self.TEXTBOX_START_Y
-
+        # tracks the duration for each round
+        self.game_duration = 0
+        
         # Initialize game objects
+
+        self.game_timer = Timer(self.SCREEN, 30, self.SCREEN_HEIGHT / 2, self.BACKGROUND_COLOR)
+        self.game_timer.activate_timer()
+        
         self.textbox_grid_obj = Textbox_grid(
             self.SCREEN, self.TEXTBOX_SIZE, self.MAX_GUESSES, 
             self.correct_word_length, self.TEXTBOX_X_SPACING, 
@@ -65,7 +74,11 @@ class WordleClassic:
     def setup_constants(self):
         ################################### CONSTANTS (will not change throughout the game) ###################################
         
-        self.SCREEN_WIDTH, self.SCREEN_HEIGHT = 1280, 720 # Screen Dimensions
+        # loads the settings
+        self.SCREEN_WIDTH = self.settings.get("General", {}).get("Screen Dimensions", {}).get("width", 1280)
+        self.SCREEN_HEIGHT = self.settings.get("General", {}).get("Screen Dimensions", {}).get("height", 720)
+        self.BACKGROUND_COLOR = self.settings.get("General", {}).get("Background Color", "#FFFFFF")
+
         self.IS_INDICATING = True # determines if the color of the textboxes and key board should change
         self.ALPHABET = "QWERTYUIOPASDFGHJKLZXCVBNM" # alphabet for checking if the key typed or click is a letter
         # Colors
@@ -77,7 +90,6 @@ class WordleClassic:
         self.GREEN = "#6aaa64"
         self.YELLOW = "#c9b458"
         self.RED = "#FF0000"
-        self.BACKGROUND_COLOR = self.WHITE
         # the maximum number of guesses
         self.MAX_GUESSES = 6
         # Textbox Dimensions
@@ -97,6 +109,7 @@ class WordleClassic:
         self.GUESSED_LETTER_FONT = pygame.font.Font("assets/FreeSansBold.otf", 50)
         self.ON_SCREEN_KEYBOARD_FONT = pygame.font.Font("assets/FreeSansBold.otf", 25)
         self.GAME_RESULTS_FONT = pygame.font.Font("assets/FreeSansBold.otf", 30)
+        self.TIMER_FONT = pygame.font.Font("assets/FreeSansBold.otf", 30)
 
     def setup_pygame(self):
         # initialize pygame, screen, and icon
@@ -173,10 +186,12 @@ class WordleClassic:
         self.current_textbox_x = self.TEXTBOX_START_X
         self.current_textbox_y = self.TEXTBOX_START_Y
         self.score = 0 
+        self.game_duration = 0
 
         # resets the objects
         self.textbox_grid_obj.draw_grid() # redraws the grid
         self.on_screen_keyboard_obj.reset_key_color() # resets the on screen keyboard key colors
+        self.game_timer.activate_timer()
 
         pygame.display.update()
 
@@ -216,6 +231,10 @@ class WordleClassic:
 
     def game_loop(self, game_runing):
         while game_runing:
+            
+            # starts timer and draws it on screen
+            self.game_timer.draw()
+            
             if self.return_button.draw(self.SCREEN):
                 print("Return to Menu")
                 self.reset()
@@ -234,6 +253,10 @@ class WordleClassic:
                         # checks if the current guess is 1) the correct length and 2) in the word list, if so, runs the check guess function
                         if len(self.current_guess_string) == self.correct_word_length and self.current_guess_string.lower() in WORDS:
                             self.check_guess()
+                            # pauses game timer and returns game time
+                            if self.game_result != "":
+                                self.game_duration = self.game_timer.stop_timer()
+                            
                 elif button_clicked == "DEL":
                     if len(self.current_guess_string) > 0: #checks if there are any letters in the current guess,. if so, deletes the last letter
                         self.delete_letter()
@@ -257,6 +280,10 @@ class WordleClassic:
                             # checks if the current guess is 1) the correct length and 2) in the word list, if so, runs the check guess function
                             if len(self.current_guess_string) == self.correct_word_length and self.current_guess_string.lower() in WORDS:
                                 self.check_guess()
+                                # pauses game timer and returns game time
+                                if self.game_result != "":
+                                    self.game_duration = self.game_timer.stop_timer()
+                                
                     elif event.key == pygame.K_BACKSPACE:
                         if len(self.current_guess_string) > 0: # checks if there are any letters in the current guess,. if so, deletes the last letter
                             self.delete_letter()
@@ -268,11 +295,13 @@ class WordleClassic:
             # if the game is over, draws the game results
             if self.game_result != "":
                 # checks if the game result is W or L, if so, draws the game results 
-                if self.game_result == "W": 
+                
+                if self.game_result == "W":
+                    self.score = self.game_duration * self.guesses_count
                     game_results_obj = Game_Results(20, 20, self.GAME_RESULTS_FONT, self.BLACK, self.WHITE, "You won! =^)", str(self.score), "Press ENTER to Play Again!", self.correct_word)
                 else:
                     game_results_obj = Game_Results(20, 20, self.GAME_RESULTS_FONT, self.BLACK, self.WHITE, "You Lost! =^(", str(self.score), "Press ENTER to Play Again!", self.correct_word)
                 # draws the game results
                 game_results_obj.draw_results(self.SCREEN)
-
+                
             pygame.display.flip()

@@ -8,11 +8,13 @@ from Funtions.textbox import Textbox
 from Funtions.buttons import Text_Button
 from Funtions.on_screen_keyboard import On_Screen_Keyboard
 from Funtions.game_results import Game_Results
+from Funtions.timer import Timer
 from Funtions.guides import Guide  # Temporary import for testing
 
 class WordleHangman:
-    def __init__(self):
+    def __init__(self, settings):
         # Initialize Constants and pygame
+        self.settings = settings
         self.setup_constants()
         self.setup_pygame()
         
@@ -21,7 +23,7 @@ class WordleHangman:
         self.current_guess = [] # tracks the current guesses
         self.incorect_guesses = 0 # tracks the number of incorrect guesses
         self.game_result = "" # tracks the game result "W" = Win, "L" = Loss, "" = undesided
-        self.score = 100 # tracks the score, will be set to a prpber calculation later
+        self.score = 0
         
         # sets the current textbox position
         self.correct_word_textbox_current_x = self.CORRECT_WORD_TEXTBOX_START_X
@@ -30,8 +32,14 @@ class WordleHangman:
         self.correct_word = "coder" # hardcoded for testing, will be replaced with: random.choice(WORDS)
         self.correct_word_textbox_list = self.set_correct_word_textbox_list() # sets the correct word text box list
 
+        # tracks the duration for each round
+        self.game_duration = 0
+
         # Initialize game objects
-        
+
+        self.game_timer = Timer(self.SCREEN, 30, self.SCREEN_HEIGHT / 2, self.BACKGROUND_COLOR)
+        self.game_timer.activate_timer()
+
         # Text box grid for the correct word
         self.correct_word_textbox_grid_obj = Textbox_grid(
             self.SCREEN, self.TEXTBOX_SIZE, 1, 
@@ -90,7 +98,11 @@ class WordleHangman:
     def setup_constants(self):
         ################################### CONSTANTS (will not change throughout the game) ###################################
         
-        self.SCREEN_WIDTH, self.SCREEN_HEIGHT = 1280, 720 # Screen Dimensions
+        # load settings
+        self.SCREEN_WIDTH = self.settings.get("General", {}).get("Screen Dimensions", {}).get("width", 1280)
+        self.SCREEN_HEIGHT = self.settings.get("General", {}).get("Screen Dimensions", {}).get("height", 720)
+        self.BACKGROUND_COLOR = self.settings.get("General", {}).get("Background Color", "#FFFFFF")
+        
         self.IS_INDICATING = True # determines if the color of the textboxes and key board should change
         self.ALPHABET = "QWERTYUIOPASDFGHJKLZXCVBNM" # alphabet for checking if the key typed or click is a letter
         # Colors
@@ -102,7 +114,6 @@ class WordleHangman:
         self.GREEN = "#6aaa64"
         self.YELLOW = "#c9b458"
         self.RED = "#FF0000"
-        self.BACKGROUND_COLOR = self.WHITE
         # the maximum number of guesses
         self.MAX_GUESSES = 7
         # Textbox Dimensions
@@ -205,6 +216,7 @@ class WordleHangman:
         self.game_result = ""
         self.score = 0 
         self.incorect_guesses = 0
+        self.game_duration = 0
 
         # sets the correct word textbox list
         self.correct_word_textbox_current_x = self.CORRECT_WORD_TEXTBOX_START_X
@@ -215,6 +227,7 @@ class WordleHangman:
         self.correct_word_textbox_grid_obj.draw_underlined_grid() # redraws the grid
         self.on_screen_keyboard_obj.reset_key_color() # resets the on screen keyboard key colors
         self.current_guess_textbox_grid_obj.draw_grid()
+        self.game_timer.activate_timer()
 
         pygame.display.update()
 
@@ -240,6 +253,10 @@ class WordleHangman:
 
     def game_loop(self, game_runing):
         while game_runing:
+            
+            # draws the timer
+            self.game_timer.draw()
+
             if self.return_button.draw(self.SCREEN):
                 # print("Return to Menu")
                 self.reset()
@@ -257,6 +274,9 @@ class WordleHangman:
                     else:
                         if len(self.current_guess) > 0:
                             self.check_guess()
+                            # stops the timer if the game is over and updates the game duration
+                            if self.game_result != "":
+                                self.game_duration = self.game_timer.stop_timer()
                 elif button_clicked == "DEL":
                     if len(self.current_guess) > 0: #checks if there are any letters in the current guess,. if so, deletes the last letter
                         self.delete_letter()
@@ -279,6 +299,9 @@ class WordleHangman:
                         else:
                             if len(self.current_guess) > 0:
                                 self.check_guess()
+                                # stops the timer if the game is over and updates the game duration
+                                if self.game_result != "":
+                                    self.game_duration = self.game_timer.stop_timer()
                     elif event.key == pygame.K_BACKSPACE:
                         if len(self.current_guess) > 0: # checks if there are any letters in the current guess,. if so, deletes the last letter
                             self.delete_letter()
@@ -291,7 +314,9 @@ class WordleHangman:
             # if the game is over, draws the game results
             if self.game_result != "":
                 # checks if the game result is W or L, if so, draws the game results 
+
                 if self.game_result == "W": 
+                    self.score = self.game_duration * self.incorect_guesses
                     game_results_obj = Game_Results(20, 20, self.GAME_RESULTS_FONT, self.BLACK, self.RED, "You won! =^)", str(self.score), "Press ENTER to Play Again!", self.correct_word)
                 else:
                     game_results_obj = Game_Results(20, 20, self.GAME_RESULTS_FONT, self.BLACK, self.WHITE, "You Lost! =^(", str(self.score), "Press ENTER to Play Again!", self.correct_word)
