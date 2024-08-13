@@ -1,4 +1,4 @@
-WORDS4=[
+WORDS4 = [
 "AAHS",
 "AALS",
 "ABAC",

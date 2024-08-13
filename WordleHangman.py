@@ -1,7 +1,7 @@
 import pygame
 import sys
 import random
-from words import WORDS
+from Word_Files.words5 import WORDS5
 from Funtions.text import Text
 from Funtions.textbox_grid import Textbox_grid
 from Funtions.textbox import Textbox
@@ -9,6 +9,7 @@ from Funtions.buttons import Text_Button
 from Funtions.on_screen_keyboard import On_Screen_Keyboard
 from Funtions.game_results import Game_Results
 from Funtions.timer import Timer
+from Funtions.random_word import Random_word
 from Funtions.guides import Guide  # Temporary import for testing
 
 class WordleHangman:
@@ -29,7 +30,7 @@ class WordleHangman:
         self.correct_word_textbox_current_x = self.CORRECT_WORD_TEXTBOX_START_X
 
         # sets the correct word
-        self.correct_word = "coder" # hardcoded for testing, will be replaced with: random.choice(WORDS)
+        self.correct_word = "coder" # hardcoded for testing, will be replaced with: random.choice(WORDS5)
         self.correct_word_textbox_list = self.set_correct_word_textbox_list() # sets the correct word text box list
 
         # tracks the duration for each round
@@ -211,7 +212,7 @@ class WordleHangman:
         self.SCREEN.fill(self.BACKGROUND_COLOR)
         
         # resets the global variables
-        self.correct_word = random.choice(WORDS) # picks a new random word from the word list
+        self.correct_word = random.choice(WORDS5) # picks a new random word from the word list
         self.current_guess = []
         self.game_result = ""
         self.score = 0 

@@ -1,7 +1,7 @@
 import pygame
 import sys
 import random
-from words import WORDS
+from Word_Files.words5 import WORDS5
 from Funtions.text import Text
 from Funtions.textbox_grid import Textbox_grid
 from Funtions.textbox import Textbox
@@ -9,6 +9,7 @@ from Funtions.buttons import Text_Button
 from Funtions.on_screen_keyboard import On_Screen_Keyboard
 from Funtions.game_results import Game_Results
 from Funtions.timer import Timer
+from Funtions.random_word import Random_word
 from Funtions.guides import Guide  # Temporary import for testing
 
 
@@ -22,7 +23,7 @@ class WordleClassic:
         ################################### Global Variables (will be accesed and changed througout the game) ###################################
         
         # sets the correct word
-        self.correct_word = "coder" # hardcoded for testing, will be replaced with: random.choice(WORDS)
+        self.correct_word = "coder" # hardcoded for testing, will be replaced with: random.choice(WORDS5)
         self.correct_word_length = len(self.correct_word)
         # tracks the guesses
         self.guesses_count = 0
@@ -176,7 +177,7 @@ class WordleClassic:
         self.SCREEN.fill(self.BACKGROUND_COLOR)
         
         # resets the global variables
-        self.correct_word = random.choice(WORDS) # picks a new random word from the word list
+        self.correct_word = random.choice(WORDS5) # picks a new random word from the word list
         self.correct_word_length = len(self.correct_word)
         self.guesses_count = 0
         self.guesses = [[] for _ in range(self.MAX_GUESSES)]
@@ -251,7 +252,7 @@ class WordleClassic:
                         self.reset()
                     else:
                         # checks if the current guess is 1) the correct length and 2) in the word list, if so, runs the check guess function
-                        if len(self.current_guess_string) == self.correct_word_length and self.current_guess_string.lower() in WORDS:
+                        if len(self.current_guess_string) == self.correct_word_length and self.current_guess_string.lower() in WORDS5:
                             self.check_guess()
                             # pauses game timer and returns game time
                             if self.game_result != "":
@@ -278,7 +279,7 @@ class WordleClassic:
                             self.reset()
                         else:
                             # checks if the current guess is 1) the correct length and 2) in the word list, if so, runs the check guess function
-                            if len(self.current_guess_string) == self.correct_word_length and self.current_guess_string.lower() in WORDS:
+                            if len(self.current_guess_string) == self.correct_word_length and self.current_guess_string.lower() in WORDS5:
                                 self.check_guess()
                                 # pauses game timer and returns game time
                                 if self.game_result != "":

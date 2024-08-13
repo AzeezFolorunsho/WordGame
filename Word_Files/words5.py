@@ -1,3 +1,4 @@
+WORDS5 = [
 "cigar",
 "rebut",
 "sissy",
@@ -12970,3 +12971,4 @@
 "zygon",
 "zymes",
 "zymic"
+]
