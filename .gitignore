@@ -1,3 +1,8 @@
 venv/
 Notes.txt
 wordle_plus_game/assets/wordle+logo SAVE.svg
+*.pyc
+/wordle_plus_game/src/components/__pycache__
+/wordle_plus_game/src/core/__pycache__
+/wordle_plus_game/src/scripts/__pycache__
+/wordle_plus_game/src/utils/__pycache__
