@@ -6,3 +6,5 @@ wordle_plus_game/assets/wordle+logo SAVE.svg
 /wordle_plus_game/src/core/__pycache__
 /wordle_plus_game/src/scripts/__pycache__
 /wordle_plus_game/src/utils/__pycache__
+.venv/
+__pycache__/
