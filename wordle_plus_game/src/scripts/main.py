@@ -4,6 +4,7 @@ from wordle_plus_game.src.core.settings import Settings
 from wordle_plus_game.src.components.buttons import TextButton
 from wordle_plus_game.src.games.WordleClassic import WordleClassic
 from wordle_plus_game.src.games.WordleHangman import WordleHangman
+from wordle_plus_game.src.components.text import Text
 
 class Menu:
     """
@@ -25,6 +26,10 @@ class Menu:
         self.init_fonts()
         self.init_buttons()
 
+        self.title_size = self.title_font.size("Welcome to Wordle+!")[0]
+
+        self.welcome_text = Text("Welcome to Wordle+!", self.title_font, (self.screen_width / 2) - (self.title_size / 2), 40)
+
     def init_pygame(self):
         """
         Initializes Pygame and sets up the screen.
@@ -41,6 +46,7 @@ class Menu:
         Initializes fonts for the menu.
         """
         self.button_font = pygame.font.Font("wordle_plus_game/assets/FreeSansBold.otf", 35)
+        self.title_font = pygame.font.Font("wordle_plus_game/assets/FreeSansBold.otf", 50)
 
     def init_buttons(self):
         """
@@ -58,6 +64,9 @@ class Menu:
         """
         running = True
         while running:
+
+            self.welcome_text.draw(self.screen)
+
             for button in self.buttons:
                 action = button.draw(self.screen)
                 if action:

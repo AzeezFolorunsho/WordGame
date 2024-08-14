@@ -52,8 +52,8 @@ class WordleClassic:
 
         # Initialize guides (for testing purposes)
         self.guides = Guide(self.screen)
-        self.guides.draw_third_guides(self.black)
-        self.guides.draw_cross_guides(self.red)
+        # self.guides.draw_third_guides(self.black)
+        # self.guides.draw_cross_guides(self.red)
 
     def init_constants(self):
         """

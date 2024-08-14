@@ -60,8 +60,8 @@ class WordleHangman:
 
         # Initialize guides (for testing purposes)
         self.guide = Guide(self.screen)
-        self.guide.draw_third_guides(self.black)
-        self.guide.draw_cross_guides(self.red)
+        # self.guide.draw_third_guides(self.black)
+        # self.guide.draw_cross_guides(self.red)
 
     def init_constants(self):
         """
