@@ -1,0 +1,27 @@
+Run the following comands in your vscode terminal to set up your virtual enviroment and be able to run the code
+
+#1. make sure your in the projects root directory if you have it open on VScode you should be there automaticaly
+
+cd wordle-plus-game
+
+#2. Set up the virtual enviroment:
+
+python -m venv venv 
+
+#3. Activiate the virtual enviroment:
+
+venv\Scripts\activate #For Windows
+source venv/bin/activate #For macOS/Linux
+
+#4. install our project dependencies (libarys we need to ruun the game) listed in the requierments.txt file, 
+only run this ONCE, unless we add new dependancys.
+
+pip install -r requirements.txt
+
+#5. When your done working and running the project donr forget to stop the virtual enviroment
+
+deactivate
+
+to run and test the code 1 make sure the virtua enviorment is activated, then run the "run.py" file it will open the game to the menu.
+
+python run.py
