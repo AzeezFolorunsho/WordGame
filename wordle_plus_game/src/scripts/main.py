@@ -21,7 +21,7 @@ class Menu:
         self.screen_width = self.settings.get("General", "Screen Dimensions", {}).get("width", 1280)
         self.screen_height = self.settings.get("General", "Screen Dimensions", {}).get("height", 720)
         self.bg_color = self.settings.get("General", "Background Color", "#FFFFFF")
-
+        
         self.init_pygame()
         self.init_fonts()
         self.init_buttons()

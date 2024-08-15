@@ -52,7 +52,6 @@ class ImageButton:
 
         return action
 
-
 class TextButton:
     """
     A class for managing text-based buttons in a Pygame application.
