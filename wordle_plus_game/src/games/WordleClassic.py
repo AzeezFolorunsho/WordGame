@@ -11,6 +11,7 @@ from wordle_plus_game.src.games.game_results import GameResults
 from wordle_plus_game.src.games.timer import Timer
 from wordle_plus_game.src.utils.guides import Guide
 from wordle_plus_game.src.utils.words import WORDS
+from wordle_plus_game.src.core.settings import Settings
 
 class WordleClassic:
     """
@@ -54,6 +55,15 @@ class WordleClassic:
         self.guides = Guide(self.screen)
         self.guides.draw_third_guides(self.black)
         self.guides.draw_cross_guides(self.red)
+        
+        #  Difficulty level values
+        self.difficulty_level = Settings.get("Current Difficulty Level")
+        
+        
+        
+        
+        
+        
 
     def init_constants(self):
         """
@@ -106,6 +116,60 @@ class WordleClassic:
         pygame.display.set_icon(self.icon)
         pygame.display.set_caption("Wordle+ Classic")
         self.screen.fill(self.bg_color)
+
+    def difficulty_level(self):
+        # want to check difficulty level and change relevant values
+            #  Length of words
+            #  Invalid words /letter
+            #  Letter hinting
+            #  Number of guesses
+        # make sure it also changes the grids***
+        
+        
+        
+        
+        
+        
+        
+        # {
+        #     "Difficulty Levels": {
+        #         "Easy": {
+        #             "Word Length": 4,
+        #             "Invalid Words/Letters": False,
+        #             "Letter Hinting": True,
+        #             "Number of Guesses": __,                    # How many guesses? Infinite?
+        #         },
+        #         "Normal": {
+        #             "Word Length": 5,
+        #             "Invalid Words/Letters": False,
+        #             "Letter Hinting": True,
+        #             "Number of Guesses": 6,
+        #         },
+        #         "Hard": {
+        #             "Word Length": 6,                           # May change into 6-8
+        #             "Invalid Words/Letters": True,
+        #             "Letter Hinting": False,
+        #             "Number of Guesses": 5,
+        #         },
+        #         "Ultra Hard": {
+        #             "Word Length": __,
+        #             "Invalid Words/Letters": __,
+        #             "Letter Hinting": __,
+        #             "Number of Guesses": 1,
+        #         }
+        #     }
+        # }
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
 
     def update_textbox_color(self, index, letter, color):
         """
