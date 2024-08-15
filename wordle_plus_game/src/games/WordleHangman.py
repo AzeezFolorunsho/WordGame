@@ -62,6 +62,9 @@ class WordleHangman:
         self.guide = Guide(self.screen)
         self.guide.draw_third_guides(self.black)
         self.guide.draw_cross_guides(self.red)
+        
+        #  Difficulty level values
+        self.difficulty_level = self.settings.get("Game Settings", "Current Difficulty Level")
 
     def init_constants(self):
         """
@@ -122,6 +125,58 @@ class WordleHangman:
         pygame.display.set_icon(self.icon)
         pygame.display.set_caption("Wordle+ Hangman")
         self.screen.fill(self.bg_color)
+
+def difficulty_level(self):
+        # want to check difficulty level and change relevant values
+            #  Length of words
+            #  Invalid words /letter
+            #  Letter hinting
+            #  Number of guesses
+        # make sure it also changes the grids***
+        
+        if self.difficulty_level == "Normal":
+            
+        
+        
+        
+        
+        # Is there any invalid guess or letter hinting in Hangman?
+
+        #         "Easy": {
+        #             "Word Length": 4
+        #             # "Invalid Words/Letters": False
+        #             # "Letter Hinting": True
+        #             "Number of Guesses": __      # How many guesses? 26? --clothing/hair to be put on the hangman?
+        
+        #         "Normal": {
+        #             "Word Length": 5
+        #             # "Invalid Words/Letters": False
+        #             # "Letter Hinting": True
+        #             "Number of Guesses": 6
+        
+        #         "Hard": {
+        #             "Word Length": 6    # May change into 6-8
+        #             # "Invalid Words/Letters": True
+        #             # "Letter Hinting": False
+        #             "Number of Guesses": 5
+        
+        #         "Ultra Hard": {        # How would this work with Hangman??
+        #             "Word Length": __
+        #             # "Invalid Words/Letters": __
+        #             # "Letter Hinting": __
+        #             "Number of Guesses": 1
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+
+
 
     def create_word_boxes(self):
         """
