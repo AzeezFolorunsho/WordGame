@@ -8,9 +8,10 @@ from wordle_plus_game.src.components.textbox_grid import TextboxGrid
 from wordle_plus_game.src.components.buttons import TextButton
 from wordle_plus_game.src.components.on_screen_keyboard import OnScreenKeyboard
 from wordle_plus_game.src.games.game_results import GameResults
-from wordle_plus_game.src.games.timer import Timer
+from wordle_plus_game.src.games.timer import Timer, Countdown
 from wordle_plus_game.src.utils.guides import Guide
 from wordle_plus_game.src.utils.words import WORDS
+
 
 class WordleClassic:
     """
@@ -20,6 +21,7 @@ class WordleClassic:
         settings (Settings): Game settings.
         score_tracker (ScoreTracking): Score tracking for the game.
         timer (Timer): Timer for the game.
+        countdown (Countdown): Countdown for the Ultra Hard difficulty.
     """
 
     def __init__(self, settings):
@@ -36,11 +38,16 @@ class WordleClassic:
         self.game_time = 0
 
         # Initialize game components
-        self.target_word = 'coder'  # set target word to 'coder' for testing purposes will change to random.choice(WORDS)
+        self.target_word = 'coder'  # set target word to 'coder' for testing purposes will change to ""
         self.score_tracker = ScoreTracking()
         self.score_saved = False
         self.timer = Timer(self.screen, 30, self.screen_height / 2, self.bg_color, self.timer_font)
         self.timer.start()
+        self.difficulty_level()
+
+        # Game Settings
+        self.is_invalid = True#"".join([g.text for g in self.current_guess]).lower() in WORDS           # random_word.list(target_length)
+        self.is_indicating = True
 
         # Initialize the grid and keyboard
         self.textbox_grid = TextboxGrid(self.screen, self.textbox_size, self.max_attempts, len(self.target_word), self.textbox_x_spacing, self.textbox_y_spacing, self.textbox_start_x, self.textbox_start_y, self.light_gray, self.white)
@@ -54,9 +61,6 @@ class WordleClassic:
         self.guides = Guide(self.screen)
         self.guides.draw_third_guides(self.black)
         self.guides.draw_cross_guides(self.red)
-        
-        #  Difficulty level values
-        self.difficulty_level = self.settings.get("Game Settings", "Current Difficulty Level")
         
     def init_constants(self):
         """
@@ -111,56 +115,37 @@ class WordleClassic:
         self.screen.fill(self.bg_color)
 
     def difficulty_level(self):
-        # want to check difficulty level and change relevant values
-            #  Length of words
-            #  Invalid words /letter
-            #  Letter hinting
-            #  Number of guesses
-        # make sure it also changes the grids***
+        """
+        Updates several aspects that differ between the difficulty levels.
+        """
+        if self.difficulty == "Normal":     #default values
+            self.target_word = random_word(5)
         
-        if self.difficulty_level == "Normal":
+        elif self.difficulty == "Easy":
+            # self.target_word = random_word(4)
+            self.target_word = "code"
+        
+        elif self.difficulty == "Hard":
+            self.target_word = "coders"#random_word(6)    # May change into 6-8
+            self.is_invalid = True
+            self.max_attempts = 4
+            # time incentive
+            self.penalty_time = 30
+            self.penalty_message = Text("Score multiplier after 30 seconds", self.timer_font, 30, self.screen_height / 2 + 20)
+            self.penalty_message.draw(self.screen)
+       
+        else: # Ultra hard
+            self.target_word = "coders"#random_word(6)
+            self.is_invalid = True,
+            self.is_indicating = False
+            self.max_attempts = 2
+            # time incentive
+            self.time_limit = 30
+            self.countdown = Countdown(self.screen, 30, self.screen_height / 2, self.bg_color, self.timer_font, self.time_limit, text_color=self.red)
+            self.penalty_message = Text("Time limit 30 seconds!", self.timer_font, 30, self.screen_height / 2 + 20)
+            self.countdown.start()
+            self.penalty_message.draw(self.screen)
             
-        
-        
-        
-        
-        
-
-        #         "Easy": {
-        #             "Word Length": 4,
-        #             "Invalid Words/Letters": False,
-        #             "Letter Hinting": True,
-        #             "Number of Guesses": __,      # How many guesses? Infinite?
-        
-        #         "Normal": {
-        #             "Word Length": 5,
-        #             "Invalid Words/Letters": False,
-        #             "Letter Hinting": True,
-        #             "Number of Guesses": 6,
-        
-        #         "Hard": {
-        #             "Word Length": 6,    # May change into 6-8
-        #             "Invalid Words/Letters": True,
-        #             "Letter Hinting": False,
-        #             "Number of Guesses": 5,
-        
-        #         "Ultra Hard": {
-        #             "Word Length": __,
-        #             "Invalid Words/Letters": __,
-        #             "Letter Hinting": __,
-        #             "Number of Guesses": 1,
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-
     def update_textbox_color(self, index, letter, color):
         """
         Updates the background color of a given textbox and the on-screen keyboard key of the same letter.
@@ -170,8 +155,9 @@ class WordleClassic:
             letter (str): The letter to update.
             color (str): The color to set as the background.
         """
-        self.keyboard.update_key_color(letter, color)
-        self.current_guess[index].update_bg_color(letter, color)
+        if self.is_indicating:
+            self.keyboard.update_key_color(letter, color)
+            self.current_guess[index].update_bg_color(letter, color)
 
     def evaluate_guess(self):
         """
@@ -202,14 +188,14 @@ class WordleClassic:
         self.current_guess = []
 
         if self.current_attempt == self.max_attempts and not self.game_outcome:
-            self.game_outcome = "L"
+            if not self.difficulty == "Easy":
+                self.game_outcome = "L"
 
     def reset_game(self):
         """
         Resets the game to start a new round.
         """
         self.screen.fill(self.bg_color)
-        self.target_word = random.choice(WORDS)
         self.current_attempt = 0
         self.guesses = [[] for _ in range(self.max_attempts)]
         self.current_guess = []
@@ -217,6 +203,7 @@ class WordleClassic:
         self.score = 0
         self.game_time = 0
         self.score_saved = False
+        self.difficulty_level()
 
         self.textbox_grid.draw_grid()
         self.keyboard.reset_key_colors()
@@ -231,7 +218,16 @@ class WordleClassic:
         Args:
             letter (str): The letter to add.
         """
-        self.current_guess.append(Textbox(letter, self.letter_font, self.textbox_size, self.black, self.white, self.light_gray, len(self.current_guess) * (self.textbox_size + self.textbox_x_spacing) + self.textbox_start_x, self.current_attempt * (self.textbox_size + self.textbox_y_spacing) + self.textbox_start_y, self.screen))
+        if self.difficulty == "Easy":
+            if self.current_attempt == 6:
+                self.current_attempt = 0
+        current_x = len(self.current_guess) * (self.textbox_size + self.textbox_x_spacing) + self.textbox_start_x
+        current_y = self.current_attempt * (self.textbox_size + self.textbox_y_spacing) + self.textbox_start_y
+        clear_line = TextboxGrid(self.screen, self.textbox_size, 1, len(self.target_word), self.textbox_x_spacing, 0, self.textbox_start_x, current_y, self.light_gray, self.white)
+        
+        if len(self.current_guess) == 0:
+            clear_line.draw_grid()
+        self.current_guess.append(Textbox(letter, self.letter_font, self.textbox_size, self.black, self.white, self.light_gray, current_x, current_y, self.screen))
         self.current_guess[-1].draw()
 
     def remove_letter(self):
@@ -266,8 +262,16 @@ class WordleClassic:
             running (bool): A flag to indicate if the game is running.
         """
         while running:
-            self.timer.draw()
-
+            if not self.difficulty == "Ultra Hard":
+                self.timer.draw()
+            else:
+                self.countdown.draw()
+                if self.countdown.countdown_time == 0:
+                    self.game_outcome = "L"
+            # turns timer red if over penalty time
+            if self.difficulty == "Hard" and self.timer.elapsed_time > self.penalty_time:
+                self.timer.set_text_color(self.red)
+            
             if self.return_button.draw(self.screen):
                 print("Return to Menu")
                 self.reset_game()
@@ -281,10 +285,12 @@ class WordleClassic:
                     if self.game_outcome:
                         self.reset_game()
                     else:
-                        if len(self.current_guess) == len(self.target_word) and "".join([g.text for g in self.current_guess]).lower() in WORDS:
+                        if len(self.current_guess) == len(self.target_word) and self.is_invalid:
                             self.evaluate_guess()
                             if self.game_outcome:
                                 self.game_time = self.timer.stop()
+                                if self.difficulty == "Ultra Hard":
+                                    self.game_time = self.countdown.stop()
                 elif clicked_key == "DEL":
                     self.remove_letter()
                 else:
@@ -302,7 +308,7 @@ class WordleClassic:
                         if self.game_outcome:
                             self.reset_game()
                         else:
-                            if len(self.current_guess) == len(self.target_word) and "".join([g.text for g in self.current_guess]).lower() in WORDS:
+                            if len(self.current_guess) == len(self.target_word) and self.is_invalid:
                                 self.evaluate_guess()
                                 if self.game_outcome:
                                     self.game_time = self.timer.stop()

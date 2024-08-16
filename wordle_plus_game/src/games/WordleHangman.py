@@ -126,21 +126,21 @@ class WordleHangman:
         pygame.display.set_caption("Wordle+ Hangman")
         self.screen.fill(self.bg_color)
 
-def difficulty_level(self):
-        # want to check difficulty level and change relevant values
-            #  Length of words
-            #  Invalid words /letter
-            #  Letter hinting
-            #  Number of guesses
-        # make sure it also changes the grids***
+# def difficulty_level(self):
+#         # want to check difficulty level and change relevant values
+#             #  Length of words
+#             #  Invalid words /letter
+#             #  Letter hinting
+#             #  Number of guesses
+#         # make sure it also changes the grids***
         
-        if self.difficulty_level == "Normal":
+#         if self.difficulty_level == "Normal":
             
         
         
         
         
-        # Is there any invalid guess or letter hinting in Hangman?
+#         # Is there any invalid guess or letter hinting in Hangman?
 
         #         "Easy": {
         #             "Word Length": 4
