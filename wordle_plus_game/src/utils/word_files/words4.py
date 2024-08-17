@@ -5524,5 +5524,5 @@ WORDS4=[
 "zurf",
 "zyga",
 "zyme",
-"zzzs",
+"zzzs"
 ]

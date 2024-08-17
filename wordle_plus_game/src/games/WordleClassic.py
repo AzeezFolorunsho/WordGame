@@ -10,7 +10,7 @@ from wordle_plus_game.src.components.on_screen_keyboard import OnScreenKeyboard
 from wordle_plus_game.src.games.game_results import GameResults
 from wordle_plus_game.src.games.timer import Timer
 from wordle_plus_game.src.utils.guides import Guide
-from wordle_plus_game.src.utils.words import WORDS
+from wordle_plus_game.src.utils.random_word import RandomWord
 
 class WordleClassic:
     """
@@ -36,7 +36,8 @@ class WordleClassic:
         self.game_time = 0
 
         # Initialize game components
-        self.target_word = 'coder'  # set target word to 'coder' for testing purposes will change to random.choice(WORDS)
+        self.random_words = RandomWord()
+        self.target_word = 'coder'  # set target word to 'coder' for testing purposes will change to self.random_word.get_random_word(5)
         self.score_tracker = ScoreTracking()
         self.score_saved = False
         self.timer = Timer(self.screen, 30, self.screen_height / 2, self.bg_color, self.timer_font)
@@ -155,7 +156,7 @@ class WordleClassic:
         Resets the game to start a new round.
         """
         self.screen.fill(self.bg_color)
-        self.target_word = random.choice(WORDS)
+        self.target_word = self.random_words.get_random_word(len(self.target_word))
         self.current_attempt = 0
         self.guesses = [[] for _ in range(self.max_attempts)]
         self.current_guess = []
@@ -227,7 +228,7 @@ class WordleClassic:
                     if self.game_outcome:
                         self.reset_game()
                     else:
-                        if len(self.current_guess) == len(self.target_word) and "".join([g.text for g in self.current_guess]).lower() in WORDS:
+                        if len(self.current_guess) == len(self.target_word) and "".join([g.text for g in self.current_guess]).lower() in self.random_words.full_word_list:
                             self.evaluate_guess()
                             if self.game_outcome:
                                 self.game_time = self.timer.stop()
@@ -248,7 +249,7 @@ class WordleClassic:
                         if self.game_outcome:
                             self.reset_game()
                         else:
-                            if len(self.current_guess) == len(self.target_word) and "".join([g.text for g in self.current_guess]).lower() in WORDS:
+                            if len(self.current_guess) == len(self.target_word) and "".join([g.text for g in self.current_guess]).lower() in self.random_words.full_word_list:
                                 self.evaluate_guess()
                                 if self.game_outcome:
                                     self.game_time = self.timer.stop()

@@ -4,13 +4,13 @@ Run the following comands in your vscode terminal to set up your virtual envirom
 
 #2. Set up the virtual enviroment:
 
-python -m venv venv #For Windows, if your unable try runing this comand then try agin: Set-ExecutionPolicy RemoteSigned contact Azeez if you have issues.
+python -m venv venv #For Windows
 
 python3 -m venv venv #For macOS/Linux
 
 #3. Activiate the virtual enviroment:
 
-venv\Scripts\activate #For Windows
+venv\Scripts\activate #For Windows, if your unable try runing this comand then try agin: Set-ExecutionPolicy RemoteSigned contact Azeez if you have issues.
 
 source venv/bin/activate #For macOS/Linux
 

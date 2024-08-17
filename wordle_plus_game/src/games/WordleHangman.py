@@ -10,7 +10,7 @@ from wordle_plus_game.src.components.on_screen_keyboard import OnScreenKeyboard
 from wordle_plus_game.src.games.game_results import GameResults
 from wordle_plus_game.src.games.timer import Timer
 from wordle_plus_game.src.utils.guides import Guide
-from wordle_plus_game.src.utils.words import WORDS
+from wordle_plus_game.src.utils.random_word import RandomWord
 
 class WordleHangman:
     """
@@ -35,7 +35,8 @@ class WordleHangman:
         self.game_time = 0
 
         # Initialize game components
-        self.target_word = 'coder'  # set target word to 'coder' for testing purposes will change to random.choice(WORDS)
+        self.random_words = RandomWord()
+        self.target_word = 'coder'  # set target word to 'coder' for testing purposes will change to self.random_word.get_random_word(5)
         self.correct_word_boxes = self.create_word_boxes()
         self.score_tracker = ScoreTracking()
         self.score_saved = False
@@ -190,7 +191,7 @@ class WordleHangman:
         """
         self.screen.fill(self.bg_color) # clear screen
 
-        self.target_word = random.choice(WORDS)
+        self.target_word = self.random_words.get_random_word(len(self.target_word))
         self.current_guess = []
         self.incorrect_attempts = 0
         self.game_outcome = ""
