@@ -46,7 +46,7 @@ class WordleClassic:
         self.difficulty_level()
 
         # Game Settings
-        self.is_invalid = True#"".join([g.text for g in self.current_guess]).lower() in WORDS           # random_word.list(target_length)
+        self.is_invalid = True#"".join([g.text for g in self.current_guess]).lower() in WORDS      # random_word.list(target_length)
         self.is_indicating = True
 
         # Initialize the grid and keyboard
