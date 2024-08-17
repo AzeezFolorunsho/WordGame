@@ -149,7 +149,7 @@ class WordleHangman:
             self.is_indicating = False
             # time incentive
             self.penalty_time = 30
-            self.penalty_message = Text("Score multiplier after 30 seconds", self.timer_font, 30, self.screen_height / 2 + 50)
+            self.penalty_message = Text("Score multiplied after 30 seconds", self.timer_font, 30, self.screen_height / 2 + 50)
             self.penalty_message.draw(self.screen)
             self.score_multiplier = 7 #score multiplier value
 
@@ -163,8 +163,7 @@ class WordleHangman:
             self.penalty_message = Text("Time limit 30 seconds!", self.timer_font, 30, self.screen_height / 2 + 50)
             self.countdown.start()
             self.penalty_message.draw(self.screen)
-        
-        
+
     def create_word_boxes(self):
         """
         Creates text boxes for each letter in the target word.
@@ -190,7 +189,9 @@ class WordleHangman:
             color (str): The color to set as the background.
         """
         self.keyboard.update_key_color(letter, color)
-        self.correct_word_boxes[index].update_bg_color(letter, color)
+        if self.difficulty != "Ultra Hard":
+            self.correct_word_boxes[index].update_bg_color(letter, color)
+            # Problem: This is preventing the game from being won in Ultra Hard mode.
 
     def evaluate_guess(self):
         """
@@ -377,7 +378,7 @@ class WordleHangman:
                                 self.add_letter(event.unicode.upper())
 
             if self.game_outcome:
-                result_message = "You won! =^)" if self.game_outcome == "W" else "You Lost! =^("
+                result_message = "You won! =^)" if self.game_outcome == "W" else "You lost! =^("
                 if self.game_outcome == "W":
                     self.score = self.game_time * self.incorrect_attempts + 1
                     self.conclude_game()

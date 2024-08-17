@@ -66,4 +66,4 @@ class Textbox:
             self.text_color = (255, 255, 255)  # White
             self.bg_color = color
             self.outline_color = color
-            # self.draw()
+            self.draw()
