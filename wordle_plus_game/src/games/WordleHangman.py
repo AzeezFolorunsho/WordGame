@@ -8,7 +8,7 @@ from wordle_plus_game.src.components.textbox_grid import TextboxGrid
 from wordle_plus_game.src.components.buttons import TextButton
 from wordle_plus_game.src.components.on_screen_keyboard import OnScreenKeyboard
 from wordle_plus_game.src.games.game_results import GameResults
-from wordle_plus_game.src.games.timer import Timer
+from wordle_plus_game.src.games.timer import Timer, Countdown
 from wordle_plus_game.src.utils.guides import Guide
 from wordle_plus_game.src.utils.words import WORDS
 
@@ -29,13 +29,17 @@ class WordleHangman:
 
         # Game state variables
         self.current_guess = []
+        self.guesses = []
         self.incorrect_attempts = 0
+        self.max_attempts = 7
         self.game_outcome = ""
         self.score = 0
         self.game_time = 0
 
         # Initialize game components
         self.target_word = 'coder'  # set target word to 'coder' for testing purposes will change to random.choice(WORDS)
+        self.is_indicating = True
+        self.difficulty_level()
         self.correct_word_boxes = self.create_word_boxes()
         self.score_tracker = ScoreTracking()
         self.score_saved = False
@@ -55,7 +59,10 @@ class WordleHangman:
         self.return_button = TextButton("Return", self.keyboard_font, self.white, self.black, self.light_gray, self.screen_width - 140, 27, 110, 45)
 
         # Load hangman images
-        self.hangman_images = [pygame.image.load(f"wordle_plus_game/assets/hangman_images/hangman{i}.png") for i in range(8)]
+        self.hangman_images = []
+        for i in range(7 - self.max_attempts, 8):
+            self.hangman_images.append(pygame.image.load(f"wordle_plus_game/assets/hangman_images/hangman{i}.png"))
+        print(len(self.hangman_images))
         self.update_hangman_image()
 
         # Initialize guides (for testing purposes)
@@ -126,58 +133,38 @@ class WordleHangman:
         pygame.display.set_caption("Wordle+ Hangman")
         self.screen.fill(self.bg_color)
 
-# def difficulty_level(self):
-#         # want to check difficulty level and change relevant values
-#             #  Length of words
-#             #  Invalid words /letter
-#             #  Letter hinting
-#             #  Number of guesses
-#         # make sure it also changes the grids***
+    def difficulty_level(self):
+        if self.difficulty == "Normal":     #default values
+            self.target_word = "coder"
+            # self.target_word = random_word(5)
         
-#         if self.difficulty_level == "Normal":
-            
+        elif self.difficulty == "Easy":
+            # self.target_word = random_word(4)
+            self.target_word = "code"
+            self.max_attempts = 7
         
-        
-        
-        
-#         # Is there any invalid guess or letter hinting in Hangman?
+        elif self.difficulty == "Hard":
+            self.target_word = "coders"#random_word(6)    # May change into 6-8
+            self.max_attempts = 4
+            self.is_indicating = False
+            # time incentive
+            self.penalty_time = 30
+            self.penalty_message = Text("Score multiplier after 30 seconds", self.timer_font, 30, self.screen_height / 2 + 50)
+            self.penalty_message.draw(self.screen)
+            self.score_multiplier = 7 #score multiplier value
 
-        #         "Easy": {
-        #             "Word Length": 4
-        #             # "Invalid Words/Letters": False
-        #             # "Letter Hinting": True
-        #             "Number of Guesses": __      # How many guesses? 26? --clothing/hair to be put on the hangman?
-        
-        #         "Normal": {
-        #             "Word Length": 5
-        #             # "Invalid Words/Letters": False
-        #             # "Letter Hinting": True
-        #             "Number of Guesses": 6
-        
-        #         "Hard": {
-        #             "Word Length": 6    # May change into 6-8
-        #             # "Invalid Words/Letters": True
-        #             # "Letter Hinting": False
-        #             "Number of Guesses": 5
-        
-        #         "Ultra Hard": {        # How would this work with Hangman??
-        #             "Word Length": __
-        #             # "Invalid Words/Letters": __
-        #             # "Letter Hinting": __
-        #             "Number of Guesses": 1
+        else: # Ultra hard
+            self.target_word = "coders"#random_word(6)
+            self.is_indicating = False
+            self.max_attempts = 2
+            # time incentive
+            self.time_limit = 30
+            self.countdown = Countdown(self.screen, 30, self.screen_height / 2, self.bg_color, self.timer_font, self.time_limit, text_color=self.red)
+            self.penalty_message = Text("Time limit 30 seconds!", self.timer_font, 30, self.screen_height / 2 + 50)
+            self.countdown.start()
+            self.penalty_message.draw(self.screen)
         
         
-        
-        
-        
-        
-        
-        
-        
-        
-
-
-
     def create_word_boxes(self):
         """
         Creates text boxes for each letter in the target word.
@@ -212,12 +199,15 @@ class WordleHangman:
         letter_in_word = False
         game_won = True
 
+        self.guesses.append(self.current_guess[-1].text)
+
         for i, box in enumerate(self.correct_word_boxes):
             letter_text = box.text.lower()
 
             if letter_text == self.current_guess[-1].text.lower():
                 self.update_textbox_color(i, letter_text, self.green)
-                box.draw()
+                if self.is_indicating:
+                    box.draw()
                 letter_in_word = True
 
         if not letter_in_word:
@@ -236,8 +226,17 @@ class WordleHangman:
 
         if game_won:
             self.game_outcome = "W"
-        elif self.incorrect_attempts == 7:
-            self.game_outcome = "L"
+            for box in self.correct_word_boxes:
+                if not self.is_indicating:
+                    box.draw()
+        elif self.incorrect_attempts == self.max_attempts:
+            if self.difficulty == "Easy":
+                self.incorrect_attempts = 0
+            else:
+                self.game_outcome = "L"
+            for box in self.correct_word_boxes:
+                if not self.is_indicating and box.bg_color == self.green:
+                    box.draw()
 
     def reset_game(self):
         """
@@ -247,6 +246,7 @@ class WordleHangman:
 
         self.target_word = random.choice(WORDS)
         self.current_guess = []
+        self.guesses = []
         self.incorrect_attempts = 0
         self.game_outcome = ""
         self.score = 0
@@ -271,6 +271,9 @@ class WordleHangman:
         """
         self.current_guess.append(Textbox(letter, self.letter_font, self.textbox_size, self.black, self.white, self.light_gray, self.current_guess_textbox_x, self.current_guess_textbox_y, self.screen))
         self.current_guess[-1].draw()
+        
+    def is_invalid(self, letter):
+        return letter in self.guesses if "Hard" not in self.difficulty else False
 
     def remove_letter(self):
         """
@@ -300,6 +303,9 @@ class WordleHangman:
         """
         Updates the hangman image on the screen based on the number of incorrect attempts.
         """
+        bg_rect = self.hangman_images[-1].get_rect(topleft = (self.hangman_image_x, self.hangman_image_y))
+        bg_rect = bg_rect.scale_by(0.7)
+        pygame.draw.rect(self.screen, self.bg_color, bg_rect)
         self.screen.blit(self.hangman_images[self.incorrect_attempts], (self.hangman_image_x, self.hangman_image_y))
 
     def game_loop(self, running):
@@ -310,8 +316,17 @@ class WordleHangman:
             running (bool): A flag to indicate if the game is running.
         """
         while running:
-            self.timer.draw()
-
+            if not self.difficulty == "Ultra Hard":
+                self.timer.draw()
+            else:
+                self.countdown.draw()
+                if self.countdown.countdown_time == 0:
+                    self.game_outcome = "L"
+            # turns timer red if over penalty time
+            if self.difficulty == "Hard" and self.timer.elapsed_time > self.penalty_time:
+                self.timer.set_text_color(self.red)
+                # score multiplier
+            
             if self.return_button.draw(self.screen):
                 print("Return to Menu")
                 self.reset_game()
@@ -329,11 +344,13 @@ class WordleHangman:
                             self.evaluate_guess()
                             if self.game_outcome:
                                 self.game_time = self.timer.stop()
+                                if self.difficulty == "Ultra Hard":
+                                    self.game_time = self.countdown.stop()
                 elif clicked_key == "DEL":
                     self.remove_letter()
                 else:
                     if str(clicked_key) in "QWERTYUIOPASDFGHJKLZXCVBNM" and not self.game_outcome:
-                        if len(self.current_guess) < 1:
+                        if len(self.current_guess) < 1 and not self.is_invalid(str(clicked_key)):
                             self.add_letter(clicked_key.upper())
 
             for event in pygame.event.get():
@@ -350,11 +367,13 @@ class WordleHangman:
                                 self.evaluate_guess()
                                 if self.game_outcome:
                                     self.game_time = self.timer.stop()
+                                    if self.difficulty == "Ultra Hard":
+                                        self.game_time = self.countdown.stop()
                     elif event.key == pygame.K_BACKSPACE:
                         self.remove_letter()
                     else:
                         if event.unicode.upper() in "QWERTYUIOPASDFGHJKLZXCVBNM" and not self.game_outcome:
-                            if len(self.current_guess) < 1:
+                            if len(self.current_guess) < 1 and not self.is_invalid(event.unicode.upper()):
                                 self.add_letter(event.unicode.upper())
 
             if self.game_outcome:

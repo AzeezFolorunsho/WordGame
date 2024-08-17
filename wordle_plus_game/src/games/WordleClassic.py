@@ -119,7 +119,8 @@ class WordleClassic:
         Updates several aspects that differ between the difficulty levels.
         """
         if self.difficulty == "Normal":     #default values
-            self.target_word = random_word(5)
+            self.target_word = "coder"
+            # self.target_word = random_word(5)
         
         elif self.difficulty == "Easy":
             # self.target_word = random_word(4)
@@ -131,7 +132,7 @@ class WordleClassic:
             self.max_attempts = 4
             # time incentive
             self.penalty_time = 30
-            self.penalty_message = Text("Score multiplier after 30 seconds", self.timer_font, 30, self.screen_height / 2 + 20)
+            self.penalty_message = Text("Score multiplier after 30 seconds", self.timer_font, 30, self.screen_height / 2 + 50)
             self.penalty_message.draw(self.screen)
        
         else: # Ultra hard
@@ -142,7 +143,7 @@ class WordleClassic:
             # time incentive
             self.time_limit = 30
             self.countdown = Countdown(self.screen, 30, self.screen_height / 2, self.bg_color, self.timer_font, self.time_limit, text_color=self.red)
-            self.penalty_message = Text("Time limit 30 seconds!", self.timer_font, 30, self.screen_height / 2 + 20)
+            self.penalty_message = Text("Time limit 30 seconds!", self.timer_font, 30, self.screen_height / 2 + 50)
             self.countdown.start()
             self.penalty_message.draw(self.screen)
             
@@ -312,6 +313,8 @@ class WordleClassic:
                                 self.evaluate_guess()
                                 if self.game_outcome:
                                     self.game_time = self.timer.stop()
+                                    if self.difficulty == "Ultra Hard":
+                                        self.game_time = self.countdown.stop()
                     elif event.key == pygame.K_BACKSPACE:
                         self.remove_letter()
                     else:
