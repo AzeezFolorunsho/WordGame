@@ -5,6 +5,7 @@ from wordle_plus_game.src.components.buttons import TextButton
 from wordle_plus_game.src.games.WordleClassic import WordleClassic
 from wordle_plus_game.src.games.WordleHangman import WordleHangman
 from wordle_plus_game.src.components.text import Text
+from wordle_plus_game.src.utils.avatar import Avatar
 
 class Menu:
     """
@@ -62,10 +63,14 @@ class Menu:
         """
         Displays the main menu and handles button interactions.
         """
+        avatar = Avatar(x=150, y=40, scale=0.8, settings=self.settings)
+
         running = True
         while running:
 
             self.welcome_text.draw(self.screen)
+
+            avatar.draw(self.screen)
 
             for button in self.buttons:
                 action = button.draw(self.screen)
