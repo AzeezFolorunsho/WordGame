@@ -189,9 +189,9 @@ class WordleHangman:
             color (str): The color to set as the background.
         """
         self.keyboard.update_key_color(letter, color)
-        if self.difficulty != "Ultra Hard":
-            self.correct_word_boxes[index].update_bg_color(letter, color)
-            # Problem: This is preventing the game from being won in Ultra Hard mode.
+        # if self.difficulty != "Ultra Hard":
+        self.correct_word_boxes[index].update_bg_color(letter, color)
+        # If the commented code is used, then Ultra Hard Hangman isn't winnable due to how the wins are decided. Do we want indication in Ultra Hard?
 
     def evaluate_guess(self):
         """

@@ -43,11 +43,11 @@ class WordleClassic:
         self.score_saved = False
         self.timer = Timer(self.screen, 30, self.screen_height / 2, self.bg_color, self.timer_font)
         self.timer.start()
-        self.difficulty_level()
-
+        
         # Game Settings
         self.is_invalid = True#"".join([g.text for g in self.current_guess]).lower() in WORDS      # random_word.list(target_length)
         self.is_indicating = True
+        self.difficulty_level()
 
         # Initialize the grid and keyboard
         self.textbox_grid = TextboxGrid(self.screen, self.textbox_size, self.max_attempts, len(self.target_word), self.textbox_x_spacing, self.textbox_y_spacing, self.textbox_start_x, self.textbox_start_y, self.light_gray, self.white)

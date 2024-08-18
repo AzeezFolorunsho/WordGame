@@ -110,7 +110,7 @@ class Countdown:
             current_time = pygame.time.get_ticks()
             self.elapsed_time = (current_time - self.start_time) // 1000
             self.countdown_time = self.time_limit - self.elapsed_time
-            time_msg = Text(f"Timer: {self.countdown_time}", self.font, self.x, self.y, text_color=self.text_color, bg_color=self.background_color)
+            time_msg = Text(f"Timer: {self.countdown_time}.0", self.font, self.x, self.y, text_color=self.text_color, bg_color=self.background_color)
             time_msg.draw(self.screen)
             if self.countdown_time == 0:
                 self.is_active = False
