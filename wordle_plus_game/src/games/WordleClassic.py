@@ -45,7 +45,7 @@ class WordleClassic:
         self.timer.start()
         
         # Game Settings
-        self.is_invalid = True#"".join([g.text for g in self.current_guess]).lower() in WORDS      # random_word.list(target_length)
+        self.is_invalid = False #"".join([g.text for g in self.current_guess]).lower() in WORDS # random_word.list(target_length)
         self.is_indicating = True
         self.difficulty_level()
 
@@ -263,6 +263,7 @@ class WordleClassic:
             running (bool): A flag to indicate if the game is running.
         """
         while running:
+
             if not self.difficulty == "Ultra Hard":
                 self.timer.draw()
             else:
@@ -286,6 +287,8 @@ class WordleClassic:
                     if self.game_outcome:
                         self.reset_game()
                     else:
+                        if "Hard" not in self.difficulty:
+                            self.is_invalid = "".join([g.text for g in self.current_guess]).lower() in WORDS # random_word.list(target_length)
                         if len(self.current_guess) == len(self.target_word) and self.is_invalid:
                             self.evaluate_guess()
                             if self.game_outcome:
@@ -309,6 +312,8 @@ class WordleClassic:
                         if self.game_outcome:
                             self.reset_game()
                         else:
+                            if "Hard" not in self.difficulty:
+                                self.is_invalid = "".join([g.text for g in self.current_guess]).lower() in WORDS # random_word.list(target_length)
                             if len(self.current_guess) == len(self.target_word) and self.is_invalid:
                                 self.evaluate_guess()
                                 if self.game_outcome:
