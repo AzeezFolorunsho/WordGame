@@ -4,7 +4,9 @@
             "width": 1280,
             "height": 720
         },
-        "Background Color": "#FFFFFF"
+        "Background Color": "#FFFFFF",
+        "Screen Dimensions.width": null,
+        "Screen Dimensions.height": null
     },
     "User Profiles": {
         "Username": "Defult Username",

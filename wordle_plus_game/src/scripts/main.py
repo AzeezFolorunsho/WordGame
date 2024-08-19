@@ -4,6 +4,7 @@ from wordle_plus_game.src.core.settings import Settings
 from wordle_plus_game.src.components.buttons import TextButton
 from wordle_plus_game.src.games.WordleClassic import WordleClassic
 from wordle_plus_game.src.games.WordleHangman import WordleHangman
+from wordle_plus_game.src.games.SettingsPage import SettingsPage
 from wordle_plus_game.src.components.text import Text
 
 class Menu:
@@ -75,6 +76,8 @@ class Menu:
                         self.play_wordle_classic()
                     elif action == "Play Wordle Hangman":
                         self.play_wordle_hangman()
+                    elif action == "Settings":
+                        self.start_settings()
                     elif action == "Quit":
                         running = False
 
@@ -99,6 +102,14 @@ class Menu:
         """
         game = WordleHangman(self.settings)
         game.game_loop(True)
+        self.screen.fill(self.bg_color)
+
+    def start_settings(self):
+        """
+        Launches Settings page.
+        """
+        settings_page = SettingsPage(self.settings)
+        settings_page.settings_running(True)
         self.screen.fill(self.bg_color)
 
 def main():

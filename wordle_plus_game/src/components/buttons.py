@@ -142,3 +142,45 @@ class TextButton:
             self.clicked = False
 
         return self.text if action else None
+    
+class SliderButton:
+    def __init__(self, x, y, width, height, min_value, max_value, initial_value, color, hover_color):
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+        self.min_value = min_value
+        self.max_value = max_value
+        self.value = initial_value
+        self.color = color
+        self.hover_color = hover_color
+        self.rect = pygame.Rect(x, y, width, height)
+        self.clicked = False
+        self.font = pygame.font.SysFont('Comic Sans MS', 20)
+
+        # you didint set these but used them, it caused errors, I dont know if these are correct values, but it works, please fix
+        self.handle_pos = self.rect.x + self.value / (self.max_value - self.min_value) * self.rect.width
+        self.dragging = False
+
+
+    def draw(self, screen):
+        pygame.draw.rect(screen, self.color, self.rect)
+        # Draw the slider handle
+        handle_rect = pygame.Rect(self.handle_pos - 5, self.rect.y - 5, 10, self.rect.height + 10)
+        pygame.draw.rect(screen, self.hover_color if self.dragging else self.color, handle_rect)
+
+    def handle_event(self, event):
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if self.rect.collidepoint(event.pos):
+                self.dragging = True
+
+        if event.type == pygame.MOUSEBUTTONUP:
+            self.dragging = False
+
+        if event.type == pygame.MOUSEMOTION:
+            if self.dragging:
+                self.handle_pos = max(self.rect.x, min(event.pos[0], self.rect.x + self.rect.width))
+                self.value = self.min_val + (self.handle_pos - self.rect.x) / self.rect.width * (self.max_val - self.min_val)
+
+    def get_value(self):
+        return self.value
