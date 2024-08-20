@@ -1,6 +1,7 @@
 import pygame
 import random
 import sys
+from wordle_plus_game.src.components.graph import LineGraph
 from wordle_plus_game.src.core.score_tracking import ScoreTracking
 from wordle_plus_game.src.components.text import Text
 from wordle_plus_game.src.components.textbox import Textbox
@@ -261,6 +262,14 @@ class WordleClassic:
         Args:
             running (bool): A flag to indicate if the game is running.
         """
+
+        scoreTracking = ScoreTracking()
+        scores = scoreTracking.load_scores("Classic")
+
+        # Create the graph
+        graph = LineGraph()
+        graph.create_graph(scores)
+
         while running:
 
             if not self.difficulty == "Ultra Hard":
