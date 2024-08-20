@@ -41,7 +41,7 @@ class WordleClassic:
         self.target_word = 'coder'  # set target word to 'coder' for testing purposes will change to self.random_word.get_random_word(5)
         self.score_tracker = ScoreTracking()
         self.score_saved = False
-        self.timer = Timer(self.screen, 30, self.screen_height / 2, self.bg_color, self.timer_font)
+        self.timer = Timer(self.screen, self.screen_width / 14, self.screen_height / 2, self.bg_color, self.timer_font)   #---changing x pos---????
         self.timer.start()
         
         # Game Settings
