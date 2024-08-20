@@ -57,10 +57,10 @@ class Menu:
         self.buttons = [
             TextButton("Play Wordle Classic", self.button_font, (255, 255, 255), (0, 0, 0), (128, 128, 128), self.screen_width / 2 - 200, 250, 400, 50),
             TextButton("Play Wordle Hangman", self.button_font, (255, 255, 255), (0, 0, 0), (128, 128, 128), self.screen_width / 2 - 200, 350, 400, 50),
-            TextButton("View Scoreboard", self.button_font, (255, 255, 255), (0, 0, 0), (128, 128, 128), self.screen_width / 2 - 200, 450, 400, 50),
-            TextButton("Quit", self.button_font, (255, 255, 255), (0, 0, 0), (128, 128, 128), self.screen_width / 2 - 200, 550, 400, 50)
+            TextButton("View Classic Scoreboard", self.button_font, (255, 255, 255), (0, 0, 0), (128, 128, 128), self.screen_width / 2 - 200, 450, 400, 50),
+            TextButton("View Hangman Scoreboard", self.button_font, (255, 255, 255), (0, 0, 0), (128, 128, 128), self.screen_width / 2 - 200, 550, 400, 50),
+            TextButton("Quit", self.button_font, (255, 255, 255), (0, 0, 0), (128, 128, 128), self.screen_width / 2 - 200, 650, 400, 50)
         ]
-
 
     def display_menu(self):
         """
@@ -82,8 +82,10 @@ class Menu:
                         self.play_wordle_classic()
                     elif action == "Play Wordle Hangman":
                         self.play_wordle_hangman()
-                    elif action == "View Scoreboard":
-                        self.view_scoreboard()
+                    elif action == "View Classic Scoreboard":
+                        self.view_scoreboard("Classic")
+                    elif action == "View Hangman Scoreboard":
+                        self.view_scoreboard("Hangman")
                     elif action == "Quit":
                         running = False
 
@@ -94,11 +96,11 @@ class Menu:
 
             pygame.display.update()
 
-    def view_scoreboard(self):
+    def view_scoreboard(self, game_mode):
         """
-        Displays the scoreboard.
+        Displays the scoreboard for the selected game mode.
         """
-        scoreboard = ScoreBoard(self.settings)
+        scoreboard = ScoreBoard(self.settings, game_mode)
         scoreboard.run()
         self.screen.fill(self.bg_color)
 
