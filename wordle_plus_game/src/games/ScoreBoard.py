@@ -2,10 +2,11 @@ import pygame
 import sys
 from wordle_plus_game.src.core.score_tracking import ScoreTracking
 from wordle_plus_game.src.components.text import Text
+from wordle_plus_game.src.components.scrollable_table import ScrollableTable
 
 class ScoreBoard:
     """
-    Class to display the scoreboard with top scores and games played for a specific game mode.
+    Class to display the scoreboard with top scores and game history for a specific game mode.
     """
 
     def __init__(self, settings, game_mode):
@@ -18,6 +19,20 @@ class ScoreBoard:
 
         # Load top scores and games played for the specified game mode
         self.top_scores = self.load_top_scores_and_games_played()
+
+        # Load game history for the specified game mode
+        self.game_history = self.load_game_history()
+
+        # Create a scrollable table for the game history
+        self.history_table = ScrollableTable(
+            self.screen, self.font,
+            self.screen_width // 8,  # Center the table horizontally
+            self.screen_height - 250,
+            self.screen_width * 3 // 4,  # Set width to 75% of the screen width
+            200,  # Fixed height for the table area
+            30,  # Row height
+            self.game_history
+        )
 
     def init_pygame(self):
         """
@@ -78,9 +93,24 @@ class ScoreBoard:
 
         return top_scores
 
+    def load_game_history(self):
+        """
+        Loads the game history for the specified game mode.
+
+        Returns:
+            list of list: A list of rows, each row containing data for a single game.
+        """
+        history_data = self.score_tracking.load_scores(self.game_mode)
+        game_history = [["Difficulty", "Score", "Time"]]
+
+        for game in history_data:
+            game_history.append([game['Difficulty'], game['Score'], game['Time']])
+
+        return game_history
+
     def display_scores(self):
         """
-        Displays the top scores and games played for the game mode on the Pygame screen.
+        Displays the top scores and game history for the game mode on the Pygame screen.
         """
         self.screen.fill(self.bg_color)
 
@@ -90,6 +120,7 @@ class ScoreBoard:
         title.draw(self.screen)
 
         y_offset = 150
+        buffer_right = 50  # Buffer from the right edge of the screen
         box_width = 200
         box_height = 50
         label_y_offset = y_offset - 30
@@ -100,27 +131,33 @@ class ScoreBoard:
             difficulty_text.draw(self.screen)
 
             # Draw Background Rectangles for Games Played and Top Score
-            games_played_rect = pygame.Rect(400, y_offset, box_width, box_height)
-            top_score_rect = pygame.Rect(650, y_offset, box_width, box_height)
+            top_score_rect_x = self.screen_width - buffer_right - box_width
+            games_played_rect_x = top_score_rect_x - box_width - 50
+
+            games_played_rect = pygame.Rect(games_played_rect_x, y_offset, box_width, box_height)
+            top_score_rect = pygame.Rect(top_score_rect_x, y_offset, box_width, box_height)
 
             pygame.draw.rect(self.screen, (200, 200, 200), games_played_rect)
             pygame.draw.rect(self.screen, (200, 200, 200), top_score_rect)
 
             # Label for Games Played and Top Score
-            games_played_label = Text("Games Played", self.label_font, 400, label_y_offset, text_color=(0, 0, 0))
-            top_score_label = Text("Top Score", self.label_font, 650, label_y_offset, text_color=(0, 0, 0))
+            games_played_label = Text("Games Played", self.label_font, games_played_rect_x, label_y_offset, text_color=(0, 0, 0))
+            top_score_label = Text("Top Score", self.label_font, top_score_rect_x, label_y_offset, text_color=(0, 0, 0))
             games_played_label.draw(self.screen)
             top_score_label.draw(self.screen)
 
             # Display the values for Games Played and Top Score inside the rectangles, centered
-            games_played_text = Text(str(games_played), self.font, 400 + box_width / 2, y_offset + box_height / 2, text_color=(0, 0, 0), center=True)
-            top_score_text = Text(str(top_score), self.font, 650 + box_width / 2, y_offset + box_height / 2, text_color=(0, 0, 0), center=True)
+            games_played_text = Text(str(games_played), self.font, games_played_rect_x + box_width / 2, y_offset + box_height / 2, text_color=(0, 0, 0), center=True)
+            top_score_text = Text(str(top_score), self.font, top_score_rect_x + box_width / 2, y_offset + box_height / 2, text_color=(0, 0, 0), center=True)
             games_played_text.draw(self.screen)
             top_score_text.draw(self.screen)
 
             # Increment y_offset for the next difficulty level
             y_offset += box_height + 40
             label_y_offset += box_height + 40
+
+        # Draw the game history table
+        self.history_table.draw()
 
         pygame.display.flip()
 
@@ -140,5 +177,7 @@ class ScoreBoard:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         running = False
+
+                self.history_table.handle_event(event)
 
             pygame.display.update()
