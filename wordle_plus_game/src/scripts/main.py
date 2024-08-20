@@ -6,6 +6,7 @@ from wordle_plus_game.src.games.WordleClassic import WordleClassic
 from wordle_plus_game.src.games.WordleHangman import WordleHangman
 from wordle_plus_game.src.components.text import Text
 from wordle_plus_game.src.utils.avatar import Avatar
+from wordle_plus_game.src.games.ScoreBoard import ScoreBoard
 
 class Menu:
     """
@@ -56,8 +57,10 @@ class Menu:
         self.buttons = [
             TextButton("Play Wordle Classic", self.button_font, (255, 255, 255), (0, 0, 0), (128, 128, 128), self.screen_width / 2 - 200, 250, 400, 50),
             TextButton("Play Wordle Hangman", self.button_font, (255, 255, 255), (0, 0, 0), (128, 128, 128), self.screen_width / 2 - 200, 350, 400, 50),
-            TextButton("Quit", self.button_font, (255, 255, 255), (0, 0, 0), (128, 128, 128), self.screen_width / 2 - 200, 450, 400, 50)
+            TextButton("View Scoreboard", self.button_font, (255, 255, 255), (0, 0, 0), (128, 128, 128), self.screen_width / 2 - 200, 450, 400, 50),
+            TextButton("Quit", self.button_font, (255, 255, 255), (0, 0, 0), (128, 128, 128), self.screen_width / 2 - 200, 550, 400, 50)
         ]
+
 
     def display_menu(self):
         """
@@ -79,6 +82,8 @@ class Menu:
                         self.play_wordle_classic()
                     elif action == "Play Wordle Hangman":
                         self.play_wordle_hangman()
+                    elif action == "View Scoreboard":
+                        self.view_scoreboard()
                     elif action == "Quit":
                         running = False
 
@@ -88,6 +93,14 @@ class Menu:
                     sys.exit()
 
             pygame.display.update()
+
+    def view_scoreboard(self):
+        """
+        Displays the scoreboard.
+        """
+        scoreboard = ScoreBoard(self.settings)
+        scoreboard.run()
+        self.screen.fill(self.bg_color)
 
     def play_wordle_classic(self):
         """
