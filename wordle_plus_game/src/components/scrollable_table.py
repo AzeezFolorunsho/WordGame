@@ -5,66 +5,98 @@ class ScrollableTable:
     A class for creating and displaying a scrollable table in Pygame.
 
     Attributes:
-        screen (pygame.Surface): The Pygame screen surface where the table will be displayed.
-        font (pygame.font.Font): The font used to render the table text.
-        x (int): The x-coordinate of the top-left corner of the table.
-        y (int): The y-coordinate of the top-left corner of the table.
-        width (int): The width of the table.
-        height (int): The height of the table (visible area).
-        row_height (int): The height of each row in the table.
-        data (list of list): The data to be displayed in the table.
-        scroll_y (int): The current scroll position.
-        max_visible_rows (int): The maximum number of rows that can be displayed without scrolling.
+        surface (pygame.Surface): The surface where the table will be drawn.
+        position (tuple): The (x, y) position of the table.
+        size (tuple): The (width, height) of the table.
+        headers (list): List of column headers.
+        data (list): List of data rows.
+        font (pygame.font.Font): Font used for rendering text.
+        row_height (int): Height of each table row.
+        scroll_offset (int): Current vertical scroll offset.
     """
 
-    def __init__(self, screen, font, x, y, width, height, row_height, data):
-        self.screen = screen
-        self.font = font
-        self.x = x
-        self.y = y
-        self.width = width
-        self.height = height
-        self.row_height = row_height
+    def __init__(self, surface, position, size, headers, data, font, row_height):
+        self.surface = surface
+        self.x, self.y = position
+        self.width, self.height = size
+        self.headers = headers
         self.data = data
+        self.font = font
+        self.row_height = row_height
+        self.scroll_offset = 0
 
-        self.scroll_y = 0
-        self.max_visible_rows = height // row_height
+        # Calculate column widths equally
+        self.num_columns = len(headers)
+        self.column_width = self.width // self.num_columns
+
+        # Create a surface for the table content
+        self.content_height = self.row_height * (len(self.data) + 1)  # +1 for headers
+        self.content_surface = pygame.Surface((self.width, self.content_height))
+        self.content_surface.fill((240, 240, 240))  # Light gray background
+
+        self.draw_table_content()
+
+    def draw_table_content(self):
+        """
+        Draws the content of the table on the off-screen surface.
+        """
+        # Draw headers
+        for i, header in enumerate(self.headers):
+            header_text = self.font.render(str(header), True, (0, 0, 0))
+            header_rect = header_text.get_rect(center=(
+                self.column_width * i + self.column_width / 2,
+                self.row_height / 2
+            ))
+            self.content_surface.blit(header_text, header_rect)
+
+            # Draw header separator
+            pygame.draw.rect(
+                self.content_surface,
+                (200, 200, 200),
+                pygame.Rect(self.column_width * i, 0, self.column_width, self.row_height),
+                1
+            )
+
+        # Draw rows
+        for row_index, row in enumerate(self.data):
+            y_position = self.row_height * (row_index + 1)
+            for col_index, item in enumerate(row):
+                cell_text = self.font.render(str(item), True, (0, 0, 0))
+                cell_rect = cell_text.get_rect(center=(
+                    self.column_width * col_index + self.column_width / 2,
+                    y_position + self.row_height / 2
+                ))
+                self.content_surface.blit(cell_text, cell_rect)
+
+                # Draw cell separator
+                pygame.draw.rect(
+                    self.content_surface,
+                    (200, 200, 200),
+                    pygame.Rect(
+                        self.column_width * col_index,
+                        y_position,
+                        self.column_width,
+                        self.row_height
+                    ),
+                    1
+                )
 
     def draw(self):
         """
-        Draws the scrollable table on the Pygame screen.
+        Draws the visible part of the table on the main surface.
         """
-        # Calculate the visible rows
-        start_row = self.scroll_y // self.row_height
-        end_row = start_row + self.max_visible_rows
+        # Create a clipping rect
+        clip_rect = pygame.Rect(self.x, self.y, self.width, self.height)
+        self.surface.set_clip(clip_rect)
 
-        # Draw visible rows
-        for i, row_data in enumerate(self.data[start_row:end_row]):
-            row_y = self.y + i * self.row_height
-            self.draw_row(row_data, row_y)
+        # Blit the content surface with current scroll offset
+        self.surface.blit(self.content_surface, (self.x, self.y - self.scroll_offset))
 
-        # Draw the border for the table
-        pygame.draw.rect(self.screen, (0, 0, 0), (self.x, self.y, self.width, self.height), 2)
+        # Reset clip
+        self.surface.set_clip(None)
 
-    def draw_row(self, row_data, row_y):
-        """
-        Draws a single row of data on the screen.
-
-        Args:
-            row_data (list): The data for the row to be drawn.
-            row_y (int): The y-coordinate of the row.
-        """
-        col_width = self.width // len(row_data)
-
-        for i, cell_data in enumerate(row_data):
-            cell_x = self.x + i * col_width
-            cell_rect = pygame.Rect(cell_x, row_y, col_width, self.row_height)
-            pygame.draw.rect(self.screen, (200, 200, 200), cell_rect)
-            pygame.draw.rect(self.screen, (0, 0, 0), cell_rect, 1)
-
-            cell_text = self.font.render(str(cell_data), True, (0, 0, 0))
-            cell_text_rect = cell_text.get_rect(center=cell_rect.center)
-            self.screen.blit(cell_text, cell_text_rect)
+        # Draw border around the table
+        pygame.draw.rect(self.surface, (0, 0, 0), clip_rect, 2)
 
     def scroll(self, direction):
         """
@@ -73,11 +105,11 @@ class ScrollableTable:
         Args:
             direction (int): The scroll direction (-1 for up, 1 for down).
         """
-        max_scroll = max(0, len(self.data) * self.row_height - self.height)
-        new_scroll_y = self.scroll_y + direction * self.row_height
+        max_scroll = max(0, self.content_height - self.height)
+        new_scroll_y = self.scroll_offset + direction * self.row_height
 
         if 0 <= new_scroll_y <= max_scroll:
-            self.scroll_y = new_scroll_y
+            self.scroll_offset = new_scroll_y
 
     def handle_event(self, event):
         """
