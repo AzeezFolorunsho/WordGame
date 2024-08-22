@@ -71,8 +71,8 @@ class SettingsPage:
         """
         Loads settings and constants.
         """
-        self.screen_width = self.settings.get("Display", "Width", 1280)
-        self.screen_height = self.settings.get("Display", "Height", 720)
+        self.screen_width = self.settings.get("General", "Screen Dimensions", 1280).get("width")
+        self.screen_height = self.settings.get("General", "Screen Dimensions", 720).get("height")
         self.background_color = self.settings.get("General", "Background Color", "#FFFFFF")
 
         self.WHITE = "#FFFFFF"
@@ -108,16 +108,27 @@ class SettingsPage:
         self.settings.set("Display", "Width", int(selected_resolution[0]))
         self.settings.set("Display", "Height", int(selected_resolution[1]))
 
-        print("Settings have been saved successfully.")
+        self.settings.set("General", "Screen Dimensions", {
+        "width": int(selected_resolution[0]),
+        "height": int(selected_resolution[1])
+        })
+
+        self.apply_new_resolution()
+        self.notify_main_menu()
+
+    def notify_main_menu(self):
+        """
+        Notify the main menu or other screens about the settings change.
+        """
+        if hasattr(self, 'main_menu'):
+            self.main_menu.update_settings()
 
     def apply_new_resolution(self):
         new_width = self.settings.get("Display", "Width", 1280)
         new_height = self.settings.get("Display", "Height", 720)
 
         self.screen = pygame.display.set_mode((new_width, new_height))
-
         self.screen.fill(self.background_color)
-
         pygame.display.flip()
 
     def settings_running(self, game_running):

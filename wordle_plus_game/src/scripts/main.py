@@ -19,6 +19,7 @@ class Menu:
 
     def __init__(self, settings):
         self.settings = settings
+        self.update_settings()
         self.screen_width = self.settings.get("General", "Screen Dimensions", {}).get("width", 1280)
         self.screen_height = self.settings.get("General", "Screen Dimensions", {}).get("height", 720)
         self.bg_color = self.settings.get("General", "Background Color", "#FFFFFF")
@@ -88,6 +89,17 @@ class Menu:
 
             pygame.display.update()
 
+    def update_settings(self):
+        """
+        Update settings in the menu based on the current settings.
+        """
+        self.screen_width = self.settings.get("Display", "Width", 1280)
+        self.screen_height = self.settings.get("Display", "Height", 720)
+        self.bg_color = self.settings.get("General", "Background Color", "#FFFFFF")
+        
+        self.screen = pygame.display.set_mode((self.screen_width, self.screen_height))
+        self.screen.fill(self.bg_color)
+
     def play_wordle_classic(self):
         """
         Launches the Wordle Classic game.
@@ -116,13 +128,12 @@ def main():
     """
     Main function to run the Wordle Plus game.
     """
-    # Initialize settings
     settings = Settings()
-
-    # Create the main menu
     menu = Menu(settings)
 
-    # Display the menu
+    settings_page = SettingsPage(settings)
+    settings_page.main_menu = menu 
+
     menu.display_menu()
 
 if __name__ == "__main__":

@@ -1,8 +1,8 @@
 {
     "General": {
         "Screen Dimensions": {
-            "width": 1280,
-            "height": 720
+            "width": 1920,
+            "height": 1080
         },
         "Background Color": "#FFFFFF",
         "Screen Dimensions.width": null,
@@ -20,7 +20,7 @@
         "Avatar": "Avatar 1"
     },
     "Display": {
-        "Width": 1280,
-        "Height": 720
+        "Width": 1920,
+        "Height": 1080
     }
 }
