@@ -14,13 +14,13 @@
     },
     "Game Settings": {
         "Current Difficulty Level": "Normal",
-        "Difficulty": "Easy"
+        "Difficulty": "Hard"
     },
     "User Profile": {
         "Avatar": "Avatar 1"
     },
     "Display": {
-        "Width": 1920,
-        "Height": 1080
+        "Width": 1280,
+        "Height": 720
     }
 }

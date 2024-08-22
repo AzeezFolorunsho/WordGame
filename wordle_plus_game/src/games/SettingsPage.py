@@ -13,9 +13,12 @@ class SettingsPage:
         self.setup_pygame()
 
         avatar_path = "wordle_plus_game/assets/avatars/"
-        self.avatars = [f"Avatar {i}" for i in range(1, 13)]  
+        self.avatars = [f"Avatar {i}" for i in range(1, 13)] 
 
-        
+        saved_avatar = self.settings.get("User Profile", "Avatar", self.avatars[0])
+        saved_difficulty = self.settings.get("Game Settings", "Difficulty", "Normal")
+        saved_resolution = f'{self.settings.get("Display", "Width", 1280)}x{self.settings.get("Display", "Height", 720)}' 
+
         self.username_field = TextButton("Username", self.font, self.WHITE, self.BLACK, self.LIGHT_GREY, 300, 100, 400, 45)
         
         self.avatar_dropdown = Dropdown(
@@ -30,6 +33,7 @@ class SettingsPage:
             color_active=self.LIGHT_GREY,   
             text_color=self.WHITE
         )
+        self.avatar_dropdown.selected_option = saved_avatar
 
         self.difficulty_dropdown = Dropdown(
             x=300,
@@ -43,6 +47,7 @@ class SettingsPage:
             color_active=self.LIGHT_GREY,   
             text_color=self.WHITE
         )
+        self.difficulty_dropdown.selected_option = saved_difficulty
 
         self.display_dropdown = Dropdown(
             x=300,
@@ -56,6 +61,7 @@ class SettingsPage:
             color_active=self.LIGHT_GREY,   
             text_color=self.WHITE
         )
+        self.display_dropdown.selected_option = saved_resolution
 
         self.return_button = TextButton("Return", self.font, self.WHITE, self.BLACK, self.LIGHT_GREY, self.screen_width - (self.screen_width / 6), 10, 110, 30)
 
@@ -65,8 +71,8 @@ class SettingsPage:
         """
         Loads settings and constants.
         """
-        self.screen_width = self.settings.get("General", "Screen Dimensions", {}).get("width", 1280)
-        self.screen_height = self.settings.get("General", "Screen Dimensions", {}).get("height", 720)
+        self.screen_width = self.settings.get("Display", "Width", 1280)
+        self.screen_height = self.settings.get("Display", "Height", 720)
         self.background_color = self.settings.get("General", "Background Color", "#FFFFFF")
 
         self.WHITE = "#FFFFFF"
