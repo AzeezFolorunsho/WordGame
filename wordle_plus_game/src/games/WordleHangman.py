@@ -66,6 +66,10 @@ class WordleHangman:
         print(len(self.hangman_images))
         self.update_hangman_image()
 
+        # Wordle-inspired background images
+        self.hangman_image = pygame.image.load("wordle_plus_game/assets/background_images/hangman_background.png")
+        self.hangman_bg = pygame.transform.scale(self.hangman_image, (self.screen_width, self.screen_height))
+
         # Initialize guides (for testing purposes)
         self.guide = Guide(self.screen)
         self.guide.draw_third_guides(self.black)
@@ -316,6 +320,10 @@ class WordleHangman:
             running (bool): A flag to indicate if the game is running.
         """
         while running:
+            
+            # fill screen with background color?
+            self.screen.blit(self.hangman_bg, [0, 0])
+            
             if not self.difficulty == "Ultra Hard":
                 self.timer.draw()
             else:

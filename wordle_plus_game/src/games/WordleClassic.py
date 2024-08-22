@@ -57,10 +57,14 @@ class WordleClassic:
         # Initialize the return button
         self.return_button = TextButton("Return", self.keyboard_font, self.white, self.black, self.light_gray, self.screen_width - 140, 27, 110, 45)
 
+        # Wordle-inspired background image
+        self.classic_image = pygame.image.load("wordle_plus_game/assets/background_images/classic_background.png")
+        self.classic_bg = pygame.transform.scale(self.classic_image, (self.screen_width, self.screen_height))
+
         # Initialize guides (for testing purposes)
-        self.guides = Guide(self.screen)
-        self.guides.draw_third_guides(self.black)
-        self.guides.draw_cross_guides(self.red)
+        # self.guides = Guide(self.screen)
+        # self.guides.draw_third_guides(self.black)
+        # self.guides.draw_cross_guides(self.red)
         
     def init_constants(self):
         """
@@ -262,6 +266,9 @@ class WordleClassic:
             running (bool): A flag to indicate if the game is running.
         """
         while running:
+            
+            # # fill screen with background color?
+            self.screen.blit(self.classic_bg, [0, 0])
 
             if not self.difficulty == "Ultra Hard":
                 self.timer.draw()

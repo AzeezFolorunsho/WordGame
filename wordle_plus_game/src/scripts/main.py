@@ -27,12 +27,6 @@ class Menu:
         self.menu_image = pygame.image.load("wordle_plus_game/assets/background_images/menu_background.png")
         self.menu_bg = pygame.transform.scale(self.menu_image, (self.screen_width, self.screen_height))
         
-        self.classic_image = pygame.image.load("wordle_plus_game/assets/background_images/classic_background.png")
-        self.classic_bg = pygame.transform.scale(self.classic_image, (self.screen_width, self.screen_height))
-        
-        self.hangman_image = pygame.image.load("wordle_plus_game/assets/background_images/hangman_background.png")
-        self.hangman_bg = pygame.transform.scale(self.hangman_image, (self.screen_width, self.screen_height))
-        
         self.init_pygame()
         self.init_fonts()
         self.init_buttons()
@@ -88,6 +82,7 @@ class Menu:
         running = True
         while running:
 
+            self.screen.blit(self.menu_bg, [0, 0])
             self.screen.blit(self.welcome_image, [((self.screen_width / 2) - (self.welcome_width / 2)), 20])
             # self.welcome_text.draw(self.screen)
             self.username_text.draw(self.screen)
@@ -118,8 +113,6 @@ class Menu:
         game = WordleClassic(self.settings)
         game.game_loop(True)
         self.screen.fill(self.bg_color)
-        self.screen.blit(self.classic_bg, [0, 0])
-        
 
     def play_wordle_hangman(self):
         """
@@ -128,8 +121,6 @@ class Menu:
         game = WordleHangman(self.settings)
         game.game_loop(True)
         self.screen.fill(self.bg_color)
-        self.screen.blit(self.hangman_bg, [0, 0])
-        
 
 def main():
     """
