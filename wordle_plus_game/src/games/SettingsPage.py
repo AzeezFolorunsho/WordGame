@@ -12,11 +12,10 @@ class SettingsPage:
         self.setup_constants()
         self.setup_pygame()
 
-        # Load avatars from the assets/avatars folder
         avatar_path = "wordle_plus_game/assets/avatars/"
-        self.avatars = [f"Avatar {i}" for i in range(1, 13)]  # Display names for avatars
+        self.avatars = [f"Avatar {i}" for i in range(1, 13)]  
 
-        # Dropdowns and buttons for settings
+        
         self.username_field = TextButton("Username", self.font, self.WHITE, self.BLACK, self.LIGHT_GREY, 300, 100, 400, 45)
         
         self.avatar_dropdown = Dropdown(
@@ -26,9 +25,9 @@ class SettingsPage:
             height=40,
             options=self.avatars,
             font=self.font,
-            color_idle=self.BLACK,          # Updated to use color_idle
-            color_hover=self.LIGHT_GREY,    # Updated to use color_hover
-            color_active=self.LIGHT_GREY,   # Updated to use color_active
+            color_idle=self.BLACK,          
+            color_hover=self.LIGHT_GREY,    
+            color_active=self.LIGHT_GREY,   
             text_color=self.WHITE
         )
 
@@ -39,9 +38,9 @@ class SettingsPage:
             height=45,
             options=["Easy", "Normal", "Hard", "Ultra Hard", "Custom"],
             font=self.font,
-            color_idle=self.BLACK,          # Updated to use color_idle
-            color_hover=self.LIGHT_GREY,    # Updated to use color_hover
-            color_active=self.LIGHT_GREY,   # Updated to use color_active
+            color_idle=self.BLACK,          
+            color_hover=self.LIGHT_GREY,    
+            color_active=self.LIGHT_GREY,   
             text_color=self.WHITE
         )
 
@@ -52,13 +51,15 @@ class SettingsPage:
             height=45,
             options=["1280x720", "1366x768", "1600x900", "1920x1080"],
             font=self.font,
-            color_idle=self.BLACK,          # Updated to use color_idle
-            color_hover=self.LIGHT_GREY,    # Updated to use color_hover
-            color_active=self.LIGHT_GREY,   # Updated to use color_active
+            color_idle=self.BLACK,          
+            color_hover=self.LIGHT_GREY,    
+            color_active=self.LIGHT_GREY,   
             text_color=self.WHITE
         )
 
-        self.return_button = TextButton("Return", self.font, self.WHITE, self.BLACK, self.LIGHT_GREY, self.screen_width - 140, self.screen_height / 2, 110, 45)
+        self.return_button = TextButton("Return", self.font, self.WHITE, self.BLACK, self.LIGHT_GREY, self.screen_width - (self.screen_width / 6), 10, 110, 30)
+
+        self.save_button = TextButton("Save", self.font, self.WHITE, self.BLACK, self.LIGHT_GREY, 300, 100, 110, 30)
 
     def setup_constants(self):
         """
@@ -87,6 +88,32 @@ class SettingsPage:
         pygame.display.set_caption("Wordle+ Settings")
         self.screen.fill(self.background_color)
 
+    def save_settings(self):
+        """
+        Save the current settings from the dropdowns and fields.
+        """
+        selected_avatar = self.avatar_dropdown.selected_option
+        self.settings.set("User Profile", "Avatar", selected_avatar)
+
+        selected_difficulty = self.difficulty_dropdown.selected_option
+        self.settings.set("Game Settings", "Difficulty", selected_difficulty)
+
+        selected_resolution = self.display_dropdown.selected_option.split('x')
+        self.settings.set("Display", "Width", int(selected_resolution[0]))
+        self.settings.set("Display", "Height", int(selected_resolution[1]))
+
+        print("Settings have been saved successfully.")
+
+    def apply_new_resolution(self):
+        new_width = self.settings.get("Display", "Width", 1280)
+        new_height = self.settings.get("Display", "Height", 720)
+
+        self.screen = pygame.display.set_mode((new_width, new_height))
+
+        self.screen.fill(self.background_color)
+
+        pygame.display.flip()
+
     def settings_running(self, game_running):
         """
         Main loop for the settings page.
@@ -104,9 +131,14 @@ class SettingsPage:
                 game_running = False
                 return
 
+            if self.save_button.draw(self.screen):
+                self.save_settings()
+                self.apply_new_resolution()
+
             self.avatar_dropdown.draw(self.screen)
             self.difficulty_dropdown.draw(self.screen)
             self.display_dropdown.draw(self.screen)
             self.return_button.draw(self.screen)
+            self.save_button.draw(self.screen)
 
             pygame.display.flip()

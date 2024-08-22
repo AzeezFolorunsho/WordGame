@@ -13,6 +13,14 @@
         "Current Avatar": "wordle_plus_game/assets/avatars/avatar1.png"
     },
     "Game Settings": {
-        "Current Difficulty Level": "Normal"
+        "Current Difficulty Level": "Normal",
+        "Difficulty": "Easy"
+    },
+    "User Profile": {
+        "Avatar": "Avatar 1"
+    },
+    "Display": {
+        "Width": 1920,
+        "Height": 1080
     }
 }
