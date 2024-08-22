@@ -24,7 +24,7 @@ class Menu:
         self.bg_color = self.settings.get("General", "Background Color", "#FFFFFF")
         
         # Wordle-inspired background images
-        self.menu_image = pygame.image.load("wordle_plus_game/assets/background_images/menu_background.png")
+        self.menu_image = pygame.image.load("wordle_plus_game/assets/background_images/resized_menu_bg.png")
         self.menu_bg = pygame.transform.scale(self.menu_image, (self.screen_width, self.screen_height))
         
         self.init_pygame()
@@ -77,7 +77,8 @@ class Menu:
         """
         Displays the main menu and handles button interactions.
         """
-        avatar = Avatar(x=150, y=40, scale=0.8, settings=self.settings)
+        avatar = Avatar(x=110, y=40, scale=0.8, settings=self.settings)
+        # have welcome_y, y_spacing, username_x, x_spacing
 
         running = True
         while running:

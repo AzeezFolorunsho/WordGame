@@ -44,7 +44,7 @@ class WordleHangman:
         self.correct_word_boxes = self.create_word_boxes()
         self.score_tracker = ScoreTracking()
         self.score_saved = False
-        self.timer = Timer(self.screen, 30, self.screen_height / 2, self.bg_color, self.timer_font)
+        self.timer = Timer(self.screen, 110, self.screen_height / 2, self.bg_color, self.timer_font)
         self.timer.start()
 
         # Initialize the word and curent_guess grid
@@ -67,7 +67,7 @@ class WordleHangman:
         self.update_hangman_image()
 
         # Wordle-inspired background images
-        self.hangman_image = pygame.image.load("wordle_plus_game/assets/background_images/hangman_background.png")
+        self.hangman_image = pygame.image.load("wordle_plus_game/assets/background_images/muted_hangman_bg.png")
         self.hangman_bg = pygame.transform.scale(self.hangman_image, (self.screen_width, self.screen_height))
 
         # Initialize guides (for testing purposes)
@@ -319,10 +319,10 @@ class WordleHangman:
         Args:
             running (bool): A flag to indicate if the game is running.
         """
+        # fill screen with background color?
+        self.screen.blit(self.hangman_bg, [0, 0])
+        
         while running:
-            
-            # fill screen with background color?
-            self.screen.blit(self.hangman_bg, [0, 0])
             
             if not self.difficulty == "Ultra Hard":
                 self.timer.draw()
