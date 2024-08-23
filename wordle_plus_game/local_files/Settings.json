@@ -1,26 +1,16 @@
 {
     "General": {
         "Screen Dimensions": {
-            "width": 1920,
-            "height": 1080
+            "width": 1280,
+            "height": 720
         },
-        "Background Color": "#FFFFFF",
-        "Screen Dimensions.width": null,
-        "Screen Dimensions.height": null
+        "Background Color": "#FFFFFF"
     },
     "User Profiles": {
         "Username": "Defult Username",
         "Current Avatar": "wordle_plus_game/assets/avatars/avatar1.png"
     },
     "Game Settings": {
-        "Current Difficulty Level": "Normal",
-        "Difficulty": "Hard"
-    },
-    "User Profile": {
-        "Avatar": "Avatar 1"
-    },
-    "Display": {
-        "Width": 1920,
-        "Height": 1080
+        "Current Difficulty Level": "Normal"
     }
 }

@@ -215,6 +215,7 @@ class Dropdown:
         self.selected_option = options[0] if options else None
         self.is_open = False
         self.rect = pygame.Rect(x, y, width, height)
+        self.cover_up = False
 
     def handle_event(self, event):
         """
@@ -226,12 +227,15 @@ class Dropdown:
         if event.type == pygame.MOUSEBUTTONDOWN:
             if self.rect.collidepoint(event.pos):
                 self.is_open = not self.is_open
+                self.cover_up = True
             elif self.is_open:
                 for i, option in enumerate(self.options):
                     option_rect = pygame.Rect(self.rect.x, self.rect.y + (i + 1) * self.height, self.width, self.height)
                     if option_rect.collidepoint(event.pos):
                         self.selected_option = option
                         self.is_open = False
+                        # Cover up the options area
+                        self.cover_up = True
 
     def draw(self, screen):
         """
@@ -261,6 +265,11 @@ class Dropdown:
                 
                 option_text = self.font.render(option, True, self.text_color)
                 screen.blit(option_text, option_text.get_rect(center=option_rect.center))
+        elif self.cover_up:
+            # Cover up the options area
+            cover_rect = pygame.Rect(self.rect.x, self.rect.y + self.height, self.width, len(self.options) * self.height)
+            pygame.draw.rect(screen, "#FFFFFF", cover_rect)
+            self.cover_up = False
         
         pygame.draw.rect(screen, self.text_color, self.rect, 2)
 

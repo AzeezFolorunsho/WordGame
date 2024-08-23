@@ -1,7 +1,6 @@
 import pygame
 import sys
 from wordle_plus_game.src.components.buttons import TextButton, SliderButton, Dropdown
-from wordle_plus_game.src.core.settings import Settings
 
 class SettingsPage:
     def __init__(self, settings):
@@ -15,9 +14,9 @@ class SettingsPage:
         avatar_path = "wordle_plus_game/assets/avatars/"
         self.avatars = [f"Avatar {i}" for i in range(1, 13)] 
 
-        saved_avatar = self.settings.get("User Profile", "Avatar", self.avatars[0])
-        saved_difficulty = self.settings.get("Game Settings", "Difficulty", "Normal")
-        saved_resolution = f'{self.settings.get("Display", "Width", 1280)}x{self.settings.get("Display", "Height", 720)}' 
+        saved_avatar = f"Avatar {(self.settings.get("User Profiles", "Current Avatar", "wordle_plus_game/assets/avatars/avatar1.png"))[-5]}"
+        saved_difficulty = self.settings.get("Game Settings", "Current Difficulty Level", "Normal")
+        saved_resolution = f'{self.settings.get("General", "Screen Dimensions", {}).get("width")}x{self.settings.get("General", "Screen Dimensions", {}).get("height")}'
 
         self.username_field = TextButton("Username", self.font, self.WHITE, self.BLACK, self.LIGHT_GREY, 300, 100, 400, 45)
         
@@ -99,37 +98,17 @@ class SettingsPage:
         Save the current settings from the dropdowns and fields.
         """
         selected_avatar = self.avatar_dropdown.selected_option
-        self.settings.set("User Profile", "Avatar", selected_avatar)
+        self.settings.set("User Profiles", "Current Avatar", f"wordle_plus_game/assets/avatars/avatar{selected_avatar[-1]}.png")
 
         selected_difficulty = self.difficulty_dropdown.selected_option
-        self.settings.set("Game Settings", "Difficulty", selected_difficulty)
+        self.settings.set("Game Settings", "Current Difficulty Level", selected_difficulty)
 
         selected_resolution = self.display_dropdown.selected_option.split('x')
-        self.settings.set("Display", "Width", int(selected_resolution[0]))
-        self.settings.set("Display", "Height", int(selected_resolution[1]))
 
         self.settings.set("General", "Screen Dimensions", {
         "width": int(selected_resolution[0]),
         "height": int(selected_resolution[1])
         })
-
-        self.apply_new_resolution()
-        self.notify_main_menu()
-
-    def notify_main_menu(self):
-        """
-        Notify the main menu or other screens about the settings change.
-        """
-        if hasattr(self, 'main_menu'):
-            self.main_menu.update_settings()
-
-    def apply_new_resolution(self):
-        new_width = self.settings.get("Display", "Width", 1280)
-        new_height = self.settings.get("Display", "Height", 720)
-
-        self.screen = pygame.display.set_mode((new_width, new_height))
-        self.screen.fill(self.background_color)
-        pygame.display.flip()
 
     def settings_running(self, game_running):
         """
@@ -150,12 +129,10 @@ class SettingsPage:
 
             if self.save_button.draw(self.screen):
                 self.save_settings()
-                self.apply_new_resolution()
+                self.__init__(self.settings)
 
             self.avatar_dropdown.draw(self.screen)
             self.difficulty_dropdown.draw(self.screen)
             self.display_dropdown.draw(self.screen)
-            self.return_button.draw(self.screen)
-            self.save_button.draw(self.screen)
 
             pygame.display.flip()
