@@ -13,6 +13,10 @@ class Settings:
     def __init__(self, filepath='wordle_plus_game/local_files/Settings.json'):
         self.filepath = filepath
         self._settings = self._load_settings()
+        self.preset_colors = {
+            "light_mode": "#FFFFFF",
+            "dark_mode": "#000000"
+        }
 
     def _load_settings(self):
         """

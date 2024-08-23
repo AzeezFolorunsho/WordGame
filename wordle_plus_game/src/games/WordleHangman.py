@@ -1,5 +1,4 @@
 import pygame
-import random
 import sys
 from wordle_plus_game.src.core.score_tracking import ScoreTracking
 from wordle_plus_game.src.components.text import Text

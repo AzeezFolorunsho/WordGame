@@ -4,6 +4,7 @@ from wordle_plus_game.src.core.settings import Settings
 from wordle_plus_game.src.components.buttons import TextButton
 from wordle_plus_game.src.games.WordleClassic import WordleClassic
 from wordle_plus_game.src.games.WordleHangman import WordleHangman
+from wordle_plus_game.src.games.SettingsPage import SettingsPage
 from wordle_plus_game.src.components.text import Text
 from wordle_plus_game.src.utils.avatar import Avatar
 
@@ -26,6 +27,8 @@ class Menu:
         self.init_pygame()
         self.init_fonts()
         self.init_buttons()
+
+        self.avatar = Avatar(x=150, y=40, scale=0.8, settings=self.settings)
 
         self.title_size = self.title_font.size("Welcome to Wordle+!")[0]
 
@@ -56,21 +59,21 @@ class Menu:
         self.buttons = [
             TextButton("Play Wordle Classic", self.button_font, (255, 255, 255), (0, 0, 0), (128, 128, 128), self.screen_width / 2 - 200, 250, 400, 50),
             TextButton("Play Wordle Hangman", self.button_font, (255, 255, 255), (0, 0, 0), (128, 128, 128), self.screen_width / 2 - 200, 350, 400, 50),
-            TextButton("Quit", self.button_font, (255, 255, 255), (0, 0, 0), (128, 128, 128), self.screen_width / 2 - 200, 450, 400, 50)
+            TextButton("Quit", self.button_font, (255, 255, 255), (0, 0, 0), (128, 128, 128), self.screen_width / 2 - 200, 450, 400, 50),
+            TextButton("Settings", self.button_font, (255, 255, 255), (0, 0, 0), (128, 128, 128), self.screen_width - (self.screen_width / 6), 30, 150, 50)
         ]
 
     def display_menu(self):
         """
         Displays the main menu and handles button interactions.
         """
-        avatar = Avatar(x=150, y=40, scale=0.8, settings=self.settings)
 
         running = True
         while running:
 
             self.welcome_text.draw(self.screen)
 
-            avatar.draw(self.screen)
+            self.avatar.draw(self.screen)
 
             for button in self.buttons:
                 action = button.draw(self.screen)
@@ -79,6 +82,8 @@ class Menu:
                         self.play_wordle_classic()
                     elif action == "Play Wordle Hangman":
                         self.play_wordle_hangman()
+                    elif action == "Settings":
+                        self.start_settings()
                     elif action == "Quit":
                         running = False
 
@@ -105,17 +110,24 @@ class Menu:
         game.game_loop(True)
         self.screen.fill(self.bg_color)
 
+    def start_settings(self):
+        """
+        Launches Settings page.
+        """
+        settings_page = SettingsPage(self.settings)
+        settings_page.settings_running(True)
+        self.screen.fill(self.bg_color)
+
 def main():
     """
     Main function to run the Wordle Plus game.
     """
-    # Initialize settings
     settings = Settings()
-
-    # Create the main menu
     menu = Menu(settings)
 
-    # Display the menu
+    settings_page = SettingsPage(settings)
+    settings_page.main_menu = menu 
+
     menu.display_menu()
 
 if __name__ == "__main__":
