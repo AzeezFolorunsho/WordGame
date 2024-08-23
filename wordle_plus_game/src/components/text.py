@@ -107,4 +107,4 @@ class Text:
             surface (pygame.Surface): The surface to draw the background on.
         """
         if self.bg_color is not None:
-            pygame.draw.rect(surface, self.bg_color, (self.x, self.y, self.width, self.height))
+            pygame.draw.rect(surface, self.bg_color, self.text_rect)

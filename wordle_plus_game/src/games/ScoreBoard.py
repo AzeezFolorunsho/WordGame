@@ -3,6 +3,7 @@ import sys
 from wordle_plus_game.src.core.score_tracking import ScoreTracking
 from wordle_plus_game.src.components.text import Text
 from wordle_plus_game.src.components.scrollable_table import ScrollableTable
+from wordle_plus_game.src.utils.avatar import Avatar
 
 class ScoreBoard:
     """
@@ -15,6 +16,7 @@ class ScoreBoard:
         self.init_pygame()
         self.load_data()
         self.create_ui_elements()
+        self.avatar = Avatar(150, 40, 0.8, self.settings)
 
     def init_pygame(self):
         """
@@ -97,7 +99,6 @@ class ScoreBoard:
             self.title_font,
             self.screen_width / 2,  # x position
             self.margin,  # y position
-            text_color=(0, 0, 0),
             center=True
         )
 
@@ -105,8 +106,30 @@ class ScoreBoard:
         self.top_scores_section = []
         section_start_y = self.margin + self.title_font.get_height() + self.spacing
 
-        label_width = self.screen_width * 0.2
         box_width = self.screen_width * 0.15
+        games_played_x = self.screen_width - self.margin - 2 * box_width - self.spacing
+        top_score_x = self.screen_width - self.margin - box_width
+
+        # label_width = self.screen_width * 0.2
+
+        # Games played and top score lable
+        games_played_lable_text = "Games Played"
+        self.game_played_lable = Text(
+            games_played_lable_text,
+            self.label_font,
+            games_played_x + box_width /2,
+            (section_start_y - self.label_font.get_height()),
+            center= True
+        )
+
+        top_score_lable_text = "Top Scores"
+        self.top_score_lable = Text(
+            top_score_lable_text,
+            self.label_font,
+            top_score_x  + box_width /2,
+            (section_start_y - self.label_font.get_height()),
+            center= True
+        )
 
         for index, (difficulty, scores) in enumerate(self.top_scores.items()):
             row_y = section_start_y + index * (self.font.get_height() + self.spacing * 2)
@@ -115,12 +138,8 @@ class ScoreBoard:
                 difficulty,
                 self.font,
                 self.margin,  # x position
-                row_y,  # y position
-                text_color=(0, 0, 0)
+                row_y  # y position
             )
-
-            games_played_x = self.screen_width - self.margin - 2 * box_width - self.spacing
-            top_score_x = self.screen_width - self.margin - box_width
 
             games_played_box = pygame.Rect(games_played_x, row_y, box_width, self.font.get_height() + self.spacing)
             top_score_box = pygame.Rect(top_score_x, row_y, box_width, self.font.get_height() + self.spacing)
@@ -151,10 +170,22 @@ class ScoreBoard:
                 'top_score_text': top_score_text
             })
 
+        # Game History section
+        history_section_start_y = section_start_y + len(self.top_scores) * (self.font.get_height() + self.spacing * 2) + self.spacing
+
+        # Game History table lable
+        game_history_lable_text = "Game History"
+        self.game_history_lable = Text(
+            game_history_lable_text,
+            self.title_font,
+            self.margin,
+            history_section_start_y
+        )
+
         # Scrollable Table
-        table_y = section_start_y + len(self.top_scores) * (self.font.get_height() + self.spacing * 2) + self.spacing
+        table_y = history_section_start_y + self.title_font.get_height() + 5
         table_height = self.screen_height - table_y - self.margin
-        table_width = self.screen_width - 2 * self.margin
+        table_width = (self.screen_width / 2) - (2 * self.margin)
 
         # Since game_history is a list, pass it directly
         self.scrollable_table = ScrollableTable(
@@ -173,9 +204,14 @@ class ScoreBoard:
         """
         self.screen.fill(self.bg_color)
         self.title.draw(self.screen)
+        self.game_history_lable.draw(self.screen)
+        self.game_played_lable.draw(self.screen)
+        self.top_score_lable.draw(self.screen)
+        self.avatar.draw(self.screen)
 
         for section in self.top_scores_section:
             section['difficulty_text'].draw(self.screen)
+
             pygame.draw.rect(self.screen, (220, 220, 220), section['games_played_box'])
             pygame.draw.rect(self.screen, (0, 0, 0), section['games_played_box'], 2)
             section['games_played_text'].draw(self.screen)
