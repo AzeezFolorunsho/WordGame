@@ -71,9 +71,9 @@ class WordleHangman:
         self.hangman_bg = pygame.transform.scale(self.hangman_image, (self.screen_width, self.screen_height))
 
         # Initialize guides (for testing purposes)
-        self.guide = Guide(self.screen)
-        self.guide.draw_third_guides(self.black)
-        self.guide.draw_cross_guides(self.red)
+        # self.guide = Guide(self.screen)
+        # self.guide.draw_third_guides(self.black)
+        # self.guide.draw_cross_guides(self.red)
         
         #  Difficulty level values
         self.difficulty_level = self.settings.get("Game Settings", "Current Difficulty Level")
@@ -114,9 +114,9 @@ class WordleHangman:
 
         # On-screen keyboard dimensions and positioning
         self.keyboard_start_x = self.screen_width / 3.3
-        self.keyboard_start_y = self.screen_height / 1.47
+        self.keyboard_start_y = self.screen_height / 1.6#1.47
         self.keyboard_x_spacing = 10
-        self.keyboard_y_spacing = 20
+        self.keyboard_y_spacing = 10
         self.keyboard_width = self.textbox_size / 1.5
         self.keyboard_height = self.textbox_size
 
@@ -152,7 +152,7 @@ class WordleHangman:
             self.is_indicating = False
             # time incentive
             self.penalty_time = 30
-            self.penalty_message = Text("Score multiplied after 30 seconds", self.timer_font, 30, self.screen_height / 2 + 50)
+            self.penalty_message = Text("Score multiplied after 30 seconds", self.timer_font, self.screen_width / 14, self.screen_height / 2 + 50, 250)
             self.penalty_message.draw(self.screen)
             self.score_multiplier = 7 #score multiplier value
 
@@ -162,8 +162,8 @@ class WordleHangman:
             self.max_attempts = 2
             # time incentive
             self.time_limit = 30
-            self.countdown = Countdown(self.screen, 30, self.screen_height / 2, self.bg_color, self.timer_font, self.time_limit, text_color=self.red)
-            self.penalty_message = Text("Time limit 30 seconds!", self.timer_font, 30, self.screen_height / 2 + 50)
+            self.countdown = Countdown(self.screen, 110, self.screen_height / 2, self.bg_color, self.timer_font, self.time_limit, text_color=self.red)
+            self.penalty_message = Text("Time limit 30 seconds!", self.timer_font, self.screen_width / 14, self.screen_height / 2 + 50)
             self.countdown.start()
             self.penalty_message.draw(self.screen)
 
