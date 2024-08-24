@@ -59,7 +59,7 @@ class WordleClassic:
         self.return_button = TextButton("Return", self.keyboard_font, self.white, self.black, self.light_gray, self.screen_width - 140, 27, 110, 45)
 
         # Wordle-inspired background image
-        self.classic_image = pygame.image.load("wordle_plus_game/assets/background_images/muted_classic_bg.png")
+        self.classic_image = pygame.image.load("wordle_plus_game/assets/background_images/classic_background.png")
         self.classic_bg = pygame.transform.scale(self.classic_image, (self.screen_width, self.screen_height))
 
         # Initialize guides (for testing purposes)

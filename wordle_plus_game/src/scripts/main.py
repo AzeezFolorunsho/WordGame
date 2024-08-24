@@ -24,7 +24,7 @@ class Menu:
         self.bg_color = self.settings.get("General", "Background Color", "#FFFFFF")
         
         # Wordle-inspired background images
-        self.menu_image = pygame.image.load("wordle_plus_game/assets/background_images/resized_menu_bg.png")
+        self.menu_image = pygame.image.load("wordle_plus_game/assets/background_images/menu_background.png")
         self.menu_bg = pygame.transform.scale(self.menu_image, (self.screen_width, self.screen_height))
         
         self.init_pygame()
@@ -85,7 +85,6 @@ class Menu:
 
             self.screen.blit(self.menu_bg, [0, 0])
             self.screen.blit(self.welcome_image, [((self.screen_width / 2) - (self.welcome_width / 2)), 20])
-            # self.welcome_text.draw(self.screen)
             self.username_text.draw(self.screen)
 
             avatar.draw(self.screen)
