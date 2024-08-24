@@ -62,7 +62,7 @@ class SettingsPage:
         )
         self.display_dropdown.selected_option = saved_resolution
 
-        self.return_button = TextButton("Return", self.font, self.WHITE, self.BLACK, self.LIGHT_GREY, self.screen_width - (self.screen_width / 6), 10, 110, 30)
+        self.return_button = TextButton("Return", self.font, self.WHITE, self.BLACK, self.LIGHT_GREY, self.screen_width - (self.screen_width / 6), 100, 110, 30)
 
         self.save_button = TextButton("Save", self.font, self.WHITE, self.BLACK, self.LIGHT_GREY, 300, 100, 110, 30)
 

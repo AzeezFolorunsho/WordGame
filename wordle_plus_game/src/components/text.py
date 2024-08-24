@@ -12,9 +12,10 @@ class Text:
         max_width (int, optional): The maximum width for text wrapping. If None, no wrapping is applied.
         text_color (tuple, optional): The color of the text in RGB format. Default is (0, 0, 0) (black).
         bg_color (tuple, optional): The background color of the text in RGB format. If None, no background is drawn.
+        center (bool, optional): Whether to center the text. Default is False.
     """
 
-    def __init__(self, text, font, x, y, max_width=None, text_color=(0, 0, 0), bg_color=None):
+    def __init__(self, text, font, x, y, max_width=None, text_color=(0, 0, 0), bg_color=None, center=False):
         self.text = text
         self.font = font
         self.x = x
@@ -22,6 +23,7 @@ class Text:
         self.max_width = max_width
         self.text_color = text_color
         self.bg_color = bg_color
+        self.center = center
 
         # Rendered text and dimensions
         self.rendered_text = None
@@ -41,6 +43,11 @@ class Text:
             # Render single-line text
             self.rendered_text = self.font.render(self.text, True, self.text_color)
             self.text_rect = self.rendered_text.get_rect(topleft=(self.x, self.y))
+
+            # Center text if needed
+            if self.center:
+                self.text_rect = self.rendered_text.get_rect(center=(self.x, self.y))
+
             self.width = self.rendered_text.get_width()
             self.height = self.rendered_text.get_height()
         else:
@@ -100,4 +107,4 @@ class Text:
             surface (pygame.Surface): The surface to draw the background on.
         """
         if self.bg_color is not None:
-            pygame.draw.rect(surface, self.bg_color, (self.x, self.y, self.width, self.height))
+            pygame.draw.rect(surface, self.bg_color, self.text_rect)

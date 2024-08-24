@@ -7,6 +7,7 @@ from wordle_plus_game.src.games.WordleHangman import WordleHangman
 from wordle_plus_game.src.games.SettingsPage import SettingsPage
 from wordle_plus_game.src.components.text import Text
 from wordle_plus_game.src.utils.avatar import Avatar
+from wordle_plus_game.src.games.ScoreBoard import ScoreBoard
 
 class Menu:
     """
@@ -28,7 +29,7 @@ class Menu:
         self.init_fonts()
         self.init_buttons()
 
-        self.avatar = Avatar(x=150, y=40, scale=0.8, settings=self.settings)
+        self.avatar = Avatar(x=150, y=40, scale=0.8)
 
         self.title_size = self.title_font.size("Welcome to Wordle+!")[0]
 
@@ -59,8 +60,11 @@ class Menu:
         self.buttons = [
             TextButton("Play Wordle Classic", self.button_font, (255, 255, 255), (0, 0, 0), (128, 128, 128), self.screen_width / 2 - 200, 250, 400, 50),
             TextButton("Play Wordle Hangman", self.button_font, (255, 255, 255), (0, 0, 0), (128, 128, 128), self.screen_width / 2 - 200, 350, 400, 50),
-            TextButton("Quit", self.button_font, (255, 255, 255), (0, 0, 0), (128, 128, 128), self.screen_width / 2 - 200, 450, 400, 50),
-            TextButton("Settings", self.button_font, (255, 255, 255), (0, 0, 0), (128, 128, 128), self.screen_width - (self.screen_width / 6), 30, 150, 50)
+            # TextButton("Quit", self.button_font, (255, 255, 255), (0, 0, 0), (128, 128, 128), self.screen_width / 2 - 200, 450, 400, 50),
+            TextButton("Settings", self.button_font, (255, 255, 255), (0, 0, 0), (128, 128, 128), self.screen_width - (self.screen_width / 6), 50, 150, 50),
+            TextButton("View Classic Scoreboard", self.button_font, (255, 255, 255), (0, 0, 0), (128, 128, 128), self.screen_width / 2 - 200, 450, 400, 50),
+            TextButton("View Hangman Scoreboard", self.button_font, (255, 255, 255), (0, 0, 0), (128, 128, 128), self.screen_width / 2 - 200, 550, 400, 50),
+            TextButton("Quit", self.button_font, (255, 255, 255), (0, 0, 0), (128, 128, 128), self.screen_width / 2 - 200, 650, 400, 50)
         ]
 
     def display_menu(self):
@@ -84,6 +88,10 @@ class Menu:
                         self.play_wordle_hangman()
                     elif action == "Settings":
                         self.start_settings()
+                    elif action == "View Classic Scoreboard":
+                        self.view_scoreboard("Classic")
+                    elif action == "View Hangman Scoreboard":
+                        self.view_scoreboard("Hangman")
                     elif action == "Quit":
                         running = False
 
@@ -93,6 +101,14 @@ class Menu:
                     sys.exit()
 
             pygame.display.update()
+
+    def view_scoreboard(self, game_mode):
+        """
+        Displays the scoreboard for the selected game mode.
+        """
+        scoreboard = ScoreBoard(self.settings, game_mode)
+        scoreboard.run(True)
+        self.screen.fill(self.bg_color)
 
     def play_wordle_classic(self):
         """

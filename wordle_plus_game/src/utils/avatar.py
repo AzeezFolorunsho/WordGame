@@ -1,11 +1,12 @@
 import pygame
+from wordle_plus_game.src.core.settings import Settings
 
 class Avatar:
-    def __init__(self, x, y, scale, settings):
+    def __init__(self, x, y, scale):
         self.x = x
         self.y = y
         self.scale = scale
-        self.settings = settings
+        self.settings = Settings()
         
 
     def draw(self, screen):
