@@ -266,10 +266,6 @@ class WordleClassic:
         scoreTracking = ScoreTracking()
         scores = scoreTracking.load_scores("Classic")
 
-        # Create the graph
-        graph = LineGraph()
-        graph.create_graph(scores)
-
         while running:
 
             if not self.difficulty == "Ultra Hard":
