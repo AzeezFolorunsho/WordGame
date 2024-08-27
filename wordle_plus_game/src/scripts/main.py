@@ -31,7 +31,7 @@ class Menu:
         self.init_fonts()
         self.init_buttons()
 
-        self.title_size = self.title_font.size("Welcome to Wordle+!")[0]
+        # username
         self.username = self.settings.get("User Profiles", "Username", "Player")
         self.username_size = self.title_font.size(self.username)[0]
         self.username_x = (self.screen_width / 2) - (self.username_size / 2)
@@ -42,7 +42,8 @@ class Menu:
         self.welcome_image = pygame.image.load("wordle_plus_game/assets/welcome.png")
         self.welcome_width = self.welcome_image.get_width()
         self.welcome_height = self.welcome_image.get_height()
-        self.welcome_scaled = pygame.transform.scale(self.screen, (100, 100))
+        self.welcome_scaled = pygame.transform.scale(self.welcome_image, (self.welcome_width * 0.95, self.welcome_height * 0.95))
+        self.scaled_width = self.welcome_scaled.get_width()
 
     def init_pygame(self):
         """
@@ -68,22 +69,22 @@ class Menu:
         Initializes the menu buttons.
         """
         self.buttons = [
-            TextButton("Play Wordle Classic", self.button_font, (255, 255, 255), (0, 0, 0), (128, 128, 128), self.screen_width / 2 - 200, 250, 400, 50),
-            TextButton("Play Wordle Hangman", self.button_font, (255, 255, 255), (0, 0, 0), (128, 128, 128), self.screen_width / 2 - 200, 325, 400, 50),
-            TextButton("Quit", self.button_font, (255, 255, 255), (0, 0, 0), (128, 128, 128), self.screen_width / 2 - 200, 400, 400, 50)
+            TextButton("Play Wordle Classic", self.button_font, (255, 255, 255), (0, 0, 0), (128, 128, 128), self.screen_width / 2 - 200, self.screen_height / 3, 400, 50),
+            TextButton("Play Wordle Hangman", self.button_font, (255, 255, 255), (0, 0, 0), (128, 128, 128), self.screen_width / 2 - 200, self.screen_height / 3 + 80, 400, 50),
+            TextButton("Quit", self.button_font, (255, 255, 255), (0, 0, 0), (128, 128, 128), self.screen_width / 2 - 200, self.screen_height / 3 + 160, 400, 50)
         ]
 
     def display_menu(self):
         """
         Displays the main menu and handles button interactions.
         """
-        avatar = Avatar(x = self.username_x - self.username_x_spacing, y = 150, scale=0.8, settings=self.settings)
+        avatar = Avatar(x = self.username_x - self.username_x_spacing, y = 150, scale = 0.8, settings=self.settings)
         
         running = True
         while running:
 
             self.screen.blit(self.menu_bg, [0, 0])
-            self.screen.blit(self.welcome_image, [((self.screen_width / 2) - (self.welcome_width / 2)), 20])
+            self.screen.blit(self.welcome_scaled, [((self.screen_width / 2) - (self.scaled_width / 2)), 20])
             self.username_text.draw(self.screen)
 
             avatar.draw(self.screen)

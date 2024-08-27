@@ -88,11 +88,11 @@ class WordleClassic:
 
         # Textbox dimensions and positioning
         self.textbox_size = 62.4
-        self.textbox_start_x = 468#(self.screen_width / 2) - ((self.num_boxes * self.textbox_size) / 2)  to center it??
-        self.textbox_start_y = 3.6
         self.textbox_x_spacing = 8
         self.textbox_y_spacing = 17
-
+        self.textbox_start_x = (self.screen_width / 2) - ((len(self.target_word) * (self.textbox_size + self.textbox_x_spacing)) / 2) #468 to center it
+        self.textbox_start_y = 3.6
+        
         # On-screen keyboard dimensions and positioning
         self.keyboard_start_x = self.screen_width / 3.3
         self.keyboard_start_y = self.screen_height / 1.52#1.47
