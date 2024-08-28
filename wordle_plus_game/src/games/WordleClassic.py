@@ -25,8 +25,6 @@ class WordleClassic:
 
     def __init__(self, settings):
         self.settings = settings
-        self.init_constants()
-        self.init_pygame()
 
         # Game state variables
         self.current_guess = []
@@ -39,6 +37,11 @@ class WordleClassic:
         # Initialize game components
         self.random_words = RandomWord()
         self.target_word = 'coder'  # set target word to 'coder' for testing purposes will change to self.random_word.get_random_word(5)
+
+        # Initialize the constants and pygame
+        self.init_constants()
+        self.init_pygame()
+
         self.score_tracker = ScoreTracking()
         self.score_saved = False
         self.timer = Timer(self.screen, self.screen_width / 14, self.screen_height / 2, self.bg_color, self.timer_font)   #---changing x pos---????
