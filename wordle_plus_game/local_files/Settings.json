@@ -4,11 +4,11 @@
             "width": 1280,
             "height": 720
         },
-        "Background Color": "#000000"
+        "Background Color": "#FFFFFF"
     },
     "User Profiles": {
         "Username": "Defult Username",
-        "Current Avatar": "wordle_plus_game/assets/avatars/avatar1.png"
+        "Current Avatar": "wordle_plus_game/assets/avatars/avatar4.png"
     },
     "Game Settings": {
         "Current Difficulty Level": "Normal"

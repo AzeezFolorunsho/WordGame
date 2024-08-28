@@ -1,6 +1,7 @@
 import pygame
 import sys
 from wordle_plus_game.src.components.buttons import TextButton, Dropdown
+from wordle_plus_game.src.utils.avatar import Avatar
 
 class SettingsPage:
     def __init__(self, settings):
@@ -11,9 +12,9 @@ class SettingsPage:
         self.setup_constants()
         self.setup_pygame()
 
-        avatar_path = "wordle_plus_game/assets/avatars/"
-        self.avatars = [f"Avatar {i}" for i in range(1, 13)] 
-
+        self.avatar = Avatar(x=150, y=100, scale=0.8)
+        
+        self.avatars = [f"Avatar {i}" for i in range(1, 13)]
         saved_avatar = f"Avatar {(self.settings.get('User Profiles', 'Current Avatar', 'wordle_plus_game/assets/avatars/avatar1.png'))[-5]}"
         saved_difficulty = self.settings.get("Game Settings", "Current Difficulty Level", "Normal")
         saved_resolution = f'{self.settings.get("General", "Screen Dimensions", {}).get("width")}x{self.settings.get("General", "Screen Dimensions", {}).get("height")}'
@@ -125,7 +126,10 @@ class SettingsPage:
         Save the current settings from the dropdowns and fields.
         """
         selected_avatar = self.avatar_dropdown.selected_option
+        avatar_index = int(selected_avatar.split(" ")[-1])
         self.settings.set("User Profiles", "Current Avatar", f"wordle_plus_game/assets/avatars/avatar{selected_avatar[-1]}.png")
+
+        self.avatar._create_img()
 
         selected_difficulty = self.difficulty_dropdown.selected_option
         self.settings.set("Game Settings", "Current Difficulty Level", selected_difficulty)
@@ -162,6 +166,8 @@ class SettingsPage:
                 self.save_settings()
                 self.__init__(self.settings)
 
+            self.avatar.draw(self.screen)
+            self.avatar_dropdown.draw(self.screen)
             self.avatar_dropdown.draw(self.screen)
             self.difficulty_dropdown.draw(self.screen)
             self.display_dropdown.draw(self.screen)

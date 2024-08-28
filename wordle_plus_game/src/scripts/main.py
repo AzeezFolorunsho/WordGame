@@ -88,6 +88,7 @@ class Menu:
                         self.play_wordle_hangman()
                     elif action == "Settings":
                         self.start_settings()
+                        self.avatar._create_img()
                     elif action == "View Classic Scoreboard":
                         self.view_scoreboard("Classic")
                     elif action == "View Hangman Scoreboard":
