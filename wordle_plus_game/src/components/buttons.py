@@ -185,7 +185,7 @@ class SliderButton:
         return self.value
     
 class Dropdown:
-    def __init__(self, x, y, width, height, options, font=None, color_idle=(200, 200, 200), color_hover=(100, 100, 100), color_active=(50, 50, 50), text_color=(0, 0, 0)):
+    def __init__(self, x, y, width, height, options, font=None, color_idle=(200, 200, 200), color_hover=(100, 100, 100), color_active=(50, 50, 50), text_color=(0, 0, 0), bg_color=(255, 255, 255)):
         """
         Initializes the dropdown menu.
 
@@ -211,6 +211,7 @@ class Dropdown:
         self.color_hover = color_hover
         self.color_active = color_active
         self.text_color = text_color
+        self.bg_color = bg_color
         self.selected_option = options[0] if options else None
         self.is_open = False
         self.rect = pygame.Rect(x, y, width, height)
@@ -267,7 +268,7 @@ class Dropdown:
         elif self.cover_up:
             # Cover up the options area
             cover_rect = pygame.Rect(self.rect.x, self.rect.y + self.height, self.width, len(self.options) * self.height)
-            pygame.draw.rect(screen, "#FFFFFF", cover_rect)
+            pygame.draw.rect(screen, self.bg_color, cover_rect)
             self.cover_up = False
         
         pygame.draw.rect(screen, self.text_color, self.rect, 2)

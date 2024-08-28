@@ -18,9 +18,6 @@ class ScoreBoard:
         self.init_pygame()
         self.load_data()
         self.create_ui_elements()
-    
-    
-    #     self.graph.create_graph(self.score_tracking.load_scores(self.game_mode))
 
     def init_pygame(self):
         """

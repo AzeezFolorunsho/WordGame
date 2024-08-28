@@ -30,7 +30,8 @@ class SettingsPage:
             color_idle=self.BLACK,          
             color_hover=self.LIGHT_GREY,    
             color_active=self.LIGHT_GREY,   
-            text_color=self.WHITE
+            text_color=self.WHITE,
+            bg_color=self.background_color
         )
         self.avatar_dropdown.selected_option = saved_avatar
 
@@ -44,7 +45,8 @@ class SettingsPage:
             color_idle=self.BLACK,          
             color_hover=self.LIGHT_GREY,    
             color_active=self.LIGHT_GREY,   
-            text_color=self.WHITE
+            text_color=self.WHITE,
+            bg_color=self.background_color
         )
         self.difficulty_dropdown.selected_option = saved_difficulty
 
@@ -58,7 +60,8 @@ class SettingsPage:
             color_idle=self.BLACK,          
             color_hover=self.LIGHT_GREY,    
             color_active=self.LIGHT_GREY,   
-            text_color=self.WHITE
+            text_color=self.WHITE,
+            bg_color=self.background_color
         )
         self.display_dropdown.selected_option = saved_resolution
 
@@ -114,6 +117,7 @@ class SettingsPage:
         """
         Main loop for the settings page.
         """
+        clock = pygame.time.Clock()
         while game_running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -134,5 +138,7 @@ class SettingsPage:
             self.avatar_dropdown.draw(self.screen)
             self.difficulty_dropdown.draw(self.screen)
             self.display_dropdown.draw(self.screen)
+
+            clock.tick(60)
 
             pygame.display.flip()
