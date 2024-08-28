@@ -1,6 +1,6 @@
 import pygame
 import sys
-from wordle_plus_game.src.components.buttons import TextButton, SliderButton, Dropdown
+from wordle_plus_game.src.components.buttons import TextButton, Dropdown
 
 class SettingsPage:
     def __init__(self, settings):
@@ -14,7 +14,7 @@ class SettingsPage:
         avatar_path = "wordle_plus_game/assets/avatars/"
         self.avatars = [f"Avatar {i}" for i in range(1, 13)] 
 
-        saved_avatar = f"Avatar {(self.settings.get("User Profiles", "Current Avatar", "wordle_plus_game/assets/avatars/avatar1.png"))[-5]}"
+        saved_avatar = f"Avatar {(self.settings.get('User Profiles', 'Current Avatar', 'wordle_plus_game/assets/avatars/avatar1.png'))[-5]}"
         saved_difficulty = self.settings.get("Game Settings", "Current Difficulty Level", "Normal")
         saved_resolution = f'{self.settings.get("General", "Screen Dimensions", {}).get("width")}x{self.settings.get("General", "Screen Dimensions", {}).get("height")}'
 
@@ -66,6 +66,33 @@ class SettingsPage:
 
         self.save_button = TextButton("Save", self.font, self.WHITE, self.BLACK, self.LIGHT_GREY, 300, 100, 110, 30)
 
+        self.color_mapping = {
+            "#FFFFFF": "White",
+            "#000000": "Black",
+            "#FF0000": "Red",
+            "#00FF00": "Green",
+            "#0000FF": "Blue"
+        }
+
+        self.background_colors = list(self.color_mapping.keys())
+
+        saved_bg_color = self.settings.get("General", "Background Color", "#FFFFFF")
+
+        self.bg_color_dropdown = Dropdown(
+            x=300,
+            y=500,  # Position it below other elements
+            width=400,
+            height=45,
+            options=[f"{self.color_mapping[color]} ({color})" for color in self.background_colors],
+            font=self.font,
+            color_idle=self.BLACK,
+            color_hover=self.LIGHT_GREY,
+            color_active=self.LIGHT_GREY,
+            text_color=self.WHITE
+        )
+        self.bg_color_dropdown.selected_option = f"{self.color_mapping[saved_bg_color]} ({saved_bg_color})"
+        self.save_button = TextButton("Save", self.font, self.WHITE, self.BLACK, self.LIGHT_GREY, 300, 100, 110, 30)
+
     def setup_constants(self):
         """
         Loads settings and constants.
@@ -110,6 +137,9 @@ class SettingsPage:
         "height": int(selected_resolution[1])
         })
 
+        selected_bg_color = self.bg_color_dropdown.selected_option.split()[-1].strip("()")
+        self.settings.set("General", "Background Color", selected_bg_color)
+
     def settings_running(self, game_running):
         """
         Main loop for the settings page.
@@ -122,6 +152,7 @@ class SettingsPage:
                 self.avatar_dropdown.handle_event(event)
                 self.difficulty_dropdown.handle_event(event)
                 self.display_dropdown.handle_event(event)
+                self.bg_color_dropdown.handle_event(event)
 
             if self.return_button.draw(self.screen):
                 game_running = False
@@ -134,5 +165,6 @@ class SettingsPage:
             self.avatar_dropdown.draw(self.screen)
             self.difficulty_dropdown.draw(self.screen)
             self.display_dropdown.draw(self.screen)
+            self.bg_color_dropdown.draw(self.screen)
 
             pygame.display.flip()
