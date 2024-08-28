@@ -4,10 +4,10 @@
             "width": 1280,
             "height": 720
         },
-        "Background Color": "#FFFFFF"
+        "Background Color": "#A4E1EA"
     },
     "User Profiles": {
-        "Username": "Defult Username",
+        "Username": "Player",
         "Current Avatar": "wordle_plus_game/assets/avatars/avatar1.png"
     },
     "Game Settings": {

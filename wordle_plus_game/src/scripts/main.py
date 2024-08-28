@@ -25,15 +25,29 @@ class Menu:
         self.screen_height = self.settings.get("General", "Screen Dimensions", {}).get("height", 720)
         self.bg_color = self.settings.get("General", "Background Color", "#FFFFFF")
         
+        # Wordle-inspired background images
+        self.menu_image = pygame.image.load("wordle_plus_game/assets/background_images/menu_background.png")
+        self.menu_bg = pygame.transform.scale(self.menu_image, (self.screen_width, self.screen_height))
+        
         self.init_pygame()
         self.init_fonts()
         self.init_buttons()
 
-        self.avatar = Avatar(x=150, y=40, scale=0.8)
+        # username
+        self.username = self.settings.get("User Profiles", "Username", "Player")
+        self.username_size = self.title_font.size(self.username)[0]
+        self.username_x = (self.screen_width / 2) - (self.username_size / 2)
+        self.username_text = Text(self.username, self.title_font, self.username_x, 150)
+        self.username_x_spacing = 85
+        
+        # welcome image
+        self.welcome_image = pygame.image.load("wordle_plus_game/assets/welcome.png")
+        self.welcome_width = self.welcome_image.get_width()
+        self.welcome_height = self.welcome_image.get_height()
+        self.welcome_scaled = pygame.transform.scale(self.welcome_image, (self.welcome_width * 0.95, self.welcome_height * 0.95))
+        self.scaled_width = self.welcome_scaled.get_width()
 
-        self.title_size = self.title_font.size("Welcome to Wordle+!")[0]
-
-        self.welcome_text = Text("Welcome to Wordle+!", self.title_font, (self.screen_width / 2) - (self.title_size / 2), 40)
+        self.avatar = Avatar(self.username_x - self.username_x_spacing, y=150, scale=0.8)
 
     def init_pygame(self):
         """
@@ -41,6 +55,7 @@ class Menu:
         """
         pygame.init()
         self.screen = pygame.display.set_mode((self.screen_width, self.screen_height))
+        
         self.icon = pygame.image.load("wordle_plus_game/assets/wordle+logo.png")
         pygame.display.set_icon(self.icon)
         pygame.display.set_caption("Wordle+ Menu")
@@ -74,7 +89,9 @@ class Menu:
         running = True
         while running:
 
-            self.welcome_text.draw(self.screen)
+            self.screen.blit(self.menu_bg, [0, 0])
+            self.screen.blit(self.welcome_scaled, [((self.screen_width / 2) - (self.scaled_width / 2)), 20])
+            self.username_text.draw(self.screen)
 
             self.avatar.draw(self.screen)
 
@@ -137,12 +154,13 @@ def main():
     """
     Main function to run the Wordle Plus game.
     """
+    # Initialize settings
     settings = Settings()
+
+    # Create the main menu
     menu = Menu(settings)
 
-    settings_page = SettingsPage(settings)
-    settings_page.main_menu = menu 
-
+    # Display the menu
     menu.display_menu()
 
 if __name__ == "__main__":

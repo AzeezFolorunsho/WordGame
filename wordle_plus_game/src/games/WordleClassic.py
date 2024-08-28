@@ -25,8 +25,6 @@ class WordleClassic:
 
     def __init__(self, settings):
         self.settings = settings
-        self.init_constants()
-        self.init_pygame()
 
         # Game state variables
         self.current_guess = []
@@ -39,9 +37,14 @@ class WordleClassic:
         # Initialize game components
         self.random_words = RandomWord()
         self.target_word = 'coder'  # set target word to 'coder' for testing purposes will change to self.random_word.get_random_word(5)
+
+        # Initialize the constants and pygame
+        self.init_constants()
+        self.init_pygame()
+
         self.score_tracker = ScoreTracking()
         self.score_saved = False
-        self.timer = Timer(self.screen, 30, self.screen_height / 2, self.bg_color, self.timer_font)
+        self.timer = Timer(self.screen, self.screen_width / 14, self.screen_height / 2, self.bg_color, self.timer_font)   #---changing x pos---????
         self.timer.start()
         
         # Game Settings
@@ -50,6 +53,7 @@ class WordleClassic:
         self.difficulty_level()
 
         # Initialize the grid and keyboard
+        self.num_boxes = len(self.target_word)
         self.textbox_grid = TextboxGrid(self.screen, self.textbox_size, self.max_attempts, len(self.target_word), self.textbox_x_spacing, self.textbox_y_spacing, self.textbox_start_x, self.textbox_start_y, self.light_gray, self.white)
         self.textbox_grid.draw_grid()
         self.keyboard = OnScreenKeyboard(self.keyboard_start_x, self.keyboard_start_y, self.keyboard_x_spacing, self.keyboard_y_spacing, self.keyboard_width, self.keyboard_height, self.keyboard_font, self.white, self.light_gray, self.medium_gray)
@@ -57,10 +61,14 @@ class WordleClassic:
         # Initialize the return button
         self.return_button = TextButton("Return", self.keyboard_font, self.white, self.black, self.light_gray, self.screen_width - 140, 27, 110, 45)
 
+        # Wordle-inspired background image
+        self.classic_image = pygame.image.load("wordle_plus_game/assets/background_images/classic_background.png")
+        self.classic_bg = pygame.transform.scale(self.classic_image, (self.screen_width, self.screen_height))
+
         # Initialize guides (for testing purposes)
-        self.guides = Guide(self.screen)
-        self.guides.draw_third_guides(self.black)
-        self.guides.draw_cross_guides(self.red)
+        # self.guides = Guide(self.screen)
+        # self.guides.draw_third_guides(self.black)
+        # self.guides.draw_cross_guides(self.red)
         
     def init_constants(self):
         """
@@ -83,16 +91,16 @@ class WordleClassic:
 
         # Textbox dimensions and positioning
         self.textbox_size = 62.4
-        self.textbox_start_x = 468
-        self.textbox_start_y = 3.6
         self.textbox_x_spacing = 8
-        self.textbox_y_spacing = 20
-
+        self.textbox_y_spacing = 17
+        self.textbox_start_x = (self.screen_width / 2) - ((len(self.target_word) * (self.textbox_size + self.textbox_x_spacing)) / 2) #468 to center it
+        self.textbox_start_y = 3.6
+        
         # On-screen keyboard dimensions and positioning
         self.keyboard_start_x = self.screen_width / 3.3
-        self.keyboard_start_y = self.screen_height / 1.47
+        self.keyboard_start_y = self.screen_height / 1.52#1.47
         self.keyboard_x_spacing = 10
-        self.keyboard_y_spacing = 20
+        self.keyboard_y_spacing = 10
         self.keyboard_width = self.textbox_size / 1.5
         self.keyboard_height = self.textbox_size
 
@@ -130,7 +138,7 @@ class WordleClassic:
             self.max_attempts = 4
             # time incentive
             self.penalty_time = 30
-            self.penalty_message = Text("Score multiplier after 30 seconds", self.timer_font, 30, self.screen_height / 2 + 50)
+            self.penalty_message = Text("Score multiplier after 30 seconds", self.timer_font, self.screen_width / 14, self.screen_height / 2 + 50)
             self.penalty_message.draw(self.screen)
        
         else: # Ultra hard
@@ -140,8 +148,8 @@ class WordleClassic:
             self.max_attempts = 2
             # time incentive
             self.time_limit = 30
-            self.countdown = Countdown(self.screen, 30, self.screen_height / 2, self.bg_color, self.timer_font, self.time_limit, text_color=self.red)
-            self.penalty_message = Text("Time limit 30 seconds!", self.timer_font, 30, self.screen_height / 2 + 50)
+            self.countdown = Countdown(self.screen, 110, self.screen_height / 2, self.bg_color, self.timer_font, self.time_limit, text_color=self.red)
+            self.penalty_message = Text("Time limit 30 seconds!", self.timer_font, self.screen_width / 14, self.screen_height / 2 + 50)
             self.countdown.start()
             self.penalty_message.draw(self.screen)
             
@@ -261,7 +269,9 @@ class WordleClassic:
         Args:
             running (bool): A flag to indicate if the game is running.
         """
-
+        # # fill screen with background color?
+        self.screen.blit(self.classic_bg, [0, 0])    
+        
         while running:
 
             if not self.difficulty == "Ultra Hard":
