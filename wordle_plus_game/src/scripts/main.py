@@ -60,7 +60,6 @@ class Menu:
         self.buttons = [
             TextButton("Play Wordle Classic", self.button_font, (255, 255, 255), (0, 0, 0), (128, 128, 128), self.screen_width / 2 - 200, 250, 400, 50),
             TextButton("Play Wordle Hangman", self.button_font, (255, 255, 255), (0, 0, 0), (128, 128, 128), self.screen_width / 2 - 200, 350, 400, 50),
-            # TextButton("Quit", self.button_font, (255, 255, 255), (0, 0, 0), (128, 128, 128), self.screen_width / 2 - 200, 450, 400, 50),
             TextButton("Settings", self.button_font, (255, 255, 255), (0, 0, 0), (128, 128, 128), self.screen_width - (self.screen_width / 6), 50, 150, 50),
             TextButton("View Classic Scoreboard", self.button_font, (255, 255, 255), (0, 0, 0), (128, 128, 128), self.screen_width / 2 - 200, 450, 400, 50),
             TextButton("View Hangman Scoreboard", self.button_font, (255, 255, 255), (0, 0, 0), (128, 128, 128), self.screen_width / 2 - 200, 550, 400, 50),

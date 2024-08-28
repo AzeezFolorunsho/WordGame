@@ -5,6 +5,7 @@ from wordle_plus_game.src.components.text import Text
 from wordle_plus_game.src.components.buttons import TextButton
 from wordle_plus_game.src.components.scrollable_table import ScrollableTable
 from wordle_plus_game.src.utils.avatar import Avatar
+from wordle_plus_game.src.components.graph import LineGraph
 
 class ScoreBoard:
     """
@@ -17,7 +18,9 @@ class ScoreBoard:
         self.init_pygame()
         self.load_data()
         self.create_ui_elements()
-        self.avatar = Avatar(self.screen_width - (self.screen_width / 6), 10, 0.8)
+    
+    
+    #     self.graph.create_graph(self.score_tracking.load_scores(self.game_mode))
 
     def init_pygame(self):
         """
@@ -93,6 +96,12 @@ class ScoreBoard:
         """
         Creates and positions all UI elements.
         """
+        # Avatar
+        self.avatar = Avatar(
+            self.screen_width - (self.screen_width / 6), 
+            10, 
+            0.8
+            )
 
         # Return button
         self.return_button = TextButton(
@@ -201,7 +210,7 @@ class ScoreBoard:
         # Scrollable Table
         table_y = history_section_start_y + self.title_font.get_height() + 5
         table_height = self.screen_height - table_y - self.margin
-        table_width = (self.screen_width / 2) - (2 * self.margin)
+        table_width = (self.screen_width / 2)
 
         # Since game_history is a list, pass it directly
         self.scrollable_table = ScrollableTable(
@@ -214,6 +223,12 @@ class ScoreBoard:
             row_height=self.font.get_height() + self.spacing
         )
 
+        self.graph = LineGraph(
+            self.margin + table_width + self.spacing, 
+            history_section_start_y,
+            self.screen
+        )
+ 
     def draw(self):
         """
         Draws all UI elements onto the screen.
@@ -224,6 +239,8 @@ class ScoreBoard:
         self.game_played_lable.draw(self.screen)
         self.top_score_lable.draw(self.screen)
         self.avatar.draw(self.screen)
+        self.return_button.draw(self.screen)
+        self.graph.create_graph(self.score_tracking.load_scores(self.game_mode))
 
         for section in self.top_scores_section:
             section['difficulty_text'].draw(self.screen)
@@ -247,8 +264,8 @@ class ScoreBoard:
 
         while running:
             self.draw()
-            if self.return_button.draw(self.screen):
-                self.running = False
+            if self.return_button.draw(self.screen) == True:
+                running = False
                 return
             
             for event in pygame.event.get():

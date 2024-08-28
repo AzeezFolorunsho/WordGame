@@ -125,7 +125,6 @@ class TextButton:
         """
         pygame.draw.rect(screen, self.bg_color, self.bg_rect)
         screen.blit(self.text_surface, self.text_rect)
-        pygame.display.update()
 
         action = False
         pos = pygame.mouse.get_pos()
