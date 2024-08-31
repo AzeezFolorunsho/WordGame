@@ -37,7 +37,7 @@ class WordleHangman:
 
         # Initialize game components
         self.random_words = RandomWord()
-        self.target_word = 'coder'  # set target word to 'coder' for testing purposes will change to self.random_word.get_random_word(5)
+        self.target_word = 'coder'  # for testing purposes. will change to self.random_word.get_random_word(5)
         self.is_indicating = True
         self.difficulty_level()
         self.correct_word_boxes = self.create_word_boxes()
@@ -246,6 +246,7 @@ class WordleHangman:
         Resets the game to start a new round.
         """
         self.screen.fill(self.bg_color) # clear screen
+        self.screen.blit(self.hangman_bg, [0, 0])
 
         self.target_word = self.random_words.get_random_word(len(self.target_word))
         self.current_guess = []
