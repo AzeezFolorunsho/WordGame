@@ -1,15 +1,27 @@
 # WordGame
- Building next generation of Wordle game
+ Building next generation of Wordle game |
+ [Project linktree](https://linktr.ee/Wordle_Plus) | [Project Proposal](https://docs.google.com/presentation/d/1WPVeuWbE_a3BGcn2OqFED0e82bGXsCw6oTUqVFsW0P4/edit#slide=id.g2834fe51b3a_0_0)
 
- # Under Development
+ # The Wordle+ Game
 
- ![menu](https://github.com/user-attachments/assets/7ef4f34d-00db-425a-a88f-303f8043130f)
+ ![wordle_plus](https://github.com/user-attachments/assets/14ebefff-de03-40a2-b729-a51e49eda5c9)
+
 
  # Classic Mode
 
-![classic](https://github.com/user-attachments/assets/980e1c79-5c1a-48f1-8947-ffab7e5e2a30)
+![image](https://github.com/user-attachments/assets/df64fa1c-be1b-48c1-a18a-87169c685aee)
 
-![win classic](https://github.com/user-attachments/assets/0375626e-a0a5-4a21-a4ee-5a8558c96c21)
+
+# Hangman Mode
+![image](https://github.com/user-attachments/assets/1bf1c657-7794-472d-99df-cea9e0f31652)
+
+![image](https://github.com/user-attachments/assets/34a9fe6b-99b0-4155-851a-4c1900dbec49)
+
+# Scoreboard Integration
+
+![image](https://github.com/user-attachments/assets/09806459-8f36-4a73-bb28-a90e459d5eb3)
+
+
 
 
 
@@ -21,4 +33,4 @@
 - Azeez Folorunsho
 - Gloria Precious
 - Sonu Gupta
-https://linktr.ee/Wordle_Plus
+
